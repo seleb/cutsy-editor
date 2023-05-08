@@ -1,0 +1,61 @@
+{
+  "build": {
+    "beforeDevCommand": "npm run tauri icon src/public/app-icon.png && npm run start:ui",
+    "beforeBuildCommand": "npm run tauri icon src/public/app-icon.png && npm run build:ui",
+    "devPath": "http://localhost:1420",
+    "distDir": "../dist",
+    "withGlobalTauri": false
+  },
+  "package": {
+    "productName": "clilp",
+    "version": "../package.json"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "shell": {
+        "all": false,
+        "open": true
+      },
+      "window": {
+        "all": false,
+        "setFullscreen": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "icon": [
+        "icons/32x32.png",
+        "icons/128x128.png",
+        "icons/128x128@2x.png",
+        "icons/icon.icns",
+        "icons/icon.ico"
+      ],
+      "identifier": "site.seans.clilp",
+      "targets": [
+        "msi",
+        "app",
+        "appimage"
+      ],
+      "publisher": "Sean S. LeBlanc",
+      "copyright": "Sean S. LeBlanc",
+      "category": "GraphicsAndDesign",
+      "shortDescription": "a lil video clip editor"
+    },
+    "security": {
+      "csp": null
+    },
+    "updater": {
+      "active": false
+    },
+    "windows": [
+      {
+        "fullscreen": false,
+        "resizable": true,
+        "title": "clilp",
+        "width": 800,
+        "height": 600
+      }
+    ]
+  }
+}

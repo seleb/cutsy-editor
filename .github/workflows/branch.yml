@@ -1,0 +1,17 @@
+name: branch
+
+on: pull_request
+
+jobs:
+  branch:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/tauri-setup
+        with:
+          linux: ${{ matrix.platform.name == 'ubuntu-20.04' }}
+      - uses: JonasKruckenberg/tauri-build@v1

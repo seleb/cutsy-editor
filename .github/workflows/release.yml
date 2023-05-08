@@ -1,0 +1,139 @@
+name: release
+
+on:
+  release:
+    types: [published]
+
+concurrency:
+  group: ${{ github.workflow }}
+
+env:
+  ITCH_USER: seansleblanc
+  ITCH_GAME: clilp-editor
+  DISCORD_USERNAME: ${{ github.repository }}
+  DISCORD_AVATAR: https://raw.githubusercontent.com/${{ github.repository }}/main/src/public/app-icon.png
+
+jobs:
+  notify-start:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_EMBEDS: '[{ "color": 16426275, "title": "deploying...", "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" }]'
+
+  get-release:
+    runs-on: ubuntu-latest
+    outputs:
+      id: ${{ steps.get-release.outputs.id }}
+      version: ${{ steps.get-release.outputs.tag_name }}
+    steps:
+      - uses: bruceadams/get-release@v1.3.2
+        id: get-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-tauri:
+    needs: get-release
+    strategy:
+      matrix:
+        platform:
+          - name: mac
+            runs: macos-latest
+          - name: linux
+            runs: ubuntu-20.04
+          - name: windows
+            runs: windows-latest
+    runs-on: ${{ matrix.platform.runs }}
+    outputs:
+      artifacts: ${{ steps.get-release.outputs.artifacts }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/tauri-setup
+        with:
+          linux: ${{ matrix.platform.name == 'linux' }}
+      - uses: JonasKruckenberg/tauri-build@v1
+        id: build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-${{ matrix.platform.name }}
+          path: "${{ join(fromJSON(steps.build.outputs.artifacts), '\n') }}"
+
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build:ui
+      - uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-web
+          path: dist
+
+  release:
+    permissions:
+      contents: write
+    needs: [get-release, build-tauri, build-web]
+    strategy:
+      matrix:
+        platform:
+          - mac
+          - linux
+          - windows
+          - web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: artifacts-${{ matrix.platform }}
+          path: artifacts/${{ matrix.platform }}
+
+      - uses: svenstaro/upload-release-action@2.5.0
+        if: ${{ matrix.platform != 'web' }}
+        with:
+          file_glob: true
+          file: artifacts/**/*
+
+      - uses: josephbmanley/butler-publish-itchio-action@v1.0.3
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.ITCH_API_KEY }}
+          CHANNEL: ${{ matrix.platform }}
+          ITCH_GAME: ${{ env.ITCH_GAME }}
+          ITCH_USER: ${{ env.ITCH_USER }}
+          PACKAGE: artifacts/${{ matrix.platform }}
+          VERSION: ${{ needs.get-release.outputs.version }}
+
+  notify-finished:
+    if: ${{ success() || failure() }}
+    needs: [get-release, release]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Ilshidur/action-discord@0.3.2
+        if: ${{ success() }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_EMBEDS: '[{ "color": 2357925, "title": "${{ needs.get-release.outputs.version }} deployed", "url": "https://${{ env.ITCH_USER }}.itch.io/${{ env.ITCH_GAME }}" }]'
+      - uses: Ilshidur/action-discord@0.3.2
+        if: ${{ failure() }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_EMBEDS: '[{ "color": 16393080, "title": "failed", "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" }]'
+
+  cleanup:
+    if: ${{ always() }}
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: |
+            artifacts-macos-latest
+            artifacts-ubuntu-20.04
+            artifacts-windows-latest
+            artifacts-web
