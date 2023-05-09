@@ -1,24 +1,38 @@
+$primary: hsl(322, 70%, 54%);
+$primary-bright: hsl(322, 82%, 70%);
+$primary-muted: hsl(322, 20%, 50%);
+$neutral-0: #000;
+$neutral-2: hsl(278, 57%, 5%);
+$neutral-4: hsl(289, 35%, 21%);
+$neutral-6: hsl(290, 10%, 53%);
+$neutral-8: hsl(300, 11%, 75%);
+$neutral-9: #FFF;
+$black: #000;
+$white: #FFF;
+
 :root {
 	color-scheme: dark;
-	--color-primary: hsl(322, 70%, 54%);
-	--color-primary-bright: hsl(322, 82%, 70%);
-	--color-primary-muted: hsl(322, 20%, 50%);
-	--color-neutral-0: #000;
-	--color-neutral-2: hsl(278, 57%, 5%);
-	--color-neutral-4: hsl(289, 35%, 21%);
-	--color-neutral-6: hsl(290, 10%, 53%);
-	--color-neutral-8: hsl(300, 11%, 75%);
-	--color-neutral-9: #FFF;
-	--color-black: #000;
-	--color-white: #FFF;
+	--color-primary: #{$primary};
+	--color-primary-bright: #{$primary-bright};
+	--color-primary-muted: #{$primary-muted};
+	--color-neutral-0: #{$neutral-0};
+	--color-neutral-2: #{$neutral-2};
+	--color-neutral-4: #{$neutral-4};
+	--color-neutral-6: #{$neutral-6};
+	--color-neutral-8: #{$neutral-8};
+	--color-neutral-9: #{$neutral-9};
+	--color-black: #{$black};
+	--color-white: #{$white};
 
 	@media (prefers-color-scheme: light) {
 		color-scheme: light;
-		--color-neutral-0: #FFF;
-		--color-neutral-2: hsl(300, 11%, 75%);
-		--color-neutral-4: hsl(290, 10%, 53%);
-		--color-neutral-6: hsl(289, 35%, 21%);
-		--color-neutral-8: hsl(278, 57%, 5%);
-		--color-neutral-9: #000;
+		--color-primary-bright: #{$primary-bright};
+		--color-primary-muted: #{$primary-muted};
+		--color-neutral-0: #{$neutral-9};
+		--color-neutral-2: #{lighten($neutral-8, 10%)};
+		--color-neutral-4: #{lighten($neutral-6, 10%)};
+		--color-neutral-6: #{$neutral-4};
+		--color-neutral-8: #{$neutral-2};
+		--color-neutral-9: #{$neutral-0};
 	}
 }
