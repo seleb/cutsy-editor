@@ -12,7 +12,7 @@ fn is_ffmpeg_installed() -> bool {
     return ffmpeg_sidecar::command::ffmpeg_is_installed();
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 fn install_ffmpeg() {
     ffmpeg_sidecar::download::auto_download().unwrap();
 }
