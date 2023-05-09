@@ -75,7 +75,13 @@ export function ViewIndex() {
 						)
 					}
 				>
-					{stateFfmpeg === 'not-installed' ? <button onClick={installFfmpeg}>Install ffmpeg for me</button> : <>ffmpeg is ready!</>}
+					{stateFfmpeg === 'not-installed' ? (
+						<button onClick={installFfmpeg}>Install ffmpeg for me</button>
+					) : (
+						<>
+							<strong>ffmpeg</strong> is ready!
+						</>
+					)}
 				</Loading>
 			</section>
 		</Page>
