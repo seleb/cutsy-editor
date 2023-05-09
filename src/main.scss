@@ -11,6 +11,8 @@
   accent-color: var(--color-primary);
   color: var(--color-neutral-8);
   background-color: var(--color-neutral-2);
+  background-image: linear-gradient(to top, rgb(var(--color-black-rgb) / 30%), rgb(var(--color-black-rgb) / 0%) 15rem);
+  background-attachment: fixed;
 }
 
 :root {
