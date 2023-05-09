@@ -20,6 +20,9 @@
       "window": {
         "all": false,
         "setFullscreen": true
+      },
+      "path": {
+        "all": true
       }
     },
     "bundle": {
