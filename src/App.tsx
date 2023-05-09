@@ -17,7 +17,7 @@ function App() {
 				setStateFfmpeg('not-installed');
 			}
 		})();
-	});
+	}, []);
 
   const installFfmpeg = useCallback(async () => {
     if (stateFfmpeg !== 'not-installed') throw new Error(`Can't install in this state: ${stateFfmpeg}`);
