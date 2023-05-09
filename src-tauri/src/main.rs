@@ -6,12 +6,24 @@
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
+
+#[tauri::command]
+fn is_ffmpeg_installed() -> bool {
+    return ffmpeg_sidecar::command::ffmpeg_is_installed();
+}
+
+#[tauri::command]
+fn install_ffmpeg() {
+    ffmpeg_sidecar::download::auto_download().unwrap();
+}
+
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             greet,
             is_ffmpeg_installed,
-            download_ffmpeg,
+            install_ffmpeg,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
