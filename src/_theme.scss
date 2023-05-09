@@ -1,0 +1,24 @@
+:root {
+	color-scheme: dark;
+	--color-primary: hsl(322, 70%, 67%);
+	--color-primary-bright: hsl(322, 80%, 77%);
+	--color-primary-muted: hsl(322, 20%, 50%);
+	--color-neutral-0: #000;
+	--color-neutral-2: hsl(278, 57%, 5%);
+	--color-neutral-4: hsl(289, 35%, 21%);
+	--color-neutral-6: hsl(290, 10%, 53%);
+	--color-neutral-8: hsl(300, 11%, 75%);
+	--color-neutral-9: #FFF;
+	--color-black: #000;
+	--color-white: #FFF;
+
+	@media (prefers-color-scheme: light) {
+		color-scheme: light;
+		--color-neutral-0: #FFF;
+		--color-neutral-2: hsl(300, 11%, 75%);
+		--color-neutral-4: hsl(290, 10%, 53%);
+		--color-neutral-6: hsl(289, 35%, 21%);
+		--color-neutral-8: hsl(278, 57%, 5%);
+		--color-neutral-9: #000;
+	}
+}

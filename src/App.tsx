@@ -1,56 +1,70 @@
-import { invoke } from "@tauri-apps/api/tauri";
-import { useState } from "react";
-import "./App.css";
-import reactLogo from "./assets/react.svg";
-import { useFullscreenToggle } from "./useFullscreenToggle";
+import { invoke } from '@tauri-apps/api/tauri';
+import { useCallback, useEffect, useState } from 'react';
+import styles from './App.module.scss';
+import { Loading } from './Loading';
+import { useFullscreenToggle } from './useFullscreenToggle';
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+	const [stateFfmpeg, setStateFfmpeg] = useState<'unknown' | 'installing' | 'error' | 'not-installed' | 'installed'>('unknown');
+	const [installError, setInstallError] = useState('');
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
-  }
+	useEffect(() => {
+		(async () => {
+			const isFfmpegInstalled = await invoke('is_ffmpeg_installed');
+			if (isFfmpegInstalled) {
+				setStateFfmpeg('installed');
+			} else {
+				setStateFfmpeg('not-installed');
+			}
+		})();
+	});
 
-  useFullscreenToggle();
+  const installFfmpeg = useCallback(async () => {
+    if (stateFfmpeg !== 'not-installed') throw new Error(`Can't install in this state: ${stateFfmpeg}`);
+    setStateFfmpeg('installing');
+    try {
+      await invoke('install_ffmpeg');
+      setStateFfmpeg('installing');
+    } catch (err) {
+      console.error(err);
+      setStateFfmpeg('error');
+      if (!(err instanceof Error)) throw err;
+      setInstallError(err.message);
+    }
+  }, [stateFfmpeg]);
 
-  return (
-    <div className="container">
-      <h1>Welcome to Tauri!</h1>
+	useFullscreenToggle();
 
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="./vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="./tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <div className="row">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            greet();
-          }}
-        >
-          <input
-            id="greet-input"
-            onChange={(e) => setName(e.currentTarget.value)}
-            placeholder="Enter a name..."
-          />
-          <button type="submit">Greet</button>
-        </form>
-      </div>
-      <p>{greetMsg}</p>
-    </div>
-  );
+	return (
+		<div className={styles.container}>
+			<h1>welcome to <strong className={styles.name}>cli<span>l</span>p</strong>!</h1>
+			<section className={styles.splash}>
+				<Loading
+					loading={stateFfmpeg === 'unknown' || stateFfmpeg === 'installing'}
+					msgLoading={
+						stateFfmpeg === 'unknown' ? (
+							<>
+								Checking <strong>ffmpeg</strong> installation...
+							</>
+						) : (
+							<>
+								Installing <strong>ffmpeg</strong> (this may take a few minutes)...
+							</>
+						)
+					}
+					error={stateFfmpeg === 'not-installed' || stateFfmpeg === 'error'}
+					msgError={installError || (
+						<>
+							<p>This app requires <a href="https://ffmpeg.org" target="_blank">ffmpeg</a> in order to edit clips.</p>
+							<button onClick={installFfmpeg}>Install ffmpeg for me</button>
+						</>
+					)}
+				>
+					ffmpeg ready!
+				</Loading>
+			</section>
+		</div>
+	);
 }
 
 export default App;

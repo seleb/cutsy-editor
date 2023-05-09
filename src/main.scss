@@ -1,0 +1,58 @@
+@import "theme";
+
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+
+  color: var(--color-neutral-8);
+  background-color: var(--color-neutral-2);
+}
+
+
+a {
+  color: var(--color-primary);
+  text-decoration: inherit;
+  will-change: background-color;
+  transition: background-color 0.1s;
+}
+
+a:hover,
+a:focus {
+  color: var(--color-primary-bright);
+}
+
+h1 {
+  text-align: center;
+}
+
+input,
+button {
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-weight: 500;
+  color: var(--color-neutral-2);
+  background-color: var(--color-primary);
+  will-change: background-color;
+  transition: background-color 0.1s;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover,
+button:focus {
+  background-color: var(--color-primary-bright);
+}
+button:active {
+  border-color: #396cd8;
+  background-color: #e8e8e8;
+}
+
+#greet-input {
+  margin-right: 5px;
+}
