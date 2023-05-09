@@ -43,7 +43,7 @@ export function ViewIndex() {
 	return (
 		<Page className={styles.container}>
 			<H>
-				<Clilp /> is setting up...
+				<Clilp /> setup
 			</H>
 			<section className={styles.splash}>
 				<Loading
