@@ -78,8 +78,7 @@ button:focus {
 }
 
 button:active {
-  border-color: #396cd8;
-  background-color: #e8e8e8;
+  background-color: var(--color-neutral-9);
 }
 
 #greet-input {
