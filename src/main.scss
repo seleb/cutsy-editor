@@ -12,6 +12,11 @@
   background-color: var(--color-neutral-2);
 }
 
+::selection {
+  background-color: var(--color-primary);
+  color: var(--color-neutral-2);
+}
+
 
 a {
   color: var(--color-primary);
