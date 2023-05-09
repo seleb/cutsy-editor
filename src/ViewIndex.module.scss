@@ -1,6 +1,5 @@
 .container {
-	margin: 0;
-	margin-top: 10vh;
+	padding-top: 10vh;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -9,12 +8,4 @@
 
 .splash {
 	position: relative;
-}
-
-.name {
-	color: var(--color-neutral-9);
-
-	>span {
-		color: var(--color-primary);
-	}
 }
