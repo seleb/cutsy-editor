@@ -24,7 +24,7 @@ function App() {
     setStateFfmpeg('installing');
     try {
       await invoke('install_ffmpeg');
-      setStateFfmpeg('installing');
+      setStateFfmpeg('installed');
     } catch (err) {
       console.error(err);
       setStateFfmpeg('error');
