@@ -12,6 +12,24 @@
   background-color: var(--color-neutral-2);
 }
 
+:root,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
 ::selection {
   background-color: var(--color-primary-bright);
   color: var(--color-neutral-2);
