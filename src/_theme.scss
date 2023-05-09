@@ -10,29 +10,45 @@ $neutral-9: #FFF;
 $black: #000;
 $white: #FFF;
 
+@function rgbv($color) {
+	@return red($color) green($color) blue($color);
+}
+
 :root {
 	color-scheme: dark;
-	--color-primary: #{$primary};
-	--color-primary-bright: #{$primary-bright};
-	--color-primary-muted: #{$primary-muted};
-	--color-neutral-0: #{$neutral-0};
-	--color-neutral-2: #{$neutral-2};
-	--color-neutral-4: #{$neutral-4};
-	--color-neutral-6: #{$neutral-6};
-	--color-neutral-8: #{$neutral-8};
-	--color-neutral-9: #{$neutral-9};
-	--color-black: #{$black};
-	--color-white: #{$white};
+	--color-primary-rgb: #{rgbv($primary)};
+	--color-primary-bright-rgb: #{rgbv($primary-bright)};
+	--color-primary-muted-rgb: #{rgbv($primary-muted)};
+	--color-neutral-0-rgb: #{rgbv($neutral-0)};
+	--color-neutral-2-rgb: #{rgbv($neutral-2)};
+	--color-neutral-4-rgb: #{rgbv($neutral-4)};
+	--color-neutral-6-rgb: #{rgbv($neutral-6)};
+	--color-neutral-8-rgb: #{rgbv($neutral-8)};
+	--color-neutral-9-rgb: #{rgbv($neutral-9)};
+	--color-black-rgb: #{rgbv($black)};
+	--color-white-rgb: #{rgbv($white)};
 
 	@media (prefers-color-scheme: light) {
 		color-scheme: light;
-		--color-primary-bright: #{$primary-bright};
-		--color-primary-muted: #{$primary-muted};
-		--color-neutral-0: #{$neutral-9};
-		--color-neutral-2: #{lighten($neutral-8, 10%)};
-		--color-neutral-4: #{lighten($neutral-6, 10%)};
-		--color-neutral-6: #{$neutral-4};
-		--color-neutral-8: #{$neutral-2};
-		--color-neutral-9: #{$neutral-0};
+		--color-primary-bright-rgb: #{rgbv($primary-bright)};
+		--color-primary-muted-rgb: #{rgbv($primary-muted)};
+		--color-neutral-0-rgb: #{rgbv($neutral-9)};
+		--color-neutral-2-rgb: #{rgbv(lighten($neutral-8, 10%))};
+		--color-neutral-4-rgb: #{rgbv(lighten($neutral-6, 10%))};
+		--color-neutral-6-rgb: #{rgbv($neutral-4)};
+		--color-neutral-8-rgb: #{rgbv($neutral-2)};
+		--color-neutral-9-rgb: #{rgbv($neutral-0)};
 	}
+
+	--color-primary: rgb(var(--color-primary-rgb));
+	--color-primary-bright: rgb(var(--color-primary-bright-rgb));
+	--color-primary-muted: rgb(var(--color-primary-muted-rgb));
+	--color-neutral-0: rgb(var(--color-neutral-0-rgb));
+	--color-neutral-2: rgb(var(--color-neutral-2-rgb));
+	--color-neutral-4: rgb(var(--color-neutral-4-rgb));
+	--color-neutral-6: rgb(var(--color-neutral-6-rgb));
+	--color-neutral-8: rgb(var(--color-neutral-8-rgb));
+	--color-neutral-9: rgb(var(--color-neutral-9-rgb));
+	--color-black: rgb(var(--color-black-rgb));
+	--color-white: rgb(var(--color-white-rgb));
 }
