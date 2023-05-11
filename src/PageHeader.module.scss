@@ -10,4 +10,8 @@
 	margin-bottom: 1rem;
 
 	z-index: 1;
+
+	&:not(:first-child) {
+		box-shadow: 0 -1px 0 var(--color-neutral-4);
+	}
 }
