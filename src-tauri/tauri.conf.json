@@ -23,6 +23,22 @@
       },
       "path": {
         "all": true
+      },
+      "fs": {
+        "all": false,
+        "readDir": true,
+        "scope": [
+          "$VIDEO",
+          "$VIDEO/**/*"
+        ]
+      },
+      "protocol": {
+        "all": false,
+        "asset": true,
+        "assetScope": [
+          "$VIDEO",
+          "$VIDEO/**/*"
+        ]
       }
     },
     "bundle": {
