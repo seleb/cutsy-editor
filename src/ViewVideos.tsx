@@ -59,7 +59,7 @@ export function ViewVideos() {
 			</PageHeader>
 			<Loading loading={loading} msgLoading="Loading videos..." error={error} msgError="Failed to load videos :(" count={videos.length} msgNone="No videos ¯\_(ツ)_/¯">
 				<ul className={styles.videos}>
-					{videos.map(video => (
+					{videos.slice(Math.floor(videos.length / videosPerPage - 1) * videosPerPage).map(video => (
 						<li key={video.path}>
 							<Video name={video.name} path={video.path} />
 						</li>
