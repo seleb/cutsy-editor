@@ -1,5 +1,7 @@
 import { invoke } from '@tauri-apps/api/tauri';
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Clilp } from './Clilp';
 import { H } from './H';
 import { Loading } from './Loading';
@@ -10,6 +12,7 @@ import { isDesktop } from './isDesktop';
 export function ViewIndex() {
 	const [stateFfmpeg, setStateFfmpeg] = useState<'unknown' | 'installing' | 'error' | 'not-installed' | 'installed'>('unknown');
 	const [installError, setInstallError] = useState('');
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!isDesktop) return;
@@ -17,6 +20,7 @@ export function ViewIndex() {
 			const isFfmpegInstalled = await invoke('is_ffmpeg_installed');
 			if (isFfmpegInstalled) {
 				setStateFfmpeg('installed');
+				navigate('/videos', { replace: true });
 			} else {
 				setStateFfmpeg('not-installed');
 			}
@@ -77,6 +81,11 @@ export function ViewIndex() {
 					) : (
 						<>
 							<strong>ffmpeg</strong> is ready!
+							<div>
+								<Link to="/videos" replace>
+									Continue
+								</Link>
+							</div>
 						</>
 					)}
 				</Loading>
