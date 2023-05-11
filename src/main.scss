@@ -47,7 +47,7 @@ a {
 }
 
 a:hover,
-a:focus {
+a:focus-visible {
   color: var(--color-primary-bright);
 }
 
@@ -75,13 +75,18 @@ details>summary {
   cursor: pointer;
 }
 
-button:hover,
-button:focus {
+button:not(:disabled):hover,
+button:not(:disabled):focus-visible {
   background-color: var(--color-primary-bright);
 }
 
-button:active {
+button:not(:disabled):active {
   background-color: var(--color-neutral-9);
+}
+
+button:disabled {
+  filter: saturate(0.25);
+  cursor: not-allowed;
 }
 
 #greet-input {
