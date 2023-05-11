@@ -90,6 +90,11 @@
 }
 
 .message {
+	display: block;
 	top: 2rem;
+	left: 0;
+	right: 0;
+	margin-inline: auto;
 	position: relative;
+	text-align: center;
 }
