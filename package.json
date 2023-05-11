@@ -60,6 +60,7 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.11.1",
     "react-router-dom": "^6.11.1",
+    "react-use-pagination": "^2.0.1",
     "sass": "^1.62.1",
     "typescript": "^5.0.4",
     "vite": "^4.2.1"

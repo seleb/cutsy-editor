@@ -1,17 +1,17 @@
 import { FileEntry, readDir } from '@tauri-apps/api/fs';
 import { BaseDirectory } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { usePagination } from 'react-use-pagination';
 import { H } from './H';
 import { Loading } from './Loading';
 import { Page } from './Page';
 import { PageHeader } from './PageHeader';
 import { Title } from './Title';
 import styles from './ViewVideos.module.scss';
-import usePagination from './usePagination';
 
-let obj = document.createElement('video');
+const obj = document.createElement('video');
 function isVideo(path: string) {
 	return obj.canPlayType(`video/${path.split('.').pop()?.toLowerCase()}`) !== '';
 }
@@ -26,46 +26,71 @@ function Video({ path, name }: FileEntry) {
 		</Link>
 	);
 }
-const videosPerPage = 10;
+const videosPerPage = 30;
 
 export function ViewVideos() {
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState('');
 	const [library, setLibrary] = useState<FileEntry[]>([]);
 	useEffect(() => {
 		(async () => {
-			const dir = await readDir('.', { dir: BaseDirectory.Video, recursive: true });
-			const flatten = (dir: FileEntry): FileEntry[] => (dir.children ? dir.children.flatMap(flatten) : [dir]);
-			setLibrary(dir.flatMap(flatten).filter(i => isVideo(i.path)));
+			try {
+				setLoading(true);
+				const dir = await readDir('.', { dir: BaseDirectory.Video, recursive: true });
+				const flatten = (dir: FileEntry): FileEntry[] => (dir.children ? dir.children.flatMap(flatten) : [dir]);
+				setLibrary(dir.flatMap(flatten).filter(i => isVideo(i.path)));
+				setLoading(false);
+			} catch (err) {
+				console.error(err);
+				setError(err instanceof Error ? err.message : 'Unknown error');
+			}
 		})();
 	}, []);
-	const loadMoreVideos = useCallback(
-		async (last: readonly FileEntry[]) => {
-			let lastIdx = library.indexOf(last[last.length - 1]);
-			lastIdx = lastIdx === -1 ? 0 : lastIdx + 1;
-			return library.slice(lastIdx, lastIdx + videosPerPage);
-		},
-		[library]
-	);
-	const { items: videos, loading, error, hasMore, loadMore } = usePagination<FileEntry>(loadMoreVideos, videosPerPage);
+
+	const { currentPage, totalPages, setNextPage, setPreviousPage, nextEnabled, previousEnabled, startIndex, endIndex } = usePagination({
+		totalItems: library.length,
+		initialPage: 0,
+		initialPageSize: videosPerPage,
+	});
+
 	return (
 		<Page>
-			<Title>
-				videos
-			</Title>
+			<Title>videos</Title>
 			<PageHeader>
 				<H>videos</H>
-				<div>
-					{videos.length} / {library.length}
-				</div>
+				{totalPages > 0 && (
+					<>
+						<button disabled={!previousEnabled} onClick={setPreviousPage}>
+							🔙
+						</button>
+						<span>
+							{currentPage + 1} / {totalPages}
+						</span>
+						<button disabled={!nextEnabled} onClick={setNextPage}>
+							⏭
+						</button>
+					</>
+				)}
 			</PageHeader>
-			<Loading loading={loading} msgLoading="Loading videos..." error={error} msgError="Failed to load videos :(" count={videos.length} msgNone="No videos ¯\_(ツ)_/¯">
+			<Loading
+				loading={loading}
+				msgLoading="Loading videos..."
+				error={!!error}
+				msgError={
+					<>
+						Failed to load videos :(<pre>{error}</pre>
+					</>
+				}
+				count={library.length}
+				msgNone="No videos ¯\_(ツ)_/¯"
+			>
 				<ul className={styles.videos}>
-					{videos.slice(Math.floor(videos.length / videosPerPage - 1) * videosPerPage).map(video => (
+					{library.slice(startIndex, endIndex < 0 ? 0 : endIndex).map(video => (
 						<li key={video.path}>
 							<Video name={video.name} path={video.path} />
 						</li>
 					))}
 				</ul>
-				{hasMore && <button onClick={loadMore}>Load more</button>}
 			</Loading>
 		</Page>
 	);
