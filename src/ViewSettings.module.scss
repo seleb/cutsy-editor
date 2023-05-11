@@ -1,0 +1,28 @@
+.about,
+.settings {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 0.1rem 1rem;
+	> dt {
+		text-align: right;
+
+		&::after {
+			content: ':';
+		}
+	}
+	> dd {
+		margin: 0;
+	}
+}
+
+.settings {
+	> dd {
+		margin-bottom: 1rem;
+
+		label {
+			display: flex;
+			gap: 0.5rem;
+			align-items: center;
+		}
+	}
+}

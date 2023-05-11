@@ -20,7 +20,7 @@ export function ViewRoot() {
 				<nav>
 					<NavLink to="/">Home</NavLink>
 					<NavLink to="videos">Video</NavLink>
-					<NavLink to="about">About</NavLink>
+					<NavLink to="settings">Settings</NavLink>
 					<Debug>
 						<NavLink to="debug">Debug</NavLink>
 					</Debug>
