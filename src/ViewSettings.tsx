@@ -25,6 +25,12 @@ export function ViewSettings() {
 					<label><input type="radio" name="font" value="Bitch" /> Bitch</label>
 					<label><input type="radio" name="font" value="" /> Boring</label>
 				</dd>
+
+				<dt>open files after saving</dt>
+				<dd>
+					<label><input type="radio" name="font" value="1" /> yes please</label>
+					<label><input type="radio" name="font" value="0" /> no thanks</label>
+				</dd>
 			</dl>
 			<PageHeader>
 				about
