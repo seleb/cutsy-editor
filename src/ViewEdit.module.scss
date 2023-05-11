@@ -1,0 +1,39 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+}
+
+.video {
+	cursor: pointer;
+	min-height: 0;
+	flex: auto;
+	background-color: var(--color-black);
+	object-fit: contain;
+	object-position: center;
+}
+
+.controls {
+	flex: none;
+
+	progress {
+		appearance: none;
+		cursor: pointer;
+		width: 100%;
+		border-radius: 0;
+
+		&::-webkit-progress-value {
+			background-color: rgb(var(--color-primary-rgb) / 25%);
+			border-right: solid 2px var(--color-primary-bright);
+		}
+
+		&::-webkit-progress-bar {
+			background: var(--color-black);
+		}
+
+		&::-moz-progress-bar {
+			background: var(--color-black);
+		}
+	}
+}

@@ -4,6 +4,7 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import './main.scss';
 import { ViewAbout } from './ViewAbout';
 import { ViewDebug } from './ViewDebug';
+import { ViewEdit } from './ViewEdit';
 import { ViewError } from './ViewError';
 import { ViewIndex } from './ViewIndex';
 import { ViewRoot } from './ViewRoot';
@@ -13,6 +14,7 @@ const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route element={<ViewRoot />} errorElement={<ViewError />}>
 			<Route index element={<ViewIndex />} errorElement={<ViewError />} />
+			<Route path="edit" element={<ViewEdit />} errorElement={<ViewError />} />
 			<Route path="videos" element={<ViewVideos />} errorElement={<ViewError />} />
 			<Route path="debug" element={<ViewDebug />} errorElement={<ViewError />} />
 		</Route>
