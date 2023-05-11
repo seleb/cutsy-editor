@@ -6,7 +6,6 @@ import { Loading } from './Loading';
 import { Page } from './Page';
 import styles from './ViewIndex.module.scss';
 import { isDesktop } from './isDesktop';
-import { useFullscreenToggle } from './useFullscreenToggle';
 
 export function ViewIndex() {
 	const [stateFfmpeg, setStateFfmpeg] = useState<'unknown' | 'installing' | 'error' | 'not-installed' | 'installed'>('unknown');
@@ -37,8 +36,6 @@ export function ViewIndex() {
 			setInstallError(err.message);
 		}
 	}, [stateFfmpeg]);
-
-	useFullscreenToggle();
 
 	return (
 		<Page className={styles.container}>

@@ -5,8 +5,10 @@ import { Clilp } from './Clilp';
 import { Debug } from './Debug';
 import { H, HLevel } from './H';
 import styles from './ViewRoot.module.scss';
+import { useFullscreenToggle } from './useFullscreenToggle';
 
 export function ViewRoot() {
+	useFullscreenToggle();
 	return (
 		<>
 			<header className={styles.header}>
