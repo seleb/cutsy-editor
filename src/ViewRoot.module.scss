@@ -8,6 +8,8 @@ $sidebar: 5rem;
 	width: $sidebar;
 	overflow: auto;
 	background-image: linear-gradient(to bottom, rgb(var(--color-neutral-4-rgb) / 50%) 10rem, rgb(var(--color-neutral-4-rgb) / 0%) max(15rem, 75vh));
+	user-select: none;
+	cursor: default;
 
 	> nav {
 		display: flex;
