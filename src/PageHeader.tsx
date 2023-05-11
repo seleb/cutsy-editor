@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import styles from './PageContainer.module.scss';
+import styles from './PageHeader.module.scss';
 
 export function PageHeader({ className, children, ...props }: ComponentProps<'header'>) {
 	return (
