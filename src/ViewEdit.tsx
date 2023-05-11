@@ -1,3 +1,6 @@
+import { message, save } from '@tauri-apps/api/dialog';
+import { open } from '@tauri-apps/api/shell';
+import { convertFileSrc, invoke } from '@tauri-apps/api/tauri';
 import { PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Title } from './Title';
@@ -9,8 +12,15 @@ const FRAME = 1 / FRAMES_PER_SECOND;
 
 export function ViewEdit() {
 	const [search] = useSearchParams();
-	const path = search.get('v') || '';
-	const src = useMemo(() => decodeURIComponent(path), [path]);
+	const pathEncoded = search.get('v') || '';
+	const pathDecoded = useMemo(() => decodeURIComponent(pathEncoded), [pathEncoded]);
+	const src = useMemo(() => convertFileSrc(pathDecoded), [pathDecoded]);
+	const name = useMemo(() => {
+		const basename = pathDecoded.split(/[\\\/]/).pop();
+		const parts = basename?.split('.');
+		parts?.pop();
+		return parts?.join('.');
+	}, [pathDecoded]);
 
 	const refVideo = useRef<HTMLVideoElement>(null);
 	const refProgress = useRef<HTMLProgressElement>(null);
@@ -67,18 +77,21 @@ export function ViewEdit() {
 		}
 	}, [paused]);
 
-	const getSkip = useCallback(({ metaKey, ctrlKey, altKey, shiftKey }: KeyboardEvent) => {
-		if (ctrlKey || metaKey) {
-			return Infinity;
-		}
-		if (shiftKey) {
-			return duration * 0.3;
-		}
-		if (altKey) {
-			return duration * 0.1;
-		}
-		return duration * 0.05;
-	}, [duration]);
+	const getSkip = useCallback(
+		({ metaKey, ctrlKey, altKey, shiftKey }: KeyboardEvent) => {
+			if (ctrlKey || metaKey) {
+				return Infinity;
+			}
+			if (shiftKey) {
+				return duration * 0.3;
+			}
+			if (altKey) {
+				return duration * 0.1;
+			}
+			return duration * 0.05;
+		},
+		[duration]
+	);
 
 	const seek = useCallback((to: number, loop = true) => {
 		const elVideo = refVideo.current;
@@ -166,10 +179,39 @@ export function ViewEdit() {
 		[seek]
 	);
 
-	if (!path) throw new Error('No video path!');
+	const onSave = useCallback(async () => {
+		let output: string | null;
+		try {
+			output = await save({
+				defaultPath: name,
+				filters: [
+					{
+						name: 'Image',
+						extensions: ['png', 'webp', 'jpg'],
+					},
+				],
+			});
+			if (!output) return; // cancelled
+
+			// ffmpeg always seems to be ~2 frames off
+			await invoke<string>('vid_to_img', { input: pathDecoded, output, time: `${Math.floor(((refVideo.current?.currentTime || 0) - FRAME * 2) * 1000000)}us` });
+		} catch (err) {
+			console.error(err);
+			await message(`Failed to save image.\nThere may be more details in the console.\n\n${err}`, { title: 'Save error', type: 'error' });
+			return;
+		}
+		try {
+			await open(`file:///${output}`);
+		} catch (err) {
+			console.error(err);
+			await message(`The file was saved, but clilp failed to open it.\nThere may be more details in the console.\n\n${err}`, { title: 'Open error', type: 'warning' });
+		}
+	}, [pathDecoded, name]);
+
+	if (!pathEncoded) throw new Error('No video path!');
 	return (
 		<div className={styles.container}>
-			<Title>{['videos', src.split(/[\\\/]/).pop()]}</Title>
+			<Title>{['videos', name]}</Title>
 			<video ref={refVideo} onClick={togglePlaying} className={styles.video} controls={false} src={src} preload="auto" muted={muted} loop></video>
 			<div className={styles.controls}>
 				<button onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>
@@ -180,6 +222,7 @@ export function ViewEdit() {
 				</button>
 				controls here
 				<progress ref={refProgress} onPointerDown={onScrubStart} value={0} max={duration}></progress>
+				<button onClick={onSave}>save</button>
 			</div>
 		</div>
 	);

@@ -18,7 +18,7 @@ function isVideo(path: string) {
 
 function Video({ path, name }: FileEntry) {
 	const src = useMemo(() => convertFileSrc(path), [path]);
-	const encoded = useMemo(() => encodeURIComponent(src), [src]);
+	const encoded = useMemo(() => encodeURIComponent(path), [src]);
 	return (
 		<Link to={`/edit?v=${encoded}`}>
 			<video aria-hidden="true" preload="metadata" src={src}></video>
