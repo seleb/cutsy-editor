@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Debug } from './Debug';
 import { H, HLevel } from './H';
 import { Page } from './Page';
+import { PageHeader } from './PageHeader';
 import styles from './ViewDebug.module.scss';
 
 function DebugPalette() {
@@ -47,7 +48,9 @@ export function ViewDebug() {
 	return (
 		<Debug>
 			<Page>
+				<PageHeader>
 				<H>Debug</H>
+				</PageHeader>
 				<HLevel>
 					<div>
 						<Link to="error">Go to broken view</Link>

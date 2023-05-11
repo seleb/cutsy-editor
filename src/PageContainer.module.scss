@@ -1,0 +1,13 @@
+.header {
+	position: sticky;
+	top: 0;
+	left: 0;
+	padding: 1rem;
+	background-color: var(--color-neutral-2);
+	background-image: linear-gradient(to bottom, rgb(var(--color-neutral-4-rgb) / 50%) 10rem, rgb(var(--color-neutral-4-rgb) / 0%) max(15rem, 75vh));
+	border-bottom: solid 1px var(--color-neutral-4);
+	margin-inline: -1rem;
+	margin-bottom: 1rem;
+
+	z-index: 1;
+}
