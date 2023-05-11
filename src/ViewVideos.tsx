@@ -21,7 +21,7 @@ function Video({ path, name }: FileEntry) {
 	const encoded = useMemo(() => encodeURIComponent(src), [src]);
 	return (
 		<Link to={`/edit?v=${encoded}`}>
-			<video aria-hidden="true" preload="metadata" src={`${src}`}></video>
+			<video aria-hidden="true" preload="metadata" src={src}></video>
 			<span>{name}</span>
 		</Link>
 	);
