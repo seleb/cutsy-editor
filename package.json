@@ -3,7 +3,7 @@
   "name": "clilp-editor",
   "description": "a lil video clip editor",
   "type": "module",
-  "version": "1.0.22",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/seleb/clilp-editor"
