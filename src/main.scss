@@ -2,8 +2,13 @@
 @import "theme";
 @import "scrollbar";
 
+@font-face {
+  font-family: Bitch;
+  src: url("./Bitch.woff2") format("woff2");
+}
+
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Bitch, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 16px;
   line-height: 1.5;
   tab-size: 2;
