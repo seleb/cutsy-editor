@@ -19,7 +19,8 @@
       },
       "window": {
         "all": false,
-        "setFullscreen": true
+        "setFullscreen": true,
+        "setTitle": true
       },
       "path": {
         "all": true

@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { Clilp } from './Clilp';
 import { Debug } from './Debug';
 import { H, HLevel } from './H';
+import { Title } from './Title';
 import styles from './ViewRoot.module.scss';
 import { useFullscreenToggle } from './useFullscreenToggle';
 
@@ -11,6 +12,7 @@ export function ViewRoot() {
 	useFullscreenToggle();
 	return (
 		<>
+			<Title>clilp</Title>
 			<header className={styles.header}>
 				<H>
 					<Clilp />

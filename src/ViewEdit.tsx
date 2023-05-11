@@ -1,5 +1,6 @@
 import { PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Title } from './Title';
 import styles from './ViewEdit.module.scss';
 import { clamp } from './clamp';
 
@@ -168,6 +169,7 @@ export function ViewEdit() {
 	if (!path) throw new Error('No video path!');
 	return (
 		<div className={styles.container}>
+			<Title>{['videos', src.split(/[\\\/]/).pop()]}</Title>
 			<video ref={refVideo} onClick={togglePlaying} className={styles.video} controls={false} src={src} preload="auto" muted={muted} loop></video>
 			<div className={styles.controls}>
 				<button onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>

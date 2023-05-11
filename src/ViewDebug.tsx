@@ -4,6 +4,7 @@ import { Debug } from './Debug';
 import { H, HLevel } from './H';
 import { Page } from './Page';
 import { PageHeader } from './PageHeader';
+import { Title } from './Title';
 import styles from './ViewDebug.module.scss';
 
 function DebugPalette() {
@@ -47,9 +48,10 @@ export function ViewDebug() {
 	});
 	return (
 		<Debug>
+			<Title>debug</Title>
 			<Page>
 				<PageHeader>
-				<H>Debug</H>
+				<H>debug</H>
 				</PageHeader>
 				<HLevel>
 					<div>

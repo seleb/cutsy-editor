@@ -7,6 +7,7 @@ import { H } from './H';
 import { Loading } from './Loading';
 import { Page } from './Page';
 import { PageHeader } from './PageHeader';
+import { Title } from './Title';
 import styles from './ViewVideos.module.scss';
 import usePagination from './usePagination';
 
@@ -47,6 +48,9 @@ export function ViewVideos() {
 	const { items: videos, loading, error, hasMore, loadMore } = usePagination<FileEntry>(loadMoreVideos, videosPerPage);
 	return (
 		<Page>
+			<Title>
+				videos
+			</Title>
 			<PageHeader>
 				<H>videos</H>
 				<div>
