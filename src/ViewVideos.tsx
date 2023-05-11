@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { H } from './H';
 import { Loading } from './Loading';
 import { Page } from './Page';
+import { PageHeader } from './PageHeader';
 import styles from './ViewVideos.module.scss';
 import usePagination from './usePagination';
 
@@ -37,7 +38,7 @@ export function ViewVideos() {
 	}, []);
 	const loadMoreVideos = useCallback(
 		async (last: readonly FileEntry[]) => {
-			let lastIdx = library.indexOf(last[last.length-1]);
+			let lastIdx = library.indexOf(last[last.length - 1]);
 			lastIdx = lastIdx === -1 ? 0 : lastIdx + 1;
 			return library.slice(lastIdx, lastIdx + videosPerPage);
 		},
@@ -46,8 +47,12 @@ export function ViewVideos() {
 	const { items: videos, loading, error, hasMore, loadMore } = usePagination<FileEntry>(loadMoreVideos, videosPerPage);
 	return (
 		<Page>
-			<H>videos</H>
-			<div>{videos.length} / {library.length}</div>
+			<PageHeader>
+				<H>videos</H>
+				<div>
+					{videos.length} / {library.length}
+				</div>
+			</PageHeader>
 			<Loading loading={loading} msgLoading="Loading videos..." error={error} msgError="Failed to load videos :(" count={videos.length} msgNone="No videos ¯\_(ツ)_/¯">
 				<ul className={styles.videos}>
 					{videos.map(video => (
