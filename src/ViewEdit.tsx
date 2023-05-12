@@ -51,6 +51,20 @@ function toMicroseconds(seconds: number) {
 	return Math.floor((seconds - FRAME * 2) * 1000000);
 }
 
+function toDuration(time: number) {
+	const s = time % 60;
+	time = Math.floor((time - s) / 60);
+	const m = time % 60;
+	time = Math.floor((time - m) / 60);
+	const h = time;
+	const a= [
+		m.toFixed(0).padStart(2, '0'),
+		[s.toFixed(0).padStart(2, '0'), (s % 1).toFixed(3).substring(2).padEnd(3, '0')].join('.')
+	];
+	if (h > 0) a.unshift(h.toFixed(0));
+	return a.join(':');
+}
+
 export function ViewEdit() {
 	const [search] = useSearchParams();
 	const pathEncoded = search.get('v') || '';
@@ -65,6 +79,7 @@ export function ViewEdit() {
 
 	const refVideo = useRef<HTMLVideoElement>(null);
 	const refProgress = useRef<HTMLProgressElement>(null);
+	const refTime = useRef<HTMLElement>(null);
 
 	const [paused, setPaused] = useState(true);
 	const [muted, setMuted] = useState(false);
@@ -95,9 +110,11 @@ export function ViewEdit() {
 		let mounted = true;
 		const elVideo = refVideo.current;
 		const elProgress = refProgress.current;
-		if (!elVideo || !elProgress) return;
+		const elTime = refTime.current;
+		if (!elVideo || !elProgress || !elTime) return;
 		const onUpdate: VideoFrameRequestCallback = (_now, metadata) => {
 			elProgress.value = metadata.mediaTime;
+			elTime.textContent = toDuration(metadata.mediaTime);
 			if (mounted) {
 				elVideo.requestVideoFrameCallback(onUpdate);
 			}
@@ -286,20 +303,26 @@ export function ViewEdit() {
 			<Title>{['videos', name]}</Title>
 			<video ref={refVideo} onClick={togglePlaying} className={styles.video} controls={false} src={src} preload="auto" muted={muted} loop></video>
 			<div className={styles.controls}>
-				<button onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>
-					{paused ? '▶' : '⏸'}
-				</button>
-				<button onClick={toggleMuted} title={muted ? 'Unmute' : 'Mute'}>
-					{muted ? '🔈' : '🔊'}
-				</button>
-				controls here
-				<progress className={styles.track} ref={refProgress} onPointerDown={onScrubStart} value={0} max={duration}></progress>
-				<div className={styles.buttons}>
-					<Loading loading={saving} msgLoading="saving...">
-						<button onClick={onSaveImage}>save image</button>
-						<button onClick={onSaveClip}>save clip</button>
-					</Loading>
+				<div className={styles.trackbar}>
+					<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStart} value={0} max={duration}></progress>
+					<div className={styles.playhead} />
 				</div>
+				<div className={styles.buttons}>
+					<button onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>
+						{paused ? '▶' : '⏸'}
+					</button>
+					<button onClick={toggleMuted} title={muted ? 'Unmute' : 'Mute'}>
+						{muted ? '🔈' : '🔊'}
+					</button>
+					<span className={styles.time}>
+						<span ref={refTime}>{0}</span> / <span>{toDuration(duration)}</span>
+					</span>
+					<div className={styles.save}>
+							<button disabled={saving} onClick={onSaveImage} title="Save image">📷</button>
+							<button disabled={saving} onClick={onSaveClip} title="Save clip">🎬</button>
+					</div>
+				</div>
+				<Loading className={styles.saving} loading={saving} msgLoading="saving..." />
 			</div>
 			<KeyboardShortcuts />
 		</div>
