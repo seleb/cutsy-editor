@@ -89,9 +89,6 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String) -
     .arg("-t").arg(duration)
     // input
     .arg("-i").arg(path_input.as_os_str().to_str().unwrap())
-    // copy video and audio
-    .arg("-c:v").arg("copy")
-    .arg("-c:a").arg("copy")
     // output
     .arg(path_output.as_os_str().to_str().unwrap())
     .spawn()
