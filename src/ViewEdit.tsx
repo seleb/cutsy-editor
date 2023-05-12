@@ -187,8 +187,20 @@ export function ViewEdit() {
 				defaultPath: name,
 				filters: [
 					{
-						name: 'Image',
-						extensions: ['png', 'webp', 'jpg'],
+						name: 'PNG Image',
+						extensions: ['png'],
+					},
+					{
+						name: 'WebP Image',
+						extensions: ['webp'],
+					},
+					{
+						name: 'JPEG Image',
+						extensions: ['jpg', 'jpeg'],
+					},
+					{
+						name: 'All files',
+						extensions: ['*'],
 					},
 				],
 			});
