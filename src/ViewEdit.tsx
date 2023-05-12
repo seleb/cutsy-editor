@@ -4,6 +4,7 @@ import { convertFileSrc, invoke } from '@tauri-apps/api/tauri';
 import { PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { KeyboardShortcuts } from './KeyboardShortcuts';
+import { Loading } from './Loading';
 import { Title } from './Title';
 import styles from './ViewEdit.module.scss';
 import { clamp } from './clamp';
@@ -219,8 +220,9 @@ export function ViewEdit() {
 		[seek]
 	);
 
-
+	const [saving, setSavingClip] = useState(false);
 	const saveAndOpen = useCallback(async (options: Parameters<typeof save>[0], doSave: (output: string) => Promise<unknown>) => {
+		setSavingClip(true);
 		let output: string | null;
 		try {
 			output = await save(options);
@@ -230,6 +232,8 @@ export function ViewEdit() {
 			console.error(err);
 			await message(`Failed to save file.\nThere may be more details in the console.\n\n${err}`, { title: 'Save error', type: 'error' });
 			return;
+		} finally {
+			setSavingClip(false);
 		}
 		try {
 			await open(`file:///${output}`);
@@ -287,9 +291,13 @@ export function ViewEdit() {
 					{muted ? '🔈' : '🔊'}
 				</button>
 				controls here
-				<progress ref={refProgress} onPointerDown={onScrubStart} value={0} max={duration}></progress>
-				<button onClick={onSaveImage}>save image</button>
-				<button onClick={onSaveClip}>save clip</button>
+				<progress className={styles.track} ref={refProgress} onPointerDown={onScrubStart} value={0} max={duration}></progress>
+				<div className={styles.buttons}>
+					<Loading loading={saving} msgLoading="saving...">
+						<button onClick={onSaveImage}>save image</button>
+						<button onClick={onSaveClip}>save clip</button>
+					</Loading>
+				</div>
 			</div>
 			<KeyboardShortcuts />
 		</div>

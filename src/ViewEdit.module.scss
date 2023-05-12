@@ -17,24 +17,28 @@
 
 .controls {
 	flex: none;
+}
 
-	progress {
-		appearance: none;
-		cursor: pointer;
-		width: 100%;
-		border-radius: 0;
+.track {
+	appearance: none;
+	cursor: pointer;
+	width: 100%;
+	border-radius: 0;
 
-		&::-webkit-progress-value {
-			background-color: rgb(var(--color-primary-rgb) / 25%);
-			border-right: solid 2px var(--color-primary-bright);
-		}
-
-		&::-webkit-progress-bar {
-			background: var(--color-black);
-		}
-
-		&::-moz-progress-bar {
-			background: var(--color-black);
-		}
+	&::-webkit-progress-value {
+		background-color: rgb(var(--color-primary-rgb) / 25%);
+		border-right: solid 2px var(--color-primary-bright);
 	}
+
+	&::-webkit-progress-bar {
+		background: var(--color-black);
+	}
+
+	&::-moz-progress-bar {
+		background: var(--color-black);
+	}
+}
+
+.buttons {
+	position: relative;
 }
