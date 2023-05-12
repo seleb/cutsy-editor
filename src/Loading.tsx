@@ -12,7 +12,9 @@ export function Loading({
 	Loading = Spinner,
 	None = ({ children }) => <>{children}</>,
 	children,
+	...props
 }: PropsWithChildren<{
+	className?: string;
 	loading?: boolean;
 	error?: boolean;
 	count?: number;
@@ -23,8 +25,8 @@ export function Loading({
 	Loading?: ElementType;
 	None?: ElementType;
 }>) {
-	if (error) return <Error>{msgError}</Error>
-	if (loading) return <Loading>{msgLoading}</Loading>
-	if (count === 0) return <None>{msgNone}</None>
+	if (error) return <Error {...props}>{msgError}</Error>
+	if (loading) return <Loading {...props}>{msgLoading}</Loading>
+	if (count === 0) return <None {...props}>{msgNone}</None>
 	return <>{children}</>;
 }
