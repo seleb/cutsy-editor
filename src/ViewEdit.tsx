@@ -3,6 +3,7 @@ import { open } from '@tauri-apps/api/shell';
 import { convertFileSrc, invoke } from '@tauri-apps/api/tauri';
 import { PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { KeyboardShortcuts } from './KeyboardShortcuts';
 import { Title } from './Title';
 import styles from './ViewEdit.module.scss';
 import { clamp } from './clamp';
@@ -224,6 +225,7 @@ export function ViewEdit() {
 				<progress ref={refProgress} onPointerDown={onScrubStart} value={0} max={duration}></progress>
 				<button onClick={onSave}>save</button>
 			</div>
+			<KeyboardShortcuts />
 		</div>
 	);
 }
