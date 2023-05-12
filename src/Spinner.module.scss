@@ -38,6 +38,8 @@
 
 .container {
 	position: relative;
+	user-select: none;
+	pointer-events: none;
 }
 
 .spinner {
