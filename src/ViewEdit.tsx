@@ -139,7 +139,7 @@ export function ViewEdit() {
 	const seek = useCallback((to: number, loop = true) => {
 		const elVideo = refVideo.current;
 		const elProgress = refProgress.current;
-		if (!elVideo || !elProgress) {
+		if (!elVideo || !elProgress || !elVideo?.duration) {
 			return;
 		}
 		if (loop && to < 0 && elVideo.currentTime < FRAME * 2) {
@@ -199,7 +199,7 @@ export function ViewEdit() {
 		event => {
 			const elVideo = refVideo.current;
 			const elProgress = event.currentTarget as HTMLProgressElement;
-			if (!elVideo) return;
+			if (!elVideo || !elVideo?.duration) return;
 
 			const onScrub = (eventScrub: PointerEvent) => {
 				eventScrub.preventDefault();
