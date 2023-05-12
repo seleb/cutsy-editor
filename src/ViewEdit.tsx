@@ -11,6 +11,30 @@ import { clamp } from './clamp';
 const FRAMES_PER_SECOND = 60;
 const FRAME = 1 / FRAMES_PER_SECOND;
 
+const filtersImages = [
+	{
+		name: 'PNG Image',
+		extensions: ['png'],
+	},
+	{
+		name: 'WebP Image',
+		extensions: ['webp'],
+	},
+	{
+		name: 'JPEG Image',
+		extensions: ['jpg', 'jpeg'],
+	},
+	{
+		name: 'All files',
+		extensions: ['*'],
+	},
+];
+
+function toMicroseconds(seconds: number) {
+	// ffmpeg always seems to be ~2 frames off
+	return Math.floor((seconds - FRAME * 2) * 1000000);
+}
+
 export function ViewEdit() {
 	const [search] = useSearchParams();
 	const pathEncoded = search.get('v') || '';
@@ -180,37 +204,16 @@ export function ViewEdit() {
 		[seek]
 	);
 
-	const onSave = useCallback(async () => {
+
+	const saveAndOpen = useCallback(async (options: Parameters<typeof save>[0], doSave: (output: string) => Promise<unknown>) => {
 		let output: string | null;
 		try {
-			output = await save({
-				defaultPath: name,
-				filters: [
-					{
-						name: 'PNG Image',
-						extensions: ['png'],
-					},
-					{
-						name: 'WebP Image',
-						extensions: ['webp'],
-					},
-					{
-						name: 'JPEG Image',
-						extensions: ['jpg', 'jpeg'],
-					},
-					{
-						name: 'All files',
-						extensions: ['*'],
-					},
-				],
-			});
+			output = await save(options);
 			if (!output) return; // cancelled
-
-			// ffmpeg always seems to be ~2 frames off
-			await invoke<string>('vid_to_img', { input: pathDecoded, output, time: `${Math.floor(((refVideo.current?.currentTime || 0) - FRAME * 2) * 1000000)}us` });
+			await doSave(output);
 		} catch (err) {
 			console.error(err);
-			await message(`Failed to save image.\nThere may be more details in the console.\n\n${err}`, { title: 'Save error', type: 'error' });
+			await message(`Failed to save file.\nThere may be more details in the console.\n\n${err}`, { title: 'Save error', type: 'error' });
 			return;
 		}
 		try {
@@ -219,7 +222,24 @@ export function ViewEdit() {
 			console.error(err);
 			await message(`The file was saved, but clilp failed to open it.\nThere may be more details in the console.\n\n${err}`, { title: 'Open error', type: 'warning' });
 		}
-	}, [pathDecoded, name]);
+	}, []);
+
+	const onSaveImage = useCallback(
+		() =>
+			saveAndOpen(
+				{
+					defaultPath: name,
+					filters: filtersImages,
+				},
+				output =>
+					invoke<string>('vid_to_img', {
+						input: pathDecoded,
+						output,
+						time: `${toMicroseconds(refVideo.current?.currentTime || 0)}us`,
+					})
+			),
+		[pathDecoded, name]
+	);
 
 	if (!pathEncoded) throw new Error('No video path!');
 	return (
@@ -235,7 +255,7 @@ export function ViewEdit() {
 				</button>
 				controls here
 				<progress ref={refProgress} onPointerDown={onScrubStart} value={0} max={duration}></progress>
-				<button onClick={onSave}>save</button>
+				<button onClick={onSaveImage}>save image</button>
 			</div>
 			<KeyboardShortcuts />
 		</div>
