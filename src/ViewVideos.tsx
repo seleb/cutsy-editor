@@ -70,7 +70,7 @@ export function ViewVideos() {
 		<Page>
 			<Title>videos</Title>
 			<PageHeader>
-				<H>videos</H>
+				<H>videos ({library.length})</H>
 				{totalPages > 0 && (
 					<PageNumbers goto={goto} current={numPage} total={totalPages} />
 				)}
