@@ -98,7 +98,9 @@ export function ViewEdit() {
 		if (!elVideo || !elProgress) return;
 		const onUpdate: VideoFrameRequestCallback = (_now, metadata) => {
 			elProgress.value = metadata.mediaTime;
-			elVideo.requestVideoFrameCallback(onUpdate);
+			if (mounted) {
+				elVideo.requestVideoFrameCallback(onUpdate);
+			}
 		};
 		elVideo.requestVideoFrameCallback(onUpdate);
 
