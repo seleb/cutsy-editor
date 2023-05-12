@@ -1,13 +1,14 @@
 import { FileEntry, readDir } from '@tauri-apps/api/fs';
 import { BaseDirectory } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
-import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { usePagination } from 'react-use-pagination';
 import { H } from './H';
 import { Loading } from './Loading';
 import { Page } from './Page';
 import { PageHeader } from './PageHeader';
+import { PageNumbers } from './PageNumbers';
 import { Title } from './Title';
 import styles from './ViewVideos.module.scss';
 
@@ -29,6 +30,7 @@ function Video({ path, name }: FileEntry) {
 const videosPerPage = 30;
 
 export function ViewVideos() {
+	const { page } = useParams();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
 	const [library, setLibrary] = useState<FileEntry[]>([]);
@@ -47,11 +49,22 @@ export function ViewVideos() {
 		})();
 	}, []);
 
-	const { currentPage, totalPages, setNextPage, setPreviousPage, nextEnabled, previousEnabled, startIndex, endIndex } = usePagination({
+	const numPage = useMemo(() => parseInt(page || '0', 10), [page]);
+
+	const { totalPages, startIndex, endIndex, setPage } = usePagination({
 		totalItems: library.length,
-		initialPage: 0,
+		initialPage: numPage,
 		initialPageSize: videosPerPage,
 	});
+	useLayoutEffect(() => {
+		setPage(numPage);
+	}, [numPage, totalPages]);
+
+	const navigate = useNavigate();
+	const goto = useCallback((newPage: number) => {
+		if (Number.isNaN(newPage)) return;
+		navigate(`/videos/${newPage}`);
+	}, [navigate]);
 
 	return (
 		<Page>
@@ -59,17 +72,7 @@ export function ViewVideos() {
 			<PageHeader>
 				<H>videos</H>
 				{totalPages > 0 && (
-					<>
-						<button disabled={!previousEnabled} onClick={setPreviousPage}>
-							🔙
-						</button>
-						<span>
-							{currentPage + 1} / {totalPages}
-						</span>
-						<button disabled={!nextEnabled} onClick={setNextPage}>
-							⏭
-						</button>
-					</>
+					<PageNumbers goto={goto} current={numPage} total={totalPages} />
 				)}
 			</PageHeader>
 			<Loading

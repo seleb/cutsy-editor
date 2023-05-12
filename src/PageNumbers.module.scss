@@ -1,0 +1,45 @@
+.container {
+	text-align: center;
+	user-select: none;
+	white-space: nowrap;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.button {
+	background: none!important;
+	color: var(--color-primary);
+	box-shadow: none;
+	padding-inline: 0;
+	width: 2rem;
+
+	&:not(:disabled):hover,
+	&:not(:disabled):focus-visible {
+		color: var(--color-primary-bright);
+	}
+	&:disabled {
+		opacity: 0;
+		pointer-events: none;
+	}
+}
+
+.first {
+	width: 2.5rem;
+	&::after {
+		content: ' ...';
+		color: var(--color-primary-muted);
+	}
+}
+
+.last {
+	width: 2.5rem;
+	&::before {
+		content: '... ';
+		color: var(--color-primary-muted);
+	}
+}
+
+.current {
+	color: var(--color-neutral-9);
+}

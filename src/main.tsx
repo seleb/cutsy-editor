@@ -15,7 +15,7 @@ const router = createBrowserRouter(
 		<Route element={<ViewRoot />} errorElement={<ViewError />}>
 			<Route index element={<ViewIndex />} errorElement={<ViewError />} />
 			<Route path="edit" element={<ViewEdit />} errorElement={<ViewError />} />
-			<Route path="videos" element={<ViewVideos />} errorElement={<ViewError />} />
+			<Route path="videos/:page?" element={<ViewVideos />} errorElement={<ViewError />} />
 			<Route path="settings" element={<ViewSettings />} errorElement={<ViewError />} />
 			<Route path="debug" element={<ViewDebug />} errorElement={<ViewError />} />
 		</Route>
