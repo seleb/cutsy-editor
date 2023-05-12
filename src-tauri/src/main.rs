@@ -69,6 +69,51 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
     Ok(())
 }
 
+#[tauri::command(async)]
+fn vid_to_clip(input: String, output: String, start: String, duration: String) -> Result<(), String> {
+    let path_input = Path::new(&input);
+    let path_output = Path::new(&output);
+    if !path_input.exists() {
+        return Err("Source video does not exist".into());
+    }
+
+    let mut errors: Vec<String> = vec![];
+    FfmpegCommand::new()
+    // allow overwriting
+    .arg("-y")
+    // no vysnc
+    .arg("-vsync").arg(0.to_string())
+    // seek
+    .arg("-ss").arg(start)
+    // duration
+    .arg("-t").arg(duration)
+    // input
+    .arg("-i").arg(path_input.as_os_str().to_str().unwrap())
+    // copy video and audio
+    .arg("-c:v").arg("copy")
+    .arg("-c:a").arg("copy")
+    // output
+    .arg(path_output.as_os_str().to_str().unwrap())
+    .spawn()
+    .unwrap()
+    .iter()
+    .unwrap()
+    .for_each(|e| match e {
+        // FfmpegEvent::Log(LogLevel::Unknown, e) => println!("Unknown: {}", e),
+        // FfmpegEvent::Log(LogLevel::Info, e) => println!("Info: {}", e),
+        // FfmpegEvent::Log(LogLevel::Warning, e) => println!("Warning: {}", e),
+        FfmpegEvent::Log(LogLevel::Error, e) => errors.push(e.clone()),
+        FfmpegEvent::Log(LogLevel::Fatal, e) => errors.push(e.clone()),
+        // FfmpegEvent::Progress(p) => println!("Progress: {} / 00:00:15", p.time),
+      _ => {}
+    });
+
+    if errors.len() > 0 {
+        return Err(errors.join("; ".into()));
+    }
+    Ok(())
+}
+
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
@@ -85,6 +130,7 @@ fn main() {
             is_ffmpeg_installed,
             install_ffmpeg,
             vid_to_img,
+            vid_to_clip,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

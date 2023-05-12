@@ -30,6 +30,21 @@ const filtersImages = [
 	},
 ];
 
+const filtersVideos = [
+	{
+		name: 'MP4 Video',
+		extensions: ['mp4'],
+	},
+	{
+		name: 'WebM Video',
+		extensions: ['webm'],
+	},
+	{
+		name: 'All files',
+		extensions: ['*'],
+	},
+];
+
 function toMicroseconds(seconds: number) {
 	// ffmpeg always seems to be ~2 frames off
 	return Math.floor((seconds - FRAME * 2) * 1000000);
@@ -241,6 +256,24 @@ export function ViewEdit() {
 		[pathDecoded, name]
 	);
 
+	const onSaveClip = useCallback(
+		() =>
+			saveAndOpen(
+				{
+					defaultPath: name,
+					filters: filtersVideos,
+				},
+				output =>
+					invoke<string>('vid_to_clip', {
+						input: pathDecoded,
+						output,
+						start: `${toMicroseconds(refVideo.current?.currentTime || 0)}us`,
+						duration: `${toMicroseconds((refVideo.current?.duration || 0) / 10)}us`,
+					})
+			),
+		[pathDecoded, name]
+	);
+
 	if (!pathEncoded) throw new Error('No video path!');
 	return (
 		<div className={styles.container}>
@@ -256,6 +289,7 @@ export function ViewEdit() {
 				controls here
 				<progress ref={refProgress} onPointerDown={onScrubStart} value={0} max={duration}></progress>
 				<button onClick={onSaveImage}>save image</button>
+				<button onClick={onSaveClip}>save clip</button>
 			</div>
 			<KeyboardShortcuts />
 		</div>
