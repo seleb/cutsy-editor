@@ -106,7 +106,7 @@ export function ViewEdit() {
 
 	// update to match video time
 	useEffect(() => {
-		let mounted = true;
+		let vfc: number;
 		const elVideo = refVideo.current;
 		const elProgress = refProgress.current;
 		const elTime = refTime.current;
@@ -114,14 +114,12 @@ export function ViewEdit() {
 		const onUpdate: VideoFrameRequestCallback = (_now, metadata) => {
 			elProgress.value = metadata.mediaTime;
 			elTime.textContent = toDuration(metadata.mediaTime);
-			if (mounted) {
-				elVideo.requestVideoFrameCallback(onUpdate);
-			}
+			vfc = elVideo.requestVideoFrameCallback(onUpdate);
 		};
-		elVideo.requestVideoFrameCallback(onUpdate);
+		vfc = elVideo.requestVideoFrameCallback(onUpdate);
 
 		return () => {
-			mounted = false;
+			elVideo.cancelVideoFrameCallback(vfc);
 		};
 	}, []);
 
