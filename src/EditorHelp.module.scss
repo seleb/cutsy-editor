@@ -14,6 +14,20 @@
 		max-height 0.1s ease-out;
 	contain: paint;
 
+	:global(.h) {
+		text-align: center;
+		font-weight: bold;
+	}
+
+	> hr {
+		margin-block: 0.5rem;
+	}
+
+	> p {
+		margin: 0;
+		padding: 0.25rem;
+	}
+
 	>div {
 		position: sticky;
 		top: 0;
@@ -24,7 +38,6 @@
 
 		:global(.h) {
 			margin-inline-end: auto;
-			text-align: center;
 		}
 
 		>button {

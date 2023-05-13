@@ -68,3 +68,11 @@ button:disabled {
   filter: saturate(0.25);
   cursor: not-allowed;
 }
+
+hr {
+  margin: 0;
+  width: 100%;
+  border: none;
+  height: 1px;
+  background-color: var(--color-neutral-4);
+}

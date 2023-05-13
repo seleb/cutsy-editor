@@ -1,7 +1,7 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from './Button';
+import styles from './EditorHelp.module.scss';
 import { H } from './H';
-import styles from './KeyboardShortcuts.module.scss';
 
 const shortcuts = [
 	['Space', 'Play/Pause'],
@@ -47,7 +47,7 @@ function Shortcut({ keys, label }: { keys: string[]; label: string }) {
 	);
 }
 
-export function KeyboardShortcuts() {
+export function EditorHelp() {
 	const [active, setActive] = useState(false);
 	const toggleActive = useCallback(() => setActive(s => !s), []);
 	const refContainer = useRef<HTMLDivElement>(null);
@@ -59,7 +59,9 @@ export function KeyboardShortcuts() {
 	return (
 		<aside ref={refContainer} className={`${styles.container} ${active && styles.open}`}>
 			<div>
-				<Button title={`${active ? 'Close' : 'Open'} shortcuts`} onClick={toggleActive}>{active ? 'X' : '?'}</Button>
+				<Button title={`${active ? 'Close' : 'Open'} shortcuts`} onClick={toggleActive}>
+					{active ? 'X' : '?'}
+				</Button>
 				<H>Shortcuts</H>
 			</div>
 			<dl>
@@ -67,6 +69,9 @@ export function KeyboardShortcuts() {
 					<Shortcut key={shortcut} keys={keys} label={label} />
 				))}
 			</dl>
+			<hr />
+			<H>Tips</H>
+			<p>Right-click on the start/end markers to snap them to the current time</p>
 		</aside>
 	);
 }

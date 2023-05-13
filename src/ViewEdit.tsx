@@ -3,8 +3,8 @@ import { open } from '@tauri-apps/api/shell';
 import { convertFileSrc, invoke } from '@tauri-apps/api/tauri';
 import { MouseEventHandler, PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { EditorHelp } from './EditorHelp';
 import { Icon } from './Icon';
-import { KeyboardShortcuts } from './KeyboardShortcuts';
 import { Loading } from './Loading';
 import { Title } from './Title';
 import styles from './ViewEdit.module.scss';
@@ -461,7 +461,7 @@ export function ViewEdit() {
 				</div>
 				<Loading className={styles.saving} loading={saving} msgLoading="saving..." />
 			</div>
-			<KeyboardShortcuts />
+			<EditorHelp />
 		</div>
 	);
 }
