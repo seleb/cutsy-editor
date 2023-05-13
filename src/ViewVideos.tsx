@@ -49,7 +49,11 @@ export function ViewVideos() {
 		})();
 	}, []);
 
-	const numPage = useMemo(() => parseInt(page || '0', 10), [page]);
+	const numPage = useMemo(() => {
+		const numPage = parseInt(page || '0', 10)
+		if (Number.isNaN(numPage)) return 0;
+		return numPage;
+	}, [page]);
 
 	const { totalPages, startIndex, endIndex, setPage } = usePagination({
 		totalItems: library.length,
