@@ -71,7 +71,7 @@ export function EditorHelp() {
 			</dl>
 			<hr />
 			<H>Tips</H>
-			<p>Right-click on the start/end markers to snap them to the current time</p>
+			<p>right-click on clip markers to snap them to the current time</p>
 		</aside>
 	);
 }
