@@ -14,7 +14,7 @@ $white: #FFF;
 	@return red($color) green($color) blue($color);
 }
 
-:root {
+@mixin dark() {
 	color-scheme: dark;
 	--color-primary-rgb: #{rgbv($primary)};
 	--color-primary-bright-rgb: #{rgbv($primary-bright)};
@@ -27,17 +27,33 @@ $white: #FFF;
 	--color-neutral-9-rgb: #{rgbv($neutral-9)};
 	--color-black-rgb: #{rgbv($black)};
 	--color-white-rgb: #{rgbv($white)};
+}
+
+@mixin light() {
+	color-scheme: light;
+	--color-primary-rgb: #{rgbv(darken($primary, 20%))};
+	--color-primary-bright-rgb: #{rgbv($primary-bright)};
+	--color-primary-muted-rgb: #{rgbv($primary-muted)};
+	--color-neutral-0-rgb: #{rgbv($neutral-9)};
+	--color-neutral-2-rgb: #{rgbv(lighten($neutral-8, 10%))};
+	--color-neutral-4-rgb: #{rgbv(lighten($neutral-6, 10%))};
+	--color-neutral-6-rgb: #{rgbv($neutral-4)};
+	--color-neutral-8-rgb: #{rgbv($neutral-2)};
+	--color-neutral-9-rgb: #{rgbv($neutral-0)};
+}
+
+:root {
+	@include dark;
 
 	@media (prefers-color-scheme: light) {
-		color-scheme: light;
-		--color-primary-bright-rgb: #{rgbv($primary-bright)};
-		--color-primary-muted-rgb: #{rgbv($primary-muted)};
-		--color-neutral-0-rgb: #{rgbv($neutral-9)};
-		--color-neutral-2-rgb: #{rgbv(lighten($neutral-8, 10%))};
-		--color-neutral-4-rgb: #{rgbv(lighten($neutral-6, 10%))};
-		--color-neutral-6-rgb: #{rgbv($neutral-4)};
-		--color-neutral-8-rgb: #{rgbv($neutral-2)};
-		--color-neutral-9-rgb: #{rgbv($neutral-0)};
+		@include light;
+	}
+
+	&[data-theme="dark"] {
+		@include dark;
+	}
+	&[data-theme="light"] {
+		@include light;
 	}
 
 	--color-primary: rgb(var(--color-primary-rgb));
