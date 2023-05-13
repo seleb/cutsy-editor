@@ -1,8 +1,9 @@
 import { Outlet, useNavigate } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
+import { open } from '@tauri-apps/api/dialog';
 import { listen } from '@tauri-apps/api/event';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Clilp } from './Clilp';
 import { Debug } from './Debug';
 import { GateFfmpeg } from './GateFfmpeg';
@@ -25,6 +26,16 @@ export function ViewRoot() {
 			navigate(toEditUrl(file));
 		});
 	}, [navigate]);
+
+	const onOpen = useCallback(async () => {
+		const file = await open({
+			multiple: false,
+			directory: false,
+		});
+		if (!file) return;
+		navigate(toEditUrl(typeof file === 'string' ? file : file[0]));
+	}, []);
+
 	return (
 		<>
 			<Title>clilp</Title>
@@ -33,6 +44,9 @@ export function ViewRoot() {
 					<Clilp />
 				</H>
 				<nav>
+					<button title="Open file" onClick={onOpen}>
+						<Icon icon="open" />
+					</button>
 					<NavLink to="videos" title="Videos">
 						<Icon icon="videos" />
 					</NavLink>

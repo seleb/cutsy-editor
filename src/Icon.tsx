@@ -1,4 +1,4 @@
-import { faArrowDownUpAcrossLine, faBug, faFilm, faFolder, faGear, faMapPin, faPause, faPhotoFilm, faPlay, faSortAlphaAsc, faSortAlphaDesc, faVolumeHigh, faVolumeXmark } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDownUpAcrossLine, faBug, faFileArrowUp, faFilm, faFolder, faGear, faMapPin, faPause, faPhotoFilm, faPlay, faSortAlphaAsc, faSortAlphaDesc, faVolumeHigh, faVolumeXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ComponentProps, ForwardedRef, forwardRef } from 'react';
 
@@ -16,6 +16,7 @@ const icons = {
 	'sortAsc': faSortAlphaAsc,
 	'sortDesc': faSortAlphaDesc,
 	'sortNone': faArrowDownUpAcrossLine,
+	'open': faFileArrowUp,
 }
 
 export const Icon = forwardRef(({
