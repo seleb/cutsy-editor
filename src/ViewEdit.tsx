@@ -289,57 +289,44 @@ export function ViewEdit() {
 		elClip.style.width = `${clamp(0, newEnd - newStart, 1 - newStart) * 100}%`;
 	}, []);
 
-	const onScrubStartStart = useCallback(
-		onScrubStart({
+	const onScrubStartMarker = useMemo(() => {
+		let target: Element;
+		let isStart = true;
+		let start = 0;
+		let end = 0;
+		return onScrubStart({
 			start: (event: PointerEvent) => {
 				const elVideo = refVideo.current;
-				if (!elVideo || !elVideo?.duration) return;
-				if (event.button && event.button !== 1) {
-					event.preventDefault();
-					const pos = elVideo.currentTime/elVideo.duration;
-					onUpdateClip(pos, undefined);
-					return false;
-				}
-				return true;
-			},
-			scrub: (event: PointerEvent) => {
-				const elVideo = refVideo.current;
+				const elClip = refClip.current;
 				const elProgress = refProgress.current as HTMLProgressElement;
-				if (!elVideo || !elVideo?.duration) return;
-				event.preventDefault();
-				const rect = elProgress.getBoundingClientRect();
-				const pos = clamp(0, (event.pageX - rect.left) / elProgress.offsetWidth, 1);
-				seek(pos * elVideo.duration, false);
-				onUpdateClip(pos, undefined);
-			},
-		}),
-		[onUpdateClip]
-	);
+				if (!elVideo || !elVideo?.duration || !elClip || !elProgress) return;
 
-	const onScrubStartEnd = useCallback(
-		onScrubStart({
-			start: (event: PointerEvent) => {
-				const elVideo = refVideo.current;
-				if (!elVideo || !elVideo?.duration) return;
+				start = Number((elClip.style.left || '0%').replace('%', '')) / 100;
+				end = Number((elClip.style.width || '100%').replace('%', '')) / 100 + start;
+
+				target = event.target as Element;
+				isStart = elClip.firstChild === target || elClip.firstChild?.contains(target) || false;
 				if (event.button && event.button !== 1) {
 					event.preventDefault();
 					const pos = elVideo.currentTime/elVideo.duration;
-					onUpdateClip(undefined, pos);
+					isStart ? onUpdateClip(pos, undefined) : onUpdateClip(undefined, pos);
 					return false;
 				}
 				return true;
 			},
 			scrub: (event: PointerEvent) => {
 				const elVideo = refVideo.current;
+				const elClip = refClip.current;
 				const elProgress = refProgress.current as HTMLProgressElement;
-				if (!elVideo || !elVideo?.duration) return;
+				if (!elVideo || !elVideo?.duration || !elClip || !elProgress) return;
 				event.preventDefault();
 				const rect = elProgress.getBoundingClientRect();
 				const pos = clamp(0, (event.pageX - rect.left) / elProgress.offsetWidth, 1);
 				seek(pos * elVideo.duration, false);
-				onUpdateClip(undefined, pos);
+				isStart ? onUpdateClip(pos, end) : onUpdateClip(start, pos);
 			},
-		}),
+		})
+	},
 		[onUpdateClip]
 	);
 
@@ -436,8 +423,8 @@ export function ViewEdit() {
 				<div className={styles.trackbar} onContextMenu={noContextMenu}>
 					<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStartPlayhead} value={0} max={duration} onContextMenu={noContextMenu}></progress>
 					<div ref={refClip} className={styles.clip} onPointerDown={onScrubStartClip} onContextMenu={noContextMenu}>
-						<Icon title="Drag start of clip" icon="pin" className={styles.start} onPointerDown={onScrubStartStart} onContextMenu={noContextMenu} />
-						<Icon title="Drag end of clip" icon="pin" className={styles.end} onPointerDown={onScrubStartEnd} onContextMenu={noContextMenu} />
+						<Icon title="Drag start of clip" icon="pin" className={styles.start} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />
+						<Icon title="Drag end of clip" icon="pin" className={styles.end} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />
 					</div>
 				</div>
 				<div className={styles.buttons}>
