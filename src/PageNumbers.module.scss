@@ -8,11 +8,8 @@
 }
 
 .button {
-	background: none!important;
 	color: var(--color-primary);
-	box-shadow: none;
-	padding: 0;
-	width: 2rem;
+	min-width: 1.5rem;
 
 	&:not(:disabled):hover,
 	&:not(:disabled):focus-visible {
@@ -25,7 +22,7 @@
 }
 
 .first {
-	width: 2.5rem;
+	min-width: 2rem;
 	&::after {
 		content: ' ...';
 		color: var(--color-primary-muted);
@@ -33,7 +30,7 @@
 }
 
 .last {
-	width: 2.5rem;
+	min-width: 2rem;
 	&::before {
 		content: '... ';
 		color: var(--color-primary-muted);
