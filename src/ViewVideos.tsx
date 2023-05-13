@@ -30,6 +30,7 @@ function Video({ path, name }: FileEntry) {
 const videosPerPage = 30;
 
 import { AllSubstringsIndexStrategy, Search, UnorderedSearchIndex } from 'js-search';
+import { Icon } from './Icon';
 
 export function ViewVideos() {
 	const { page } = useParams();
@@ -49,10 +50,10 @@ export function ViewVideos() {
 				search.addIndex('path');
 				const dir = await readDir('.', { dir: BaseDirectory.Video, recursive: true });
 				const flatten = (dir: FileEntry): FileEntry[] => (dir.children ? dir.children.flatMap(flatten) : [dir]);
-				const library = dir.flatMap(flatten).filter(i => isVideo(i.path));
-				setLibrary(library);
-				setResults(library);
-				search.addDocuments(library);
+				const files = dir.flatMap(flatten).filter(i => isVideo(i.path));
+				setLibrary(files);
+				setResults(files);
+				search.addDocuments(files);
 				// @ts-ignore
 				refSearch.current = search;
 				setLoading(false);
@@ -64,13 +65,13 @@ export function ViewVideos() {
 	}, []);
 
 	const numPage = useMemo(() => {
-		const numPage = parseInt(page || '0', 10)
+		const numPage = parseInt(page || '0', 10);
 		if (Number.isNaN(numPage)) return 0;
 		return numPage;
 	}, [page]);
 
 	const { totalPages, startIndex, endIndex, setPage } = usePagination({
-		totalItems: library.length,
+		totalItems: results.length,
 		initialPage: numPage,
 		initialPageSize: videosPerPage,
 	});
@@ -79,35 +80,76 @@ export function ViewVideos() {
 	}, [numPage, totalPages]);
 
 	const navigate = useNavigate();
-	const goto = useCallback((newPage: number) => {
-		if (Number.isNaN(newPage)) return;
-		navigate(`/videos/${newPage}`);
-	}, [navigate]);
+	const goto = useCallback(
+		(newPage: number) => {
+			if (Number.isNaN(newPage)) return;
+			navigate(`/videos/${newPage}`);
+		},
+		[navigate]
+	);
 
-	const onSearch = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
-		const search = refSearch.current;
-		if (!search) return;
-		const query = event.currentTarget.value;
-		if (!query) {
-			setResults(library);
-			return;
-		};
-		const files = search.search(event.currentTarget.value) as FileEntry[];
-		setResults(files);
-	}, [library]);
+	const onSearch = useCallback<ChangeEventHandler<HTMLInputElement>>(
+		event => {
+			const search = refSearch.current;
+			if (!search) return;
+			const query = event.currentTarget.value;
+			if (!query) {
+				setResults(library);
+				return;
+			}
+			const files = search.search(event.currentTarget.value) as FileEntry[];
+			setResults(files);
+		},
+		[library]
+	);
+
+	const [sort, setSort] = useState<'sortAsc' | 'sortDesc' | 'sortNone'>('sortAsc');
+	const cycleSort = useCallback(() => {
+		setSort(
+			s =>
+				((
+					{
+						sortAsc: 'sortDesc',
+						sortDesc: 'sortNone',
+						sortNone: 'sortAsc',
+					} as const
+				)[s])
+		);
+	}, []);
+	const sorted = useMemo(() => {
+		if (sort === 'sortNone') return results;
+		const sorted = results.slice();
+		sorted.sort(({ name: a = '' }, { name: b = '' }) => a?.localeCompare(b, undefined, { sensitivity: 'base' }));
+		if (sort === 'sortDesc') sorted.reverse();
+		return sorted;
+	}, [results, sort]);
 
 	return (
 		<Page>
 			<Title>videos</Title>
 			<PageHeader>
-				<H>videos ({results.length}/{library.length})</H>
+				<H>
+					videos ({results.length}/{library.length})
+				</H>
 				<datalist id="list-videos">
-					{library.map(i => <option key={i.path} value={i.name} />)}
+					{library.map(i => (
+						<option key={i.path} value={i.name} />
+					))}
 				</datalist>
-				<input type="text" list='list-videos' placeholder='Search...' onChange={onSearch} />
-				{totalPages > 0 && (
-					<PageNumbers goto={goto} current={numPage} total={totalPages} />
-				)}
+				<input type="text" list="list-videos" placeholder="Search..." onChange={onSearch} />
+				<button
+					title={
+						{
+							sortAsc: 'Sort alphabetical (ascending)',
+							sortDesc: 'Sort alphabetical (descending)',
+							sortNone: 'No sort (system order)',
+						}[sort]
+					}
+					onClick={cycleSort}
+				>
+					<Icon icon={sort} />
+				</button>
+				{totalPages > 0 && <PageNumbers goto={goto} current={numPage} total={totalPages} />}
 			</PageHeader>
 			<Loading
 				loading={loading}
@@ -122,7 +164,7 @@ export function ViewVideos() {
 				msgNone="No videos ¯\_(ツ)_/¯"
 			>
 				<ul className={styles.videos}>
-					{results.slice(startIndex, endIndex < 0 ? 0 : endIndex).map(video => (
+					{sorted.slice(startIndex, endIndex < 0 ? 0 : endIndex).map(video => (
 						<li key={video.path}>
 							<Video name={video.name} path={video.path} />
 						</li>
