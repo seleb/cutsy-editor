@@ -70,8 +70,29 @@ export function ViewVideos() {
 		return numPage;
 	}, [page]);
 
+	const [sort, setSort] = useState<'sortAsc' | 'sortDesc' | 'sortNone'>('sortNone');
+	const cycleSort = useCallback(() => {
+		setSort(
+			s =>
+				((
+					{
+						sortAsc: 'sortDesc',
+						sortDesc: 'sortNone',
+						sortNone: 'sortAsc',
+					} as const
+				)[s])
+		);
+	}, []);
+	const sorted = useMemo(() => {
+		if (sort === 'sortNone') return results;
+		const sorted = results.slice();
+		sorted.sort(({ name: a = '' }, { name: b = '' }) => a?.localeCompare(b, undefined, { sensitivity: 'base' }));
+		if (sort === 'sortDesc') sorted.reverse();
+		return sorted;
+	}, [results, sort]);
+
 	const { totalPages, startIndex, endIndex, setPage } = usePagination({
-		totalItems: results.length,
+		totalItems: sorted.length,
 		initialPage: numPage,
 		initialPageSize: videosPerPage,
 	});
@@ -95,34 +116,15 @@ export function ViewVideos() {
 			const query = event.currentTarget.value;
 			if (!query) {
 				setResults(library);
+				navigate('/videos/0', { replace: true });
 				return;
 			}
 			const files = search.search(event.currentTarget.value) as FileEntry[];
 			setResults(files);
+			navigate('/videos/0', { replace: true });
 		},
 		[library]
 	);
-
-	const [sort, setSort] = useState<'sortAsc' | 'sortDesc' | 'sortNone'>('sortAsc');
-	const cycleSort = useCallback(() => {
-		setSort(
-			s =>
-				((
-					{
-						sortAsc: 'sortDesc',
-						sortDesc: 'sortNone',
-						sortNone: 'sortAsc',
-					} as const
-				)[s])
-		);
-	}, []);
-	const sorted = useMemo(() => {
-		if (sort === 'sortNone') return results;
-		const sorted = results.slice();
-		sorted.sort(({ name: a = '' }, { name: b = '' }) => a?.localeCompare(b, undefined, { sensitivity: 'base' }));
-		if (sort === 'sortDesc') sorted.reverse();
-		return sorted;
-	}, [results, sort]);
 
 	return (
 		<Page>
@@ -164,7 +166,7 @@ export function ViewVideos() {
 				msgNone="No videos ¯\_(ツ)_/¯"
 			>
 				<ul className={styles.videos}>
-					{sorted.slice(startIndex, endIndex < 0 ? 0 : endIndex).map(video => (
+					{sorted.slice(startIndex, (endIndex < 0 ? 0 : endIndex) + 1).map(video => (
 						<li key={video.path}>
 							<Video name={video.name} path={video.path} />
 						</li>
