@@ -70,7 +70,7 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
 }
 
 #[tauri::command(async)]
-fn vid_to_clip(input: String, output: String, start: String, duration: String) -> Result<(), String> {
+fn vid_to_clip(input: String, output: String, start: String, duration: String, audio: bool) -> Result<(), String> {
     let path_input = Path::new(&input);
     let path_output = Path::new(&output);
     if !path_input.exists() {
@@ -78,9 +78,18 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String) -
     }
 
     let mut errors: Vec<String> = vec![];
-    FfmpegCommand::new()
+    let mut command = FfmpegCommand::new();
+
+    command
     // allow overwriting
-    .arg("-y")
+    .arg("-y");
+
+    // no audio
+    if !audio {
+        command.arg("-an");
+    }
+
+    command
     // no vysnc
     .arg("-vsync").arg(0.to_string())
     // seek

@@ -364,7 +364,7 @@ export function ViewEdit() {
 	}, [onUpdateClip]);
 
 	const [saving, setSavingClip] = useState(false);
-	const { openAfterSave } = useSettings();
+	const { openAfterSave, saveAudio } = useSettings();
 	const saveAndOpen = useCallback(async (options: Parameters<typeof save>[0], doSave: (output: string) => Promise<unknown>) => {
 		setSavingClip(true);
 		let output: string | null;
@@ -423,9 +423,14 @@ export function ViewEdit() {
 						output,
 						start: `${toMicroseconds(start * elVideo.duration || 0)}us`,
 						duration: `${toMicroseconds(width * elVideo.duration || 0)}us`,
+						audio: {
+							'always': true,
+							'never': false,
+							'editor': !muted,
+						}[saveAudio],
 					})}
 			),
-		[pathDecoded, name]
+		[pathDecoded, name, saveAudio, muted]
 	);
 
 	const noContextMenu = useCallback<MouseEventHandler<SVGSVGElement | HTMLElement>>((event) => {
