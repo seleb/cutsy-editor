@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { Clilp } from './Clilp';
 import { Debug } from './Debug';
 import { H, HLevel } from './H';
+import { Icon } from './Icon';
 import { Title } from './Title';
 import styles from './ViewRoot.module.scss';
 import { useFullscreenToggle } from './useFullscreenToggle';
@@ -18,11 +19,12 @@ export function ViewRoot() {
 					<Clilp />
 				</H>
 				<nav>
-					<NavLink to="/">Home</NavLink>
-					<NavLink to="videos">Video</NavLink>
-					<NavLink to="settings">Settings</NavLink>
+					<NavLink to="/" title="Home"><Icon icon="exportImage" /></NavLink>
+					<NavLink to="videos" title="Videos"><Icon icon="videos" /></NavLink>
+					<NavLink to="settings" title="Settings"><Icon icon="settings" /></NavLink>
 					<Debug>
-						<NavLink to="debug">Debug</NavLink>
+						<hr />
+						<NavLink to="debug" title="Debug"><Icon icon="debug" /></NavLink>
 					</Debug>
 				</nav>
 			</header>

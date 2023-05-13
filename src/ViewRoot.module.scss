@@ -1,4 +1,4 @@
-$sidebar: 5rem;
+$sidebar: 4rem;
 
 @keyframes logo {
 	from {
@@ -43,12 +43,23 @@ $sidebar: 5rem;
 		> a {
 			text-align: center;
 			width: 100%;
-			display: block;
+			min-height: 3rem;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			
 			&:global(.active) {
 				background-color: var(--color-neutral-2);
 				color: var(--color-primary-bright);
 			}
+		}
+
+		> hr {
+			margin: 0;
+			width: 100%;
+			border: none;
+			height: 1px;
+			background-color: var(--color-neutral-4);
 		}
 	}
 }
