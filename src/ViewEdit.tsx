@@ -79,6 +79,7 @@ export function ViewEdit() {
 	const refProgress = useRef<HTMLProgressElement>(null);
 	const refTime = useRef<HTMLElement>(null);
 	const refClip = useRef<HTMLDivElement>(null);
+	const refPlayhead = useRef<HTMLDivElement>(null);
 
 	const [paused, setPaused] = useState(true);
 	const [muted, setMuted] = useState(false);
@@ -150,11 +151,25 @@ export function ViewEdit() {
 		[duration]
 	);
 
+	const updatePlayhead = useCallback((pos: number) => {
+		const elPlayhead = refPlayhead.current;
+		if (!elPlayhead) return;
+		elPlayhead.style.left = `${clamp(0, pos, 1)*100}%`;
+	}, []);
+
+	const onUpdatePlayhead = useCallback<MouseEventHandler>((event) => {
+		const elPlayhead = refPlayhead.current;
+		if (!elPlayhead?.parentElement) return;
+		const rect = elPlayhead.parentElement.getBoundingClientRect();
+		const pos = (event.pageX - rect.left) / elPlayhead.parentElement.offsetWidth;
+		updatePlayhead(pos);
+	}, [updatePlayhead]);
+
 	const seek = useCallback((to: number, loop = true) => {
 		const elVideo = refVideo.current;
-		const elProgress = refProgress.current;
+		const elPlayhead = refPlayhead.current;
 		const elTime = refTime.current;
-		if (!elVideo || !elProgress || !elTime || !elVideo?.duration) {
+		if (!elVideo || !elPlayhead || !elTime || !elVideo?.duration) {
 			return;
 		}
 		let t: number;
@@ -165,10 +180,12 @@ export function ViewEdit() {
 		} else {
 			t = clamp(0, to, elVideo.duration - FRAME);
 		}
-		elProgress.value = elVideo.currentTime = t;
+		
+		elVideo.currentTime = t;
 		elTime.textContent = toDuration(t);
+		updatePlayhead(t / elVideo.duration);
 		return t;
-	}, []);
+	}, [updatePlayhead]);
 
 	const seekBy = useCallback((by: number) => {
 		const elVideo = refVideo.current;
@@ -418,12 +435,13 @@ export function ViewEdit() {
 			<Title>{['videos', name]}</Title>
 			<video ref={refVideo} onClick={togglePlaying} className={styles.video} controls={false} src={src} preload="auto" muted={muted} loop></video>
 			<div className={styles.controls}>
-				<div className={styles.trackbar} onContextMenu={noContextMenu}>
+				<div className={styles.trackbar} onContextMenu={noContextMenu} onMouseMove={onUpdatePlayhead}>
 					<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStartPlayhead} value={0} max={duration} onContextMenu={noContextMenu}></progress>
 					<div ref={refClip} className={styles.clip} onPointerDown={onScrubStartClip} onContextMenu={noContextMenu}>
 						<Icon title="Drag start of clip" icon="pin" className={styles.start} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />
 						<Icon title="Drag end of clip" icon="pin" className={styles.end} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />
 					</div>
+					<div className={styles.playhead} ref={refPlayhead} aria-hidden="true" />
 				</div>
 				<div className={styles.buttons}>
 					<button onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>

@@ -47,6 +47,20 @@
 	}
 }
 
+.playhead {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 1px;
+	background-color: rgb(var(--color-primary-bright-rgb) / 25%);
+	pointer-events: none;
+
+	:not(:hover) > & {
+		display: none;
+	}
+}
+
 .clip {
 	color: var(--color-primary-bright);
 	border-top: solid 0.2rem var(--color-primary-bright);
