@@ -1,6 +1,8 @@
-import { Outlet } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
+import { listen } from '@tauri-apps/api/event';
+import { useEffect } from 'react';
 import { Clilp } from './Clilp';
 import { Debug } from './Debug';
 import { GateFfmpeg } from './GateFfmpeg';
@@ -9,9 +11,19 @@ import { Icon } from './Icon';
 import { Title } from './Title';
 import styles from './ViewRoot.module.scss';
 import { useFullscreenToggle } from './useFullscreenToggle';
-
 export function ViewRoot() {
 	useFullscreenToggle();
+
+	const navigate = useNavigate();
+
+	// edit video on drag+dropping a video
+	useEffect(() => {
+		listen('tauri://file-drop', event => {
+			const file = (event.payload as string[])?.[0];
+			if (!file) return;
+			navigate(`/edit?v=${encodeURIComponent(file)}`);
+		});
+	}, [navigate]);
 	return (
 		<>
 			<Title>clilp</Title>
