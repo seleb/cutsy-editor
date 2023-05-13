@@ -1,7 +1,7 @@
 import { FileEntry, readDir } from '@tauri-apps/api/fs';
 import { BaseDirectory } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { usePagination } from 'react-use-pagination';
 import { H } from './H';
@@ -29,18 +29,32 @@ function Video({ path, name }: FileEntry) {
 }
 const videosPerPage = 30;
 
+import { AllSubstringsIndexStrategy, Search, UnorderedSearchIndex } from 'js-search';
+
 export function ViewVideos() {
 	const { page } = useParams();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
 	const [library, setLibrary] = useState<FileEntry[]>([]);
+	const [results, setResults] = useState<FileEntry[]>([]);
+	const refSearch = useRef<Search>(null);
 	useEffect(() => {
 		(async () => {
 			try {
 				setLoading(true);
+				const search = new Search('path');
+				search.searchIndex = new UnorderedSearchIndex();
+				search.indexStrategy = new AllSubstringsIndexStrategy();
+				search.addIndex('name');
+				search.addIndex('path');
 				const dir = await readDir('.', { dir: BaseDirectory.Video, recursive: true });
 				const flatten = (dir: FileEntry): FileEntry[] => (dir.children ? dir.children.flatMap(flatten) : [dir]);
-				setLibrary(dir.flatMap(flatten).filter(i => isVideo(i.path)));
+				const library = dir.flatMap(flatten).filter(i => isVideo(i.path));
+				setLibrary(library);
+				setResults(library);
+				search.addDocuments(library);
+				// @ts-ignore
+				refSearch.current = search;
 				setLoading(false);
 			} catch (err) {
 				console.error(err);
@@ -70,11 +84,27 @@ export function ViewVideos() {
 		navigate(`/videos/${newPage}`);
 	}, [navigate]);
 
+	const onSearch = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
+		const search = refSearch.current;
+		if (!search) return;
+		const query = event.currentTarget.value;
+		if (!query) {
+			setResults(library);
+			return;
+		};
+		const files = search.search(event.currentTarget.value) as FileEntry[];
+		setResults(files);
+	}, [library]);
+
 	return (
 		<Page>
 			<Title>videos</Title>
 			<PageHeader>
-				<H>videos ({library.length})</H>
+				<H>videos ({results.length}/{library.length})</H>
+				<datalist id="list-videos">
+					{library.map(i => <option key={i.path} value={i.name} />)}
+				</datalist>
+				<input type="text" list='list-videos' placeholder='Search...' onChange={onSearch} />
 				{totalPages > 0 && (
 					<PageNumbers goto={goto} current={numPage} total={totalPages} />
 				)}
@@ -88,11 +118,11 @@ export function ViewVideos() {
 						Failed to load videos :(<pre>{error}</pre>
 					</>
 				}
-				count={library.length}
+				count={results.length}
 				msgNone="No videos ¯\_(ツ)_/¯"
 			>
 				<ul className={styles.videos}>
-					{library.slice(startIndex, endIndex < 0 ? 0 : endIndex).map(video => (
+					{results.slice(startIndex, endIndex < 0 ? 0 : endIndex).map(video => (
 						<li key={video.path}>
 							<Video name={video.name} path={video.path} />
 						</li>
