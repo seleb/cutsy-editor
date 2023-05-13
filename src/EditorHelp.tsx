@@ -2,6 +2,7 @@ import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from './Button';
 import styles from './EditorHelp.module.scss';
 import { H } from './H';
+import { Icon } from './Icon';
 
 const shortcuts = [
 	['Space', 'Play/Pause'],
@@ -60,7 +61,7 @@ export function EditorHelp() {
 		<aside ref={refContainer} className={`${styles.container} ${active && styles.open}`}>
 			<div>
 				<Button title={`${active ? 'Close' : 'Open'} shortcuts`} onClick={toggleActive}>
-					{active ? 'X' : '?'}
+					<Icon icon={active ? 'x' : '?'} />
 				</Button>
 				<H>Shortcuts</H>
 			</div>
