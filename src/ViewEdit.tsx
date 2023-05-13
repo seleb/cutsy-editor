@@ -1,7 +1,7 @@
 import { message, save } from '@tauri-apps/api/dialog';
 import { open } from '@tauri-apps/api/shell';
 import { convertFileSrc, invoke } from '@tauri-apps/api/tauri';
-import { PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { MouseEventHandler, PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Icon } from './Icon';
 import { KeyboardShortcuts } from './KeyboardShortcuts';
@@ -291,7 +291,17 @@ export function ViewEdit() {
 
 	const onScrubStartStart = useCallback(
 		onScrubStart({
-			start: true,
+			start: (event: PointerEvent) => {
+				const elVideo = refVideo.current;
+				if (!elVideo || !elVideo?.duration) return;
+				if (event.button && event.button !== 1) {
+					event.preventDefault();
+					const pos = elVideo.currentTime/elVideo.duration;
+					onUpdateClip(pos, undefined);
+					return false;
+				}
+				return true;
+			},
 			scrub: (event: PointerEvent) => {
 				const elVideo = refVideo.current;
 				const elProgress = refProgress.current as HTMLProgressElement;
@@ -308,7 +318,17 @@ export function ViewEdit() {
 
 	const onScrubStartEnd = useCallback(
 		onScrubStart({
-			start: true,
+			start: (event: PointerEvent) => {
+				const elVideo = refVideo.current;
+				if (!elVideo || !elVideo?.duration) return;
+				if (event.button && event.button !== 1) {
+					event.preventDefault();
+					const pos = elVideo.currentTime/elVideo.duration;
+					onUpdateClip(undefined, pos);
+					return false;
+				}
+				return true;
+			},
 			scrub: (event: PointerEvent) => {
 				const elVideo = refVideo.current;
 				const elProgress = refProgress.current as HTMLProgressElement;
@@ -403,17 +423,21 @@ export function ViewEdit() {
 		[pathDecoded, name]
 	);
 
+	const noContextMenu = useCallback<MouseEventHandler<SVGSVGElement | HTMLElement>>((event) => {
+		event.preventDefault();
+	}, []);
+
 	if (!pathEncoded) throw new Error('No video path!');
 	return (
 		<div className={styles.container}>
 			<Title>{['videos', name]}</Title>
 			<video ref={refVideo} onClick={togglePlaying} className={styles.video} controls={false} src={src} preload="auto" muted={muted} loop></video>
 			<div className={styles.controls}>
-				<div className={styles.trackbar}>
-					<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStartPlayhead} value={0} max={duration}></progress>
-					<div ref={refClip} className={styles.clip} onPointerDown={onScrubStartClip}>
-						<Icon title="Drag start of clip" icon="pin" className={styles.start} onPointerDown={onScrubStartStart} />
-						<Icon title="Drag end of clip" icon="pin" className={styles.end} onPointerDown={onScrubStartEnd} />
+				<div className={styles.trackbar} onContextMenu={noContextMenu}>
+					<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStartPlayhead} value={0} max={duration} onContextMenu={noContextMenu}></progress>
+					<div ref={refClip} className={styles.clip} onPointerDown={onScrubStartClip} onContextMenu={noContextMenu}>
+						<Icon title="Drag start of clip" icon="pin" className={styles.start} onPointerDown={onScrubStartStart} onContextMenu={noContextMenu} />
+						<Icon title="Drag end of clip" icon="pin" className={styles.end} onPointerDown={onScrubStartEnd} onContextMenu={noContextMenu} />
 					</div>
 				</div>
 				<div className={styles.buttons}>
