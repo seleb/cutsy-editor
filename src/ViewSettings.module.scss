@@ -3,7 +3,8 @@
 	display: grid;
 	grid-template-columns: 5rem 1fr;
 	gap: 0.1rem 1rem;
-	> dt {
+
+	>dt {
 		text-align: right;
 		margin-top: 0.25rem;
 		line-height: 1;
@@ -12,19 +13,58 @@
 			content: ':';
 		}
 	}
-	> dd {
+
+	>dd {
 		margin: 0;
 	}
 }
 
 .settings {
-	> dd {
-		margin-bottom: 1rem;
+	row-gap: 1rem;
 
+	>dd {
 		label {
 			display: flex;
 			gap: 0.5rem;
 			align-items: center;
 		}
 	}
+}
+
+.folders {
+	list-style: none;
+
+	>li {
+		&:not(:last-child) {
+			margin-bottom: 0.25rem;
+		}
+
+		>button {
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+			padding: 0.25rem 0.75rem;
+			border: solid 1px var(--color-neutral-4);
+			border-radius: 0.25rem;
+			text-align: initial;
+			transition:
+				border-color 0.1s ease-out,
+				background-color 0.1s ease-out;
+			word-break: break-word;
+
+			&:hover,
+			&:focus-visible {
+				border-color: var(--color-neutral-6);
+				background-color: var(--color-neutral-4);
+			}
+
+			&:active {
+				background-color: var(--color-neutral-6);
+			}
+		}
+	}
+}
+
+.abouth {
+	margin-top: 1rem;
 }
