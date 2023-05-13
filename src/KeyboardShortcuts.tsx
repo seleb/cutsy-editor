@@ -1,4 +1,5 @@
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Button } from './Button';
 import { H } from './H';
 import styles from './KeyboardShortcuts.module.scss';
 
@@ -58,7 +59,7 @@ export function KeyboardShortcuts() {
 	return (
 		<aside ref={refContainer} className={`${styles.container} ${active && styles.open}`}>
 			<div>
-				<button title={`${active ? 'Close' : 'Open'} shortcuts`} onClick={toggleActive}>{active ? 'X' : '?'}</button>
+				<Button title={`${active ? 'Close' : 'Open'} shortcuts`} onClick={toggleActive}>{active ? 'X' : '?'}</Button>
 				<H>Shortcuts</H>
 			</div>
 			<dl>

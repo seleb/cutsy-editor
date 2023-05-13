@@ -57,35 +57,13 @@ h1 {
   text-align: center;
 }
 
-input,
-button {
-  border-radius: 0.5rem;
-  border: 1px solid transparent;
-  padding: 0.5rem 1rem;
-  font: inherit;
-  font-weight: 500;
-  color: var(--color-neutral-2);
-  background-color: var(--color-primary);
-  will-change: background-color;
-  transition: background-color 0.1s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-}
-
 a,
 button,
 details>summary {
   cursor: pointer;
 }
 
-button:not(:disabled):hover,
-button:not(:disabled):focus-visible {
-  background-color: var(--color-primary-bright);
-}
-
-button:not(:disabled):active {
-  background-color: var(--color-neutral-9);
-}
-
+input:disabled,
 button:disabled {
   filter: saturate(0.25);
   cursor: not-allowed;

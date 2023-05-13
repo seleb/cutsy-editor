@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Button } from './Button';
 import { Debug } from './Debug';
 import { H, HLevel } from './H';
 import { Page } from './Page';
@@ -57,7 +58,7 @@ export function ViewDebug() {
 					<div>
 						<Link to="error">Go to broken view</Link>
 					</div>
-					<button onClick={doError}>Break this view</button>
+					<Button onClick={doError}>Break this view</Button>
 					<DebugPalette />
 				</HLevel>
 			</Page>
