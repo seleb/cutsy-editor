@@ -73,7 +73,7 @@ export function useSettingsSet() {
 export function useSettingsReset() {
 	const dispatch = useContext(contextDispatch);
 	return useCallback(async () => {
-		if (!await ask('Are you sure? This action cannot be undone.')) return;
+		if (!await ask('Are you sure? This action cannot be undone.', { type: 'warning' })) return;
 		dispatch({ type: 'reset' });
 	}, [dispatch]);
 }
