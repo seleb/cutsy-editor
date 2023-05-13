@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { isRouteErrorResponse, useNavigate, useRouteError } from 'react-router';
+import { Button } from './Button';
 import { H } from './H';
 import styles from './ViewError.module.scss';
 
@@ -58,8 +59,8 @@ export function ViewError() {
 			<H>Oops! Something went wrong...</H>
 			<ContextualDetails />
 			<div className={styles.buttons}>
-				<button onClick={refresh}>Try reloading page</button>
-				<button onClick={goBack}>Try going back a page</button>
+				<Button onClick={refresh}>Try reloading page</Button>
+				<Button onClick={goBack}>Try going back a page</Button>
 			</div>
 			<details className={styles.error}>
 				<summary>More details</summary>
