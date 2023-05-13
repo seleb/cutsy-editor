@@ -47,6 +47,8 @@ const contextDispatch = createContext<Dispatch<Action<keyof State>>>(() => {});
 export function ContextSettings({ children }: PropsWithChildren<{}>) {
 	const [state, dispatch] = useReducer(reducer, initial);
 
+	// TODO: persistence
+
 	useEffect(() => {
 		document.documentElement.dataset.font = state.font;
 	}, [state.font]);
