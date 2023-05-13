@@ -58,10 +58,7 @@ function toDuration(time: number) {
 	const m = time % 60;
 	time = Math.floor((time - m) / 60);
 	const h = time;
-	const a= [
-		m.toFixed(0).padStart(2, '0'),
-		[s.toFixed(0).padStart(2, '0'), (s % 1).toFixed(3).substring(2).padEnd(3, '0')].join('.')
-	];
+	const a = [m.toFixed(0).padStart(2, '0'), [s.toFixed(0).padStart(2, '0'), (s % 1).toFixed(3).substring(2).padEnd(3, '0')].join('.')];
 	if (h > 0) a.unshift(h.toFixed(0));
 	return a.join(':');
 }
@@ -81,6 +78,7 @@ export function ViewEdit() {
 	const refVideo = useRef<HTMLVideoElement>(null);
 	const refProgress = useRef<HTMLProgressElement>(null);
 	const refTime = useRef<HTMLElement>(null);
+	const refClip = useRef<HTMLDivElement>(null);
 
 	const [paused, setPaused] = useState(true);
 	const [muted, setMuted] = useState(false);
@@ -157,16 +155,21 @@ export function ViewEdit() {
 	const seek = useCallback((to: number, loop = true) => {
 		const elVideo = refVideo.current;
 		const elProgress = refProgress.current;
-		if (!elVideo || !elProgress || !elVideo?.duration) {
+		const elTime = refTime.current;
+		if (!elVideo || !elProgress || !elTime || !elVideo?.duration) {
 			return;
 		}
+		let t: number;
 		if (loop && to < 0 && elVideo.currentTime < FRAME * 2) {
-			elProgress.value = elVideo.currentTime = elVideo.duration - FRAME;
+			t = elVideo.duration - FRAME;
 		} else if (loop && to > elVideo.duration && elVideo.currentTime - elVideo.duration > -FRAME * 2) {
-			elProgress.value = elVideo.currentTime = 0;
+			t = 0;
 		} else {
-			elProgress.value = elVideo.currentTime = clamp(0, to, elVideo.duration - FRAME);
+			t = clamp(0, to, elVideo.duration - FRAME);
 		}
+		elProgress.value = elVideo.currentTime = t;
+		elTime.textContent = toDuration(t);
+		return t;
 	}, []);
 
 	const seekBy = useCallback((by: number) => {
@@ -213,32 +216,117 @@ export function ViewEdit() {
 		};
 	}, [getSkip, seekBy, togglePlaying, toggleMuted]);
 
-	const onScrubStart = useCallback<PointerEventHandler<HTMLProgressElement>>(
-		event => {
-			const elVideo = refVideo.current;
-			const elProgress = event.currentTarget as HTMLProgressElement;
-			if (!elVideo || !elVideo?.duration) return;
+	const onScrubStart = useCallback<
+		(options: {
+			/** called on start; if returns false, scrub is aborted; can pass `true` to run `scrub` parameter on start */
+			start?: ((event: PointerEvent) => boolean | void) | true;
+			/** called on each movement during scrubbing */
+			scrub?: (event: PointerEvent) => void;
+			/** called when scrubbing is released */
+			end?: (event: PointerEvent) => void;
+		}) => PointerEventHandler<Element>
+	>(
+		({ start, scrub, end }) =>
+			event => {
+				if (start === true && scrub) scrub(event.nativeEvent);
+				else if (typeof start === 'function') if (start(event.nativeEvent) === false) return;
 
-			const onScrub = (eventScrub: PointerEvent) => {
-				eventScrub.preventDefault();
-				const rect = elProgress.getBoundingClientRect();
-				const pos = (eventScrub.pageX - rect.left) / elProgress.offsetWidth;
-				seek(pos * elVideo.duration, false);
-			};
+				const onScrubStop = (eventScrub: PointerEvent) => {
+					eventScrub.preventDefault();
+					if (scrub) window.removeEventListener('pointermove', scrub);
+					if (end) window.removeEventListener('pointerup', end);
+					window.removeEventListener('pointerup', onScrubStop);
+				};
 
-			const onScrubStop = (eventScrub: PointerEvent) => {
-				eventScrub.preventDefault();
-				window.removeEventListener('pointermove', onScrub);
-				window.removeEventListener('pointerup', onScrubStop);
-			};
-
-			window.addEventListener('pointermove', onScrub);
-			window.addEventListener('pointerup', onScrubStop);
-
-			onScrub(event.nativeEvent);
-		},
+				if (scrub) window.addEventListener('pointermove', scrub);
+				if (end) window.addEventListener('pointerup', end);
+				window.addEventListener('pointerup', onScrubStop);
+			},
 		[seek]
 	);
+
+	const onScrubStartPlayhead = useCallback(
+		onScrubStart({
+			start: true,
+			scrub: (event: PointerEvent) => {
+				const elVideo = refVideo.current;
+				const elProgress = refProgress.current as HTMLProgressElement;
+				if (!elVideo || !elVideo?.duration) return;
+				event.preventDefault();
+				const rect = elProgress.getBoundingClientRect();
+				const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
+				seek(pos * elVideo.duration, false);
+			},
+		}),
+		[]
+	);
+
+	const onUpdateClip = useCallback((start?: number, end?: number, slide?: number) => {
+		const elClip = refClip.current;
+		if (!elClip) return;
+		const oldStart = Number((elClip.style.left || '0%').replace('%', '')) / 100;
+		const oldEnd = Number((elClip.style.width || '100%').replace('%', '')) / 100 + oldStart;
+		let newStart = start ?? oldStart;
+		let newEnd = end ?? oldEnd;
+		if (newEnd < newStart) [newStart, newEnd] = [newEnd, newStart];
+		if (slide !== undefined) {
+			newStart += slide;
+			newEnd += slide;
+		}
+		elClip.style.left = `${clamp(0, newStart, 1) * 100}%`;
+		elClip.style.width = `${clamp(0, newEnd - newStart, 1 - newStart) * 100}%`;
+	}, []);
+
+	const onScrubStartStart = useCallback(
+		onScrubStart({
+			start: true,
+			scrub: (event: PointerEvent) => {
+				const elVideo = refVideo.current;
+				const elProgress = refProgress.current as HTMLProgressElement;
+				if (!elVideo || !elVideo?.duration) return;
+				event.preventDefault();
+				const rect = elProgress.getBoundingClientRect();
+				const pos = clamp(0, (event.pageX - rect.left) / elProgress.offsetWidth, 1);
+				seek(pos * elVideo.duration, false);
+				onUpdateClip(pos, undefined);
+			},
+		}),
+		[onUpdateClip]
+	);
+
+	const onScrubStartEnd = useCallback(
+		onScrubStart({
+			start: true,
+			scrub: (event: PointerEvent) => {
+				const elVideo = refVideo.current;
+				const elProgress = refProgress.current as HTMLProgressElement;
+				if (!elVideo || !elVideo?.duration) return;
+				event.preventDefault();
+				const rect = elProgress.getBoundingClientRect();
+				const pos = clamp(0, (event.pageX - rect.left) / elProgress.offsetWidth, 1);
+				seek(pos * elVideo.duration, false);
+				onUpdateClip(undefined, pos);
+			},
+		}),
+		[onUpdateClip]
+	);
+
+	const onScrubStartClip = useMemo(() => {
+		return onScrubStart({
+			start: (event: PointerEvent) => {
+				if (event.target !== refClip.current) return false;
+			},
+			scrub: (event: PointerEvent) => {
+				const elProgress = refProgress.current as HTMLProgressElement;
+				const elClip = refProgress.current as HTMLProgressElement;
+				if (!elProgress || !elClip) return;
+				event.preventDefault();
+				const rect = elClip.getBoundingClientRect();
+				if ((event.movementX < 0 && event.pageX > rect.right) || (event.movementX > 0 && event.pageX < rect.left)) return;
+				onUpdateClip(undefined, undefined, event.movementX / elProgress.offsetWidth);
+			},
+		});
+	}, [onUpdateClip]);
 
 	const [saving, setSavingClip] = useState(false);
 	const saveAndOpen = useCallback(async (options: Parameters<typeof save>[0], doSave: (output: string) => Promise<unknown>) => {
@@ -305,8 +393,11 @@ export function ViewEdit() {
 			<video ref={refVideo} onClick={togglePlaying} className={styles.video} controls={false} src={src} preload="auto" muted={muted} loop></video>
 			<div className={styles.controls}>
 				<div className={styles.trackbar}>
-					<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStart} value={0} max={duration}></progress>
-					<div className={styles.playhead} />
+					<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStartPlayhead} value={0} max={duration}></progress>
+					<div ref={refClip} className={styles.clip} onPointerDown={onScrubStartClip}>
+						<Icon title="Drag start of clip" icon="pin" className={styles.start} onPointerDown={onScrubStartStart} />
+						<Icon title="Drag end of clip" icon="pin" className={styles.end} onPointerDown={onScrubStartEnd} />
+					</div>
 				</div>
 				<div className={styles.buttons}>
 					<button onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>
@@ -319,12 +410,12 @@ export function ViewEdit() {
 						<span ref={refTime}>{0}</span> / <span>{toDuration(duration)}</span>
 					</span>
 					<div className={styles.save}>
-							<button disabled={saving} onClick={onSaveImage} title="Save image">
-								<Icon icon="exportImage" />
-							</button>
-							<button disabled={saving} onClick={onSaveClip} title="Save clip">
-								<Icon icon="exportClip" />
-							</button>
+						<button disabled={saving} onClick={onSaveImage} title="Save image">
+							<Icon icon="exportImage" />
+						</button>
+						<button disabled={saving} onClick={onSaveClip} title="Save clip">
+							<Icon icon="exportClip" />
+						</button>
 					</div>
 				</div>
 				<Loading className={styles.saving} loading={saving} msgLoading="saving..." />

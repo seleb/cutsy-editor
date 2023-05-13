@@ -1,6 +1,6 @@
-import { faBug, faFilm, faFolder, faGear, faPause, faPhotoFilm, faPlay, faVolumeHigh, faVolumeXmark } from '@fortawesome/free-solid-svg-icons';
+import { faBug, faFilm, faFolder, faGear, faMapPin, faPause, faPhotoFilm, faPlay, faVolumeHigh, faVolumeXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ComponentProps } from 'react';
+import { ComponentProps, ForwardedRef, forwardRef } from 'react';
 
 const icons = {
 	'play': faPlay,
@@ -12,13 +12,14 @@ const icons = {
 	'videos': faFolder,
 	'settings': faGear,
 	'debug': faBug,
+	'pin': faMapPin,
 }
 
-export function Icon({
+export const Icon = forwardRef(({
 	icon, 
 	...props
 }: Omit<ComponentProps<typeof FontAwesomeIcon>, 'icon'> & {
 	icon: keyof typeof icons;
-}) {
-	return <FontAwesomeIcon icon={icons[icon]} {...props} />
-}
+}, ref: ForwardedRef<SVGSVGElement>) => {
+	return <FontAwesomeIcon ref={ref} icon={icons[icon]} {...props} />
+})
