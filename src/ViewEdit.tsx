@@ -106,7 +106,7 @@ export function ViewEdit() {
 		};
 	}, []);
 
-	//
+	// update to match video time
 	useEffect(() => {
 		let mounted = true;
 		const elVideo = refVideo.current;
