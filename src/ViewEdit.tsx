@@ -218,7 +218,11 @@ export function ViewEdit() {
 
 	const onScrubStart = useCallback<
 		(options: {
-			/** called on start; if returns false, scrub is aborted; can pass `true` to run `scrub` parameter on start */
+			/** called on start.
+			 * if returns `false`, scrub is aborted.
+			 * if returns `true`, scrub is also called on start.
+			 * if no return, scrub is called on first move.
+			 * can pass `true` instead of a callback to always run `scrub` parameter on start */
 			start?: ((event: PointerEvent) => boolean | void) | true;
 			/** called on each movement during scrubbing */
 			scrub?: (event: PointerEvent) => void;
@@ -228,8 +232,16 @@ export function ViewEdit() {
 	>(
 		({ start, scrub, end }) =>
 			event => {
-				if (start === true && scrub) scrub(event.nativeEvent);
-				else if (typeof start === 'function') if (start(event.nativeEvent) === false) return;
+				if (typeof start === 'function') {
+					const startVal = start(event.nativeEvent) !== false;
+					if (startVal === true) {
+						scrub?.(event.nativeEvent);
+					} else if (startVal === false) {
+						return;
+					}
+				} else if (start) {
+					scrub?.(event.nativeEvent);
+				}
 
 				const onScrubStop = (eventScrub: PointerEvent) => {
 					eventScrub.preventDefault();
