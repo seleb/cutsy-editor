@@ -3,6 +3,7 @@ import { open } from '@tauri-apps/api/shell';
 import { convertFileSrc, invoke } from '@tauri-apps/api/tauri';
 import { PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Icon } from './Icon';
 import { KeyboardShortcuts } from './KeyboardShortcuts';
 import { Loading } from './Loading';
 import { Title } from './Title';
@@ -309,17 +310,21 @@ export function ViewEdit() {
 				</div>
 				<div className={styles.buttons}>
 					<button onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>
-						{paused ? '▶' : '⏸'}
+						<Icon icon={paused ? 'play' : 'pause'} />
 					</button>
 					<button onClick={toggleMuted} title={muted ? 'Unmute' : 'Mute'}>
-						{muted ? '🔈' : '🔊'}
+						<Icon icon={muted ? 'muted' : 'sound'} />
 					</button>
 					<span className={styles.time}>
 						<span ref={refTime}>{0}</span> / <span>{toDuration(duration)}</span>
 					</span>
 					<div className={styles.save}>
-							<button disabled={saving} onClick={onSaveImage} title="Save image">📷</button>
-							<button disabled={saving} onClick={onSaveClip} title="Save clip">🎬</button>
+							<button disabled={saving} onClick={onSaveImage} title="Save image">
+								<Icon icon="exportImage" />
+							</button>
+							<button disabled={saving} onClick={onSaveClip} title="Save clip">
+								<Icon icon="exportClip" />
+							</button>
 					</div>
 				</div>
 				<Loading className={styles.saving} loading={saving} msgLoading="saving..." />
