@@ -12,11 +12,6 @@ import { PageNumbers } from './PageNumbers';
 import { Title } from './Title';
 import styles from './ViewVideos.module.scss';
 
-const obj = document.createElement('video');
-function isVideo(path: string) {
-	return obj.canPlayType(`video/${path.split('.').pop()?.toLowerCase()}`) !== '';
-}
-
 function Video({ path, name }: FileEntry) {
 	const src = useMemo(() => convertFileSrc(path), [path]);
 	const to = useMemo(() => toEditUrl(path), [src]);
@@ -31,6 +26,7 @@ const videosPerPage = 30;
 
 import { AllSubstringsIndexStrategy, Search, UnorderedSearchIndex } from 'js-search';
 import { Icon } from './Icon';
+import { isVideo } from './isVideo';
 import { toEditUrl } from './toEditUrl';
 
 export function ViewVideos() {

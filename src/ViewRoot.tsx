@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
-import { open } from '@tauri-apps/api/dialog';
+import { message, open } from '@tauri-apps/api/dialog';
 import { listen } from '@tauri-apps/api/event';
 import { useCallback, useEffect } from 'react';
 import { Clilp } from './Clilp';
@@ -11,6 +11,7 @@ import { H, HLevel } from './H';
 import { Icon } from './Icon';
 import { Title } from './Title';
 import styles from './ViewRoot.module.scss';
+import { isVideo } from './isVideo';
 import { toEditUrl } from './toEditUrl';
 import { useFullscreenToggle } from './useFullscreenToggle';
 export function ViewRoot() {
@@ -23,17 +24,20 @@ export function ViewRoot() {
 		listen('tauri://file-drop', event => {
 			const file = (event.payload as string[])?.[0];
 			if (!file) return;
+			if (!isVideo(file)) return message("File is not a supported video format :(", { type: 'error' });
 			navigate(toEditUrl(file));
 		});
 	}, [navigate]);
 
 	const onOpen = useCallback(async () => {
-		const file = await open({
+		let file = await open({
 			multiple: false,
 			directory: false,
 		});
 		if (!file) return;
-		navigate(toEditUrl(typeof file === 'string' ? file : file[0]));
+		file = typeof file === 'string' ? file : file[0];
+		if (!isVideo(file)) return message("File is not a supported video format :(", { type: 'error' });
+		navigate(toEditUrl(file));
 	}, []);
 
 	return (
