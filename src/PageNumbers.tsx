@@ -28,7 +28,7 @@ export function PageNumbers({ goto, current = 0, total }: { goto: (page: number)
 					{current + 1 - (a.length - idx)}
 				</button>
 			))}
-			<button className={`${styles.button} ${styles.current}`} onClick={jump} title="Jump to page">
+			<button className={`${styles.button} ${styles.current}`} onClick={jump} disabled={total <= 1} title="Jump to page">
 				{current + 1}
 			</button>
 			{new Array(pad).fill(0).map((_, idx, a) => (
