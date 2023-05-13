@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import { Clilp } from './Clilp';
 import { Debug } from './Debug';
+import { GateFfmpeg } from './GateFfmpeg';
 import { H, HLevel } from './H';
 import { Icon } from './Icon';
 import { Title } from './Title';
@@ -19,18 +20,25 @@ export function ViewRoot() {
 					<Clilp />
 				</H>
 				<nav>
-					<NavLink to="/" title="Home"><Icon icon="exportImage" /></NavLink>
-					<NavLink to="videos" title="Videos"><Icon icon="videos" /></NavLink>
-					<NavLink to="settings" title="Settings"><Icon icon="settings" /></NavLink>
+					<NavLink to="videos" title="Videos">
+						<Icon icon="videos" />
+					</NavLink>
+					<NavLink to="settings" title="Settings">
+						<Icon icon="settings" />
+					</NavLink>
 					<Debug>
 						<hr />
-						<NavLink to="debug" title="Debug"><Icon icon="debug" /></NavLink>
+						<NavLink to="debug" title="Debug">
+							<Icon icon="debug" />
+						</NavLink>
 					</Debug>
 				</nav>
 			</header>
 			<main className={styles.main}>
 				<HLevel>
-					<Outlet />
+					<GateFfmpeg>
+						<Outlet />
+					</GateFfmpeg>
 				</HLevel>
 			</main>
 		</>

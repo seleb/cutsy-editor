@@ -1,18 +1,17 @@
 import { invoke } from '@tauri-apps/api/tauri';
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { Link } from 'react-router-dom';
+import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
+import { Button } from './Button';
 import { Clilp } from './Clilp';
+import styles from './GateFfmpeg.module.scss';
 import { H } from './H';
 import { Loading } from './Loading';
 import { Page } from './Page';
-import styles from './ViewIndex.module.scss';
 import { isDesktop } from './isDesktop';
 
-export function ViewIndex() {
+export function GateFfmpeg({ children }: PropsWithChildren<{}>) {
+	const [gated, setGated] = useState(true);
 	const [stateFfmpeg, setStateFfmpeg] = useState<'unknown' | 'installing' | 'error' | 'not-installed' | 'installed'>('unknown');
 	const [installError, setInstallError] = useState('');
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (!isDesktop) return;
@@ -20,7 +19,7 @@ export function ViewIndex() {
 			const isFfmpegInstalled = await invoke('is_ffmpeg_installed');
 			if (isFfmpegInstalled) {
 				setStateFfmpeg('installed');
-				navigate('/videos', { replace: true });
+				setGated(false);
 			} else {
 				setStateFfmpeg('not-installed');
 			}
@@ -41,7 +40,13 @@ export function ViewIndex() {
 		}
 	}, [stateFfmpeg]);
 
-	return (
+	const onContinue = useCallback(() => {
+		setGated(false);
+	}, []);
+
+	return !gated ? (
+		<>{children}</>
+	) : (
 		<Page className={styles.container}>
 			<H>
 				<Clilp /> setup
@@ -71,23 +76,13 @@ export function ViewIndex() {
 									</a>{' '}
 									in order to edit clips.
 								</p>
-								<button onClick={installFfmpeg}>Install ffmpeg for me</button>
+								<Button onClick={installFfmpeg}>Install ffmpeg for me</Button>
 							</>
 						)
 					}
 				>
-					{stateFfmpeg === 'not-installed' ? (
-						<button onClick={installFfmpeg}>Install ffmpeg for me</button>
-					) : (
-						<>
-							<strong>ffmpeg</strong> is ready!
-							<div>
-								<Link to="/videos" replace>
-									Continue
-								</Link>
-							</div>
-						</>
-					)}
+					<p><strong>ffmpeg</strong> is ready!</p>
+					<Button onClick={onContinue}>Continue</Button>
 				</Loading>
 			</section>
 		</Page>
