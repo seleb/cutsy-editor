@@ -375,13 +375,18 @@ export function ViewEdit() {
 					defaultPath: name,
 					filters: filtersVideos,
 				},
-				output =>
-					invoke<string>('vid_to_clip', {
+				output =>{
+					const elVideo = refVideo.current;
+					const elClip = refClip.current;
+					if (!elVideo || !elClip) throw new Error("Could not find elements");
+					const start = Number((elClip.style.left || '0%').replace('%', '')) / 100;
+					const width = Number((elClip.style.width || '100%').replace('%', '')) / 100;
+					return invoke<string>('vid_to_clip', {
 						input: pathDecoded,
 						output,
-						start: `${toMicroseconds(refVideo.current?.currentTime || 0)}us`,
-						duration: `${toMicroseconds((refVideo.current?.duration || 0) / 10)}us`,
-					})
+						start: `${toMicroseconds(start * elVideo.duration || 0)}us`,
+						duration: `${toMicroseconds(width * elVideo.duration || 0)}us`,
+					})}
 			),
 		[pathDecoded, name]
 	);
