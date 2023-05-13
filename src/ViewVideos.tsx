@@ -19,9 +19,9 @@ function isVideo(path: string) {
 
 function Video({ path, name }: FileEntry) {
 	const src = useMemo(() => convertFileSrc(path), [path]);
-	const encoded = useMemo(() => encodeURIComponent(path), [src]);
+	const to = useMemo(() => toEditUrl(path), [src]);
 	return (
-		<Link to={`/edit?v=${encoded}`}>
+		<Link to={to}>
 			<video aria-hidden="true" preload="metadata" src={src}></video>
 			<span>{name}</span>
 		</Link>
@@ -31,6 +31,7 @@ const videosPerPage = 30;
 
 import { AllSubstringsIndexStrategy, Search, UnorderedSearchIndex } from 'js-search';
 import { Icon } from './Icon';
+import { toEditUrl } from './toEditUrl';
 
 export function ViewVideos() {
 	const { page } = useParams();

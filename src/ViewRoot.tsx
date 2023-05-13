@@ -10,6 +10,7 @@ import { H, HLevel } from './H';
 import { Icon } from './Icon';
 import { Title } from './Title';
 import styles from './ViewRoot.module.scss';
+import { toEditUrl } from './toEditUrl';
 import { useFullscreenToggle } from './useFullscreenToggle';
 export function ViewRoot() {
 	useFullscreenToggle();
@@ -21,7 +22,7 @@ export function ViewRoot() {
 		listen('tauri://file-drop', event => {
 			const file = (event.payload as string[])?.[0];
 			if (!file) return;
-			navigate(`/edit?v=${encodeURIComponent(file)}`);
+			navigate(toEditUrl(file));
 		});
 	}, [navigate]);
 	return (
