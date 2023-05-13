@@ -1,11 +1,7 @@
 @import "reset";
 @import "theme";
+@import "font";
 @import "scrollbar";
-
-@font-face {
-  font-family: Bitch;
-  src: url("/Bitch.woff2") format("woff2");
-}
 
 :root {
   font-size: 16px;
@@ -27,7 +23,6 @@
 
 body {
   height: 100%;
-  font-family: Bitch, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #root {

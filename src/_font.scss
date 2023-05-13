@@ -1,0 +1,15 @@
+@font-face {
+	font-family: Bitch;
+	src: url("/Bitch.woff2") format("woff2");
+}
+
+:root {
+
+	&[data-font="Bitch"]>body {
+		font-family: Bitch, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	}
+
+	&[data-font="Boring"]>body {
+		font-family: system-ui;
+	}
+}
