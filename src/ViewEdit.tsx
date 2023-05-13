@@ -3,6 +3,7 @@ import { open } from '@tauri-apps/api/shell';
 import { convertFileSrc, invoke } from '@tauri-apps/api/tauri';
 import { MouseEventHandler, PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useSettings } from './ContextSettings';
 import { EditorHelp } from './EditorHelp';
 import { Icon } from './Icon';
 import { Loading } from './Loading';
@@ -363,6 +364,7 @@ export function ViewEdit() {
 	}, [onUpdateClip]);
 
 	const [saving, setSavingClip] = useState(false);
+	const { openAfterSave } = useSettings();
 	const saveAndOpen = useCallback(async (options: Parameters<typeof save>[0], doSave: (output: string) => Promise<unknown>) => {
 		setSavingClip(true);
 		let output: string | null;
@@ -377,13 +379,14 @@ export function ViewEdit() {
 		} finally {
 			setSavingClip(false);
 		}
+		if (openAfterSave !== 'true') return;
 		try {
 			await open(`file:///${output}`);
 		} catch (err) {
 			console.error(err);
 			await message(`The file was saved, but clilp failed to open it.\nThere may be more details in the console.\n\n${err}`, { title: 'Open error', type: 'warning' });
 		}
-	}, []);
+	}, [openAfterSave]);
 
 	const onSaveImage = useCallback(
 		() =>
