@@ -19,8 +19,8 @@ function DebugPalette() {
 						style={{
 							backgroundColor: `var(--color-${i})`,
 							color: {
-								primary: 'var(--color-neutral-9)',
-								'primary-muted': 'var(--color-neutral-9)',
+								primary: 'var(--color-neutral-0)',
+								'primary-muted': 'var(--color-neutral-0)',
 								'primary-bright': 'var(--color-neutral-0)',
 								'neutral-6': 'var(--color-neutral-0)',
 								'neutral-8': 'var(--color-neutral-0)',
