@@ -355,7 +355,7 @@ export function ViewEdit() {
 		const elClip = refClip.current;
 		const clip = getClip();
 		if (!elVideo || !elClip || !clip) throw new Error('Could not find elements');
-		const [start, _, duration] = clip;
+		const [start, , duration] = clip;
 		const output = await saveAsVideoLocation(name);
 		if (!output) return;
 		queuePush({
