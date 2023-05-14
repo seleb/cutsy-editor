@@ -112,7 +112,15 @@
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	padding-bottom: 0.5rem;
+
+	button {
+		min-width: 2rem;
+		padding-block: 0.5rem;
+
+		[data-icon="volume-xmark"] {
+			margin-inline-end: 2px;
+		}
+	}
 }
 
 .time {
