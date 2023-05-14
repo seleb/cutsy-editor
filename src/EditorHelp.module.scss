@@ -93,7 +93,7 @@
 	border-top: none;
 	border-left: none;
 	max-width: min(calc(100% - 2rem), 15rem);
-	max-height: min(calc(100% - 5rem), 47rem);
+	max-height: calc(100% - 5rem);
 	overflow: auto;
 	scrollbar-gutter: stable;
 	box-shadow: 4px 4px 8px var(--color-black);
