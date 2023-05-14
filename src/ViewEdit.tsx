@@ -235,22 +235,6 @@ export function ViewEdit() {
 		[seek]
 	);
 
-	const onScrubStartPlayhead = useCallback(
-		onScrubStart({
-			start: true,
-			scrub: (event: PointerEvent) => {
-				const elVideo = refVideo.current;
-				const elProgress = refProgress.current as HTMLProgressElement;
-				if (!elVideo || !elVideo?.duration) return;
-				event.preventDefault();
-				const rect = elProgress.getBoundingClientRect();
-				const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
-				seek(pos * elVideo.duration, false);
-			},
-		}),
-		[]
-	);
-
 	const onUpdateClip = useCallback((start?: number, end?: number, slide?: number) => {
 		const elClip = refClip.current;
 		const clip = getClip();
@@ -266,6 +250,36 @@ export function ViewEdit() {
 		elClip.style.left = `${clamp(0, newStart, 1) * 100}%`;
 		elClip.style.width = `${clamp(0, newEnd - newStart, 1 - newStart) * 100}%`;
 	}, []);
+
+	const onScrubStartPlayhead = useCallback(
+		onScrubStart({
+			start: (event: PointerEvent) => {
+				if (event.shiftKey) {
+					const elVideo = refVideo.current;
+					const elProgress = refProgress.current as HTMLProgressElement;
+					if (!elVideo || !elVideo?.duration) return;
+					event.preventDefault();
+					const rect = elProgress.getBoundingClientRect();
+					const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
+					
+					event.button && event.button === 2 ? onUpdateClip(undefined, pos) : onUpdateClip(pos, undefined);
+					return false;
+				} else {
+					return true;
+				}
+			},
+			scrub: (event: PointerEvent) => {
+				const elVideo = refVideo.current;
+				const elProgress = refProgress.current as HTMLProgressElement;
+				if (!elVideo || !elVideo?.duration) return;
+				event.preventDefault();
+				const rect = elProgress.getBoundingClientRect();
+				const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
+				seek(pos * elVideo.duration, false);
+			},
+		}),
+		[onUpdateClip]
+	);
 
 	const onScrubStartMarker = useMemo(() => {
 		let target: Element;
