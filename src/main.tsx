@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
+import { ContextApp } from './ContextApp';
 import { ContextSettings } from './ContextSettings';
 import './main.scss';
 import { ViewDebug } from './ViewDebug';
@@ -28,7 +29,9 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
 		<ContextSettings>
-			<RouterProvider router={router} />
+			<ContextApp>
+				<RouterProvider router={router} />
+			</ContextApp>
 		</ContextSettings>
 	</React.StrictMode>
 );
