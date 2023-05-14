@@ -63,7 +63,7 @@ export function EditorHelp() {
 		const elContainer = refContainer.current;
 		if (!elContainer) return;
 		elContainer.scrollTo({ left: 0, top: 0 });
-	}, [!active]);
+	}, [active]);
 	return (
 		<aside ref={refContainer} className={`${styles.container} ${active && styles.open}`}>
 			<div>

@@ -110,7 +110,7 @@ export function ViewEdit() {
 		return () => {
 			elVideo.cancelVideoFrameCallback(vfc);
 		};
-	}, [preview]);
+	}, [getClip, preview]);
 
 	// play/pause
 	useEffect(() => {
@@ -185,7 +185,7 @@ export function ViewEdit() {
 		const elVideo = refVideo.current;
 		if (!elVideo) return;
 		seek(elVideo.currentTime + by);
-	}, []);
+	}, [seek]);
 
 	const centerTrack = useCallback(() => {
 		const elVideo = refVideo.current;
@@ -249,41 +249,39 @@ export function ViewEdit() {
 		}
 		elClip.style.left = `${clamp(0, newStart, 1) * 100}%`;
 		elClip.style.width = `${clamp(0, newEnd - newStart, 1 - newStart) * 100}%`;
-	}, []);
+	}, [getClip]);
 
-	const onScrubStartPlayhead = useCallback(
-		onScrubStart({
-			start: (event: PointerEvent) => {
-				if (event.shiftKey) {
-					const elVideo = refVideo.current;
-					const elProgress = refProgress.current as HTMLProgressElement;
-					if (!elVideo || !elVideo?.duration) return undefined;
-					event.preventDefault();
-					const rect = elProgress.getBoundingClientRect();
-					const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
-					
-					if (event.button && event.button === 2) {
-						onUpdateClip(undefined, pos);
-					} else {
-						onUpdateClip(pos, undefined);
-					}
-					return false;
-				} 
-				return true;
-				
-			},
-			scrub: (event: PointerEvent) => {
+	const onScrubStartPlayhead = useMemo(() => onScrubStart({
+		start: (event: PointerEvent) => {
+			if (event.shiftKey) {
 				const elVideo = refVideo.current;
 				const elProgress = refProgress.current as HTMLProgressElement;
-				if (!elVideo || !elVideo?.duration) return;
+				if (!elVideo || !elVideo?.duration) return undefined;
 				event.preventDefault();
 				const rect = elProgress.getBoundingClientRect();
 				const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
-				setPreview(false);
-				seek(pos * elVideo.duration, false);
-			},
-		}),
-		[onUpdateClip]
+				
+				if (event.button && event.button === 2) {
+					onUpdateClip(undefined, pos);
+				} else {
+					onUpdateClip(pos, undefined);
+				}
+				return false;
+			} 
+			return true;
+		},
+		scrub: (event: PointerEvent) => {
+			const elVideo = refVideo.current;
+			const elProgress = refProgress.current as HTMLProgressElement;
+			if (!elVideo || !elVideo?.duration) return;
+			event.preventDefault();
+			const rect = elProgress.getBoundingClientRect();
+			const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
+			setPreview(false);
+			seek(pos * elVideo.duration, false);
+		},
+	}),
+	[onScrubStart, onUpdateClip, seek]
 	);
 
 	const onScrubStartMarker = useMemo(() => {
@@ -330,7 +328,7 @@ export function ViewEdit() {
 				}
 			},
 		});
-	}, [onUpdateClip]);
+	}, [getClip, onScrubStart, onUpdateClip, seek]);
 
 	const onScrubStartClip = useMemo(() => onScrubStart({
 		start: (event: PointerEvent) => {
@@ -346,9 +344,9 @@ export function ViewEdit() {
 			if ((event.movementX < 0 && event.pageX > rect.right) || (event.movementX > 0 && event.pageX < rect.left)) return;
 			onUpdateClip(undefined, undefined, event.movementX / elProgress.offsetWidth);
 		},
-	}), [onUpdateClip]);
+	}), [onScrubStart, onUpdateClip]);
 
-	const { openAfterSave, saveAudio } = useSettings();
+	const { saveAudio } = useSettings();
 
 	const queuePush = useQueuePush();
 
@@ -358,7 +356,7 @@ export function ViewEdit() {
 			if (!output) return;
 			queuePush({ command: 'vid_to_img', input: pathDecoded, output, time: refVideo.current?.currentTime || 0 })
 		},
-		[pathDecoded, name, openAfterSave]
+		[name, queuePush, pathDecoded]
 	);
 
 	const onSaveClip = useCallback(async () => {
@@ -381,7 +379,7 @@ export function ViewEdit() {
 				editor: !muted,
 			}[saveAudio],
 		});
-	}, [pathDecoded, name, saveAudio, muted, openAfterSave]);
+	}, [getClip, name, queuePush, pathDecoded, muted, saveAudio]);
 
 	const noContextMenu = useCallback<MouseEventHandler<SVGSVGElement | HTMLElement>>(event => {
 		event.preventDefault();
@@ -402,13 +400,13 @@ export function ViewEdit() {
 				clipEnd,
 			});
 		};
-	}, [pathEncoded]);
+	}, [pathEncoded, setVideo]);
 
 	// reload clip
 	const lastVideo = useVideo();
 	useEffect(() => {
 		onUpdateClip(lastVideo.clipStart, lastVideo.clipEnd);
-	}, [lastVideo.clipStart, lastVideo.clipEnd]);
+	}, [lastVideo.clipStart, lastVideo.clipEnd, onUpdateClip]);
 
 	const [zoom, setZoom] = useState(100);
 	const zoomIn = useCallback(() => {
@@ -424,7 +422,7 @@ export function ViewEdit() {
 
 	useEffect(() => {
 		centerTrack();
-	}, [zoom]);
+	}, [centerTrack, zoom]);
 
 	const onWheel = useCallback<WheelEventHandler<HTMLDivElement>>((event) => {
 		if (event.ctrlKey || event.metaKey) {

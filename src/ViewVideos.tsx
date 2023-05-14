@@ -22,7 +22,7 @@ import { usePrevious } from './usePrevious';
 
 function Video({ path, name }: FileEntry) {
 	const src = useMemo(() => convertFileSrc(path), [path]);
-	const to = useMemo(() => toEditUrl(path), [src]);
+	const to = useMemo(() => toEditUrl(path), [path]);
 	const openInFolder = useCallback<MouseEventHandler>(async (event) => {
 		event.preventDefault();
 		open(`file:///${path.replace(/(?:.(?![\\/]))+$/, '').replace(/([\\/])\.[\\/]/g, '$1').replace(/([\\/])\.$/, '$1')}`)
@@ -77,7 +77,7 @@ export function ViewVideos() {
 				setError(getErrorMessage(err));
 			}
 		})();
-	}, []);
+	}, [videoFolders]);
 
 	const numPage = useMemo(() => {
 		const num = parseInt(page || '0', 10);
@@ -113,7 +113,7 @@ export function ViewVideos() {
 	});
 	useLayoutEffect(() => {
 		setPage(numPage);
-	}, [numPage, totalPages]);
+	}, [numPage, setPage, totalPages]);
 
 	const navigate = useNavigate();
 	const goto = useCallback(
@@ -138,7 +138,7 @@ export function ViewVideos() {
 			setResults(files);
 			navigate('/videos/0', { replace: true });
 		},
-		[library]
+		[library, navigate]
 	);
 
 	// scroll down if going back 1 page,

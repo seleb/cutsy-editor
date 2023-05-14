@@ -42,7 +42,7 @@ export function ViewRoot() {
 		if (!isVideo(file)) return message("File is not a supported video format :(", { type: 'error' });
 		navigate(toEditUrl(file));
 		return undefined;
-	}, []);
+	}, [navigate]);
 
 	const { path } = useVideo();
 	const queue = useQueue();

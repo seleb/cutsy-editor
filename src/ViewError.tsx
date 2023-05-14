@@ -45,8 +45,8 @@ function ContextualDetails() {
 
 export function ViewError() {
 	const navigate = useNavigate();
-	const goBack = useCallback(() => navigate(-1), []);
-	const refresh = useCallback(() => navigate(0), []);
+	const goBack = useCallback(() => navigate(-1), [navigate]);
+	const refresh = useCallback(() => navigate(0), [navigate]);
 	const error = useRouteError();
 	const errorDetails = useMemo(() => {
 		try {

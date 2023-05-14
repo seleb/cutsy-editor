@@ -5,6 +5,6 @@ export function ViewIndex() {
 	const navigate = useNavigate();
 	useEffect(() => {
 		navigate('/videos', { replace: true });
-	}, []);
+	}, [navigate]);
 	return null;
 }

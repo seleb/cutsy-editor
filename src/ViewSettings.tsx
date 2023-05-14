@@ -25,12 +25,12 @@ export function ViewSettings() {
 		if (!files || !files.length) return;
 		// TODO: save scope
 		set('videoFolders', settings.videoFolders.concat(files));
-	}, [settings.videoFolders]);
+	}, [set, settings.videoFolders]);
 	const removeFolder = useCallback<MouseEventHandler<HTMLButtonElement>>((event) => {
 		const f = settings.videoFolders.slice();
 		f.splice(parseInt(event.currentTarget.value, 10), 1);
 		set('videoFolders', f);
-	}, [settings.videoFolders]);
+	}, [set, settings.videoFolders]);
 
 	const onRadio = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
 		const el = event.currentTarget as HTMLInputElement;
