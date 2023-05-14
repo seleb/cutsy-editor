@@ -448,7 +448,7 @@ export function ViewEdit() {
 	if (!pathEncoded) throw new Error('No video path!');
 	return (
 		<div className={styles.container}>
-			<Title>{['videos', name]}</Title>
+			<Title>{['edit', name]}</Title>
 			<video ref={refVideo} onClick={togglePlaying} className={styles.video} controls={false} src={src} preload="auto" muted={muted} loop></video>
 			<div className={styles.controls}>
 				<div className={styles.trackbar} onContextMenu={noContextMenu} onMouseMove={onUpdatePlayhead}>
