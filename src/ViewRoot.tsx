@@ -54,6 +54,9 @@ export function ViewRoot() {
 					<NavLink to="videos" title="Videos">
 						<Icon icon="videos" />
 					</NavLink>
+					<NavLink to="queue" title="Queue" data-count={4}>
+						<Icon icon="exportImage" />
+					</NavLink>
 					<hr />
 					<NavLink to="settings" title="Settings">
 						<Icon icon="settings" />

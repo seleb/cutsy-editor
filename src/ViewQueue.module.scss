@@ -1,0 +1,17 @@
+.queue {
+	list-style: none;
+
+	> li {
+		padding: 0.5rem;
+
+		&:not(:last-child) {
+			border-bottom: solid 1px var(--color-neutral-4);
+		}
+	}
+}
+
+.spinner {
+	display: inline-block;
+	width: 4rem;
+	height: 1rem;
+}

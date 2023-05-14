@@ -7,6 +7,7 @@ import { ViewDebug } from './ViewDebug';
 import { ViewEdit } from './ViewEdit';
 import { ViewError } from './ViewError';
 import { ViewIndex } from './ViewIndex';
+import { ViewQueue } from './ViewQueue';
 import { ViewRoot } from './ViewRoot';
 import { ViewSettings } from './ViewSettings';
 import { ViewVideos } from './ViewVideos';
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
 			<Route path="edit" element={<ViewEdit />} errorElement={<ViewError />} />
 			<Route path="videos/:page?" element={<ViewVideos />} errorElement={<ViewError />} />
 			<Route path="settings" element={<ViewSettings />} errorElement={<ViewError />} />
+			<Route path="queue" element={<ViewQueue />} errorElement={<ViewError />} />
 			<Route path="debug" element={<ViewDebug />} errorElement={<ViewError />} />
 		</Route>
 	)
