@@ -1,33 +1,16 @@
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { MouseEventHandler, PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useVideo, useVideoSet } from './ContextApp';
+import { useQueuePush, useVideo, useVideoSet } from './ContextApp';
 import { useSettings } from './ContextSettings';
 import { EditorHelp } from './EditorHelp';
 import { Icon } from './Icon';
 import { Title } from './Title';
 import styles from './ViewEdit.module.scss';
 import { clamp } from './clamp';
-import { saveClip, saveImage } from './ffmpeg';
-
-const FRAMES_PER_SECOND = 60;
-const FRAME = 1 / FRAMES_PER_SECOND;
-
-function toMicroseconds(seconds: number) {
-	// ffmpeg always seems to be ~2 frames off
-	return Math.floor((seconds - FRAME * 2) * 1000000);
-}
-
-function toDuration(time: number) {
-	const s = time % 60;
-	time = Math.floor((time - s) / 60);
-	const m = time % 60;
-	time = Math.floor((time - m) / 60);
-	const h = time;
-	const a = [m.toFixed(0).padStart(2, '0'), [s.toFixed(0).padStart(2, '0'), (s % 1).toFixed(3).substring(2).padEnd(3, '0')].join('.')];
-	if (h > 0) a.unshift(h.toFixed(0));
-	return a.join(':');
-}
+import { FRAME } from './ffmpeg';
+import { saveAsImageLocation, saveAsVideoLocation } from './save';
+import { toDuration } from './toDuration';
 
 export function ViewEdit() {
 	const [search] = useSearchParams();
@@ -334,28 +317,36 @@ export function ViewEdit() {
 
 	const { openAfterSave, saveAudio } = useSettings();
 
+	const queuePush = useQueuePush();
+
 	const onSaveImage = useCallback(
-		() => saveImage({ defaultPath: name, input: pathDecoded, time: toMicroseconds(refVideo.current?.currentTime || 0), open: openAfterSave === 'true' }),
+		async () => {
+			const output = await saveAsImageLocation(name);
+			if (!output) return;
+			queuePush({ command: 'vid_to_img', input: pathDecoded, output, time: refVideo.current?.currentTime || 0 })
+		},
 		[pathDecoded, name, openAfterSave]
 	);
 
-	const onSaveClip = useCallback(() => {
+	const onSaveClip = useCallback(async () => {
 		const elVideo = refVideo.current;
 		const elClip = refClip.current;
 		if (!elVideo || !elClip) throw new Error('Could not find elements');
 		const start = Number((elClip.style.left || '0%').replace('%', '')) / 100;
 		const width = Number((elClip.style.width || '100%').replace('%', '')) / 100;
-		return saveClip({
-			defaultPath: name,
+		const output = await saveAsVideoLocation(name);
+		if (!output) return;
+		queuePush({
+			command: 'vid_to_clip',
 			input: pathDecoded,
-			start: toMicroseconds(start * elVideo.duration || 0),
-			duration: toMicroseconds(width * elVideo.duration || 0),
+			output,
+			start: start * elVideo.duration || 0,
+			duration: width * elVideo.duration || 0,
 			audio: {
 				always: true,
 				never: false,
 				editor: !muted,
 			}[saveAudio],
-			open: openAfterSave === 'true',
 		});
 	}, [pathDecoded, name, saveAudio, muted, openAfterSave]);
 

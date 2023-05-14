@@ -1,17 +1,36 @@
 .queue {
 	list-style: none;
+	width: 100%;
+	border-collapse: collapse;
 
-	> li {
-		padding: 0.5rem;
-
-		&:not(:last-child) {
-			border-bottom: solid 1px var(--color-neutral-4);
-		}
+	th,
+	td {
+		padding: 0.25rem;
 	}
-}
 
-.spinner {
-	display: inline-block;
-	width: 4rem;
-	height: 1rem;
+	th {
+		text-align: initial;
+		background-color: var(--color-neutral-4);
+	}
+
+	td {
+		max-width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding: 0.5rem;
+		border: solid 1px var(--color-neutral-4);
+	}
+
+	tr > :nth-child(3) {
+		width: 10rem;
+		font-variant-numeric: tabular-nums;
+		text-align: center;
+	}
+
+	tr > :nth-child(4),
+	tr > :nth-child(5) {
+		width: 4rem;
+		text-align: center;
+	}
 }
