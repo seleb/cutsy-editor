@@ -46,6 +46,17 @@ export function ViewSettings() {
 			// not guaranteed but safe enough
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
+			if (availableSettings.includes(el.name)) set(el.name, Number(el.value));
+		},
+		[set]
+	);
+
+	const onNumber = useCallback<ChangeEventHandler<HTMLInputElement>>(
+		(event) => {
+			const el = event.currentTarget as HTMLInputElement;
+			// not guaranteed but safe enough
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			if (availableSettings.includes(el.name)) set(el.name, el.value);
 		},
 		[set]
@@ -141,6 +152,18 @@ export function ViewSettings() {
 						</p>
 					</dd>
 				</Debug>
+
+				<dt>videos per page</dt>
+				<dd>
+					<input
+						type="number"
+						name="itemsPerPage"
+						value={settings.itemsPerPage}
+						onInput={onNumber}
+						step={1}
+						min={1}
+					/>
+				</dd>
 
 				<dt>save audio</dt>
 				<dd>
