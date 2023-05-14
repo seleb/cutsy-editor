@@ -48,7 +48,7 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
     .arg("-qmin").arg(1.to_string())
     .arg("-q:v").arg(1.to_string())
     // output
-    .arg(path_output.as_os_str().to_str().unwrap())
+    .output(path_output.as_os_str().to_str().unwrap())
     .spawn()
     .unwrap()
     .iter()
@@ -99,7 +99,7 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String, a
     // input
     .arg("-i").arg(path_input.as_os_str().to_str().unwrap())
     // output
-    .arg(path_output.as_os_str().to_str().unwrap())
+    .output(path_output.as_os_str().to_str().unwrap())
     .spawn()
     .unwrap()
     .iter()
