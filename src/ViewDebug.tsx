@@ -5,6 +5,7 @@ import { Debug } from './Debug';
 import { H, HLevel } from './H';
 import { Page } from './Page';
 import { PageHeader } from './PageHeader';
+import { Spinner } from './Spinner';
 import { Title } from './Title';
 import styles from './ViewDebug.module.scss';
 
@@ -72,6 +73,8 @@ export function ViewDebug() {
 					</div>
 					<Button onClick={doError}>Break this view</Button>
 					<DebugPalette />
+					<H>spinner</H>
+					<Spinner />
 				</HLevel>
 			</Page>
 		</Debug>
