@@ -496,7 +496,7 @@ export function ViewEdit() {
 		return () => {
 			window.removeEventListener('keydown', onKey);
 		};
-	}, [getSkip, seekBy, togglePlaying, togglePreview, toggleMuted, zoomIn, zoomOut, centerTrack]);
+	}, [getSkip, seekBy, togglePlaying, togglePreview, toggleMuted, zoomIn, zoomOut, centerTrack, onSaveClip]);
 
 	if (!pathEncoded) throw new Error('No video path!');
 	return (
