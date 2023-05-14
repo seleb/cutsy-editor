@@ -25,11 +25,13 @@ function Video({ path, name }: FileEntry) {
 const videosPerPage = 30;
 
 import { AllSubstringsIndexStrategy, Search, UnorderedSearchIndex } from 'js-search';
+import { useSettings } from './ContextSettings';
 import { Icon } from './Icon';
 import { isVideo } from './isVideo';
 import { toEditUrl } from './toEditUrl';
 
 export function ViewVideos() {
+	const { videoFolders } = useSettings();
 	const { page } = useParams();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
@@ -45,9 +47,14 @@ export function ViewVideos() {
 				search.indexStrategy = new AllSubstringsIndexStrategy();
 				search.addIndex('name');
 				search.addIndex('path');
-				const dir = await readDir('.', { dir: BaseDirectory.Video, recursive: true });
+				let dirs: FileEntry[][];
+				if (videoFolders.length) {
+					dirs = await Promise.all(videoFolders.map(i => readDir(i, { recursive: true })));
+				} else {
+					dirs = [await readDir('.', { dir: BaseDirectory.Video, recursive: true })];
+				}
 				const flatten = (dir: FileEntry): FileEntry[] => (dir.children ? dir.children.flatMap(flatten) : [dir]);
-				const files = dir.flatMap(flatten).filter(i => isVideo(i.path));
+				const files = dirs.flatMap(i => i.flatMap(flatten)).filter(i => isVideo(i.path));
 				setLibrary(files);
 				setResults(files);
 				search.addDocuments(files);
