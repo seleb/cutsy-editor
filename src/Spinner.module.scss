@@ -66,10 +66,16 @@
 
 	&::-moz-progress-bar {
 		@include spinner;
+
+		animation-delay: 0.5s;
+		top: 0.25rem;
 	}
 
 	&::-webkit-progress-bar {
 		@include spinner;
+
+		animation-delay: 0.5s;
+		top: 0.25rem;
 	}
 
 	&::after {
@@ -78,16 +84,6 @@
 
 	&::before {
 		animation-delay: 0.25s;
-	}
-
-	&::-webkit-progress-bar {
-		animation-delay: 0.5s;
-		top: 0.25rem;
-	}
-
-	&::-moz-progress-bar {
-		animation-delay: 0.5s;
-		top: 0.25rem;
 	}
 }
 
