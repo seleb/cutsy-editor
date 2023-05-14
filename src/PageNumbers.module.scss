@@ -48,3 +48,19 @@
 .current {
 	color: var(--color-neutral-9);
 }
+
+.total {
+	display: none;
+	pointer-events: none;
+}
+
+
+@media screen and (width < 20rem) {
+	.total {
+		display: initial;
+	}
+
+	.button:not(.total):not(.current):not(.next):not(.prev) {
+		display: none;
+	}
+}
