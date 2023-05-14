@@ -93,6 +93,12 @@
 	gap: 0.5rem;
 	align-items: center;
 	justify-content: center;
+
+	button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 }
 
 .h {
