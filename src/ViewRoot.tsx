@@ -54,6 +54,7 @@ export function ViewRoot() {
 					<NavLink to="videos" title="Videos">
 						<Icon icon="videos" />
 					</NavLink>
+					<hr />
 					<NavLink to="settings" title="Settings">
 						<Icon icon="settings" />
 					</NavLink>
