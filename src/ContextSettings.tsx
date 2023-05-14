@@ -44,10 +44,24 @@ function reducer(state: State, action: Action<keyof State>) {
 const contextState = createContext<State>(initial);
 const contextDispatch = createContext<Dispatch<Action<keyof State>>>(() => {});
 
-export function ContextSettings({ children }: PropsWithChildren<{}>) {
-	const [state, dispatch] = useReducer(reducer, initial);
+let persistedState: State;
+try {
+	persistedState = JSON.parse(localStorage.getItem('state') || '{}') as State;
+	persistedState = {
+		...initial,
+		...persistedState,
+	};
+} catch (err) {
+	console.error("failed to load persisted settings", err);
+	persistedState = initial;
+}
 
-	// TODO: persistence
+export function ContextSettings({ children }: PropsWithChildren<{}>) {
+	const [state, dispatch] = useReducer(reducer, persistedState);
+
+	useEffect(() => {
+		localStorage.setItem('state', JSON.stringify(state));
+	}, [state])
 
 	useEffect(() => {
 		document.documentElement.dataset.font = state.font;
