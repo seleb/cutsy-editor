@@ -152,16 +152,23 @@ export function ViewVideos() {
 	return (
 		<Page>
 			<Title>videos</Title>
-			<PageHeader>
-				<H>
-					videos ({results.length}/{library.length})
+			<PageHeader className={styles.header}>
+				<H className={styles.h}>
+					videos
 				</H>
+
+
 				<datalist id="list-videos">
 					{library.map(i => (
 						<option key={i.path} value={i.name} />
 					))}
 				</datalist>
-				<input type="text" list="list-videos" placeholder="Search..." onChange={onSearch} />
+				<div className={styles.search}>
+					<Icon icon="search" />
+					<input type="text" list="list-videos" placeholder="Search..." onChange={onSearch} />
+				</div>
+
+				<span className={styles.count}>{results.length.toString(10).padStart(library.length.toString(10).length, '0')} /&nbsp;{library.length}</span>
 				<button
 					title={
 						{
@@ -174,7 +181,8 @@ export function ViewVideos() {
 				>
 					<Icon icon={sort} />
 				</button>
-				{totalPages > 0 && <PageNumbers goto={goto} current={numPage} total={totalPages} />}
+
+				{totalPages > 0 && <PageNumbers className={styles.numbers} goto={goto} current={numPage} total={totalPages} />}
 			</PageHeader>
 			<Loading
 				loading={loading}

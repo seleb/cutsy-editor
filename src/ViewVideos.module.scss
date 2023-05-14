@@ -81,3 +81,53 @@
 		}
 	}
 }
+
+
+.header {
+	display: flex;
+	flex-wrap: wrap;
+	gap:0.5rem;
+	align-items: center;
+}
+
+.h {
+	display: none;
+}
+
+.search {
+	flex: auto;
+	display: inline-flex;
+	gap: 0.5rem;
+	background-color: rgb(var(--color-white-rgb) / 75%);
+	border-radius: 0.5rem;
+	color: var(--color-black);
+	align-items: center;
+	padding: 0.25rem;
+	padding-inline-start: 0.5rem;
+	border: solid 2px transparent;
+	transition: border-color 0.2s ease-in-out;
+
+	&:focus-within {
+		border-color: var(--color-primary-bright);
+	}
+
+	> input {
+		color: inherit;
+		flex: auto;
+		min-width: 0;
+		width: 100%;
+		appearance: none;
+		background: none;
+		border: none;
+		outline: none;
+	}
+}
+
+.count {
+	text-align: right;
+	font-family: 'Courier New', Courier, monospace;
+}
+
+.numbers {
+	width: 100%;
+}
