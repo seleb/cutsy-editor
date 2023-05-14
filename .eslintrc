@@ -28,6 +28,8 @@
 			"devDependencies": true,
 		}], // all dev deps
 
+		"react/require-default-props": "off", // using TS instead of prop-types
+
 		// prefer named
 		"import/prefer-default-export": "off",
 		"import/no-default-export": "error",
