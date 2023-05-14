@@ -28,7 +28,7 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
     let mut errors: Vec<String> = vec![];
     FfmpegCommand::new()
     // allow overwriting
-    .arg("-y")
+    .overwrite()
     // no audio
     .arg("-an")
     // no vysnc
@@ -82,7 +82,7 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String, a
 
     command
     // allow overwriting
-    .arg("-y");
+    .overwrite();
 
     // no audio
     if !audio {
