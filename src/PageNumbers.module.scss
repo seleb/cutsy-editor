@@ -15,6 +15,7 @@
 	&:not(:disabled):focus-visible {
 		color: var(--color-primary-bright);
 	}
+
 	&:disabled {
 		opacity: 0;
 		pointer-events: none;
@@ -23,6 +24,7 @@
 
 .first {
 	min-width: 2rem;
+
 	&::after {
 		content: ' ...';
 		color: var(--color-primary-muted);
@@ -31,6 +33,7 @@
 
 .last {
 	min-width: 2rem;
+
 	&::before {
 		content: '... ';
 		color: var(--color-primary-muted);
@@ -40,6 +43,7 @@
 .next,
 .prev {
 	margin-top: 3px;
+
 	&:disabled {
 		opacity: 0.5;
 	}

@@ -52,6 +52,7 @@ $white: #FFF;
 	&[data-theme="dark"] {
 		@include dark;
 	}
+
 	&[data-theme="light"] {
 		@include light;
 	}

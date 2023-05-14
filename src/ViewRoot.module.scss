@@ -4,6 +4,7 @@ $sidebar: 4rem;
 	from {
 		transform: rotate(2turn) scale(1.25);
 	}
+
 	to {
 		transform: rotate(0) scale(0.9);
 	}
@@ -24,6 +25,7 @@ $sidebar: 4rem;
 		font-size: 130%;
 		padding-block: 0.5rem;
 		overflow: hidden;
+
 		>strong {
 			display: inline-block;
 		}
@@ -41,6 +43,7 @@ $sidebar: 4rem;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+
 		> a,
 		> button {
 			text-align: center;
