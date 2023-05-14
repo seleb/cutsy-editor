@@ -268,9 +268,9 @@ export function ViewEdit() {
 						onUpdateClip(pos, undefined);
 					}
 					return false;
-				} else {
+				} 
 					return true;
-				}
+				
 			},
 			scrub: (event: PointerEvent) => {
 				const elVideo = refVideo.current;
