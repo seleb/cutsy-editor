@@ -1,4 +1,3 @@
-import { invoke } from '@tauri-apps/api/tauri';
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { Button } from './Button';
 import { Clilp } from './Clilp';
@@ -6,6 +5,7 @@ import styles from './GateFfmpeg.module.scss';
 import { H } from './H';
 import { Loading } from './Loading';
 import { Page } from './Page';
+import { installFfmpeg, isFfmpegInstalled } from './ffmpeg';
 import { getErrorMessage } from './getErrorMessage';
 import { isDesktop } from './isDesktop';
 
@@ -17,8 +17,7 @@ export function GateFfmpeg({ children }: PropsWithChildren<{}>) {
 	useEffect(() => {
 		if (!isDesktop) return;
 		(async () => {
-			const isFfmpegInstalled = await invoke('is_ffmpeg_installed');
-			if (isFfmpegInstalled) {
+			if (await isFfmpegInstalled()) {
 				setStateFfmpeg('installed');
 				setGated(false);
 			} else {
@@ -27,11 +26,11 @@ export function GateFfmpeg({ children }: PropsWithChildren<{}>) {
 		})();
 	}, []);
 
-	const installFfmpeg = useCallback(async () => {
+	const onInstallFfmpeg = useCallback(async () => {
 		if (stateFfmpeg !== 'not-installed') throw new Error(`Can't install in this state: ${stateFfmpeg}`);
 		setStateFfmpeg('installing');
 		try {
-			await invoke('install_ffmpeg');
+			await installFfmpeg();
 			setStateFfmpeg('installed');
 		} catch (err) {
 			console.error(err);
@@ -76,7 +75,7 @@ export function GateFfmpeg({ children }: PropsWithChildren<{}>) {
 									</a>{' '}
 									in order to edit clips.
 								</p>
-								<Button onClick={installFfmpeg}>Install ffmpeg for me</Button>
+								<Button onClick={onInstallFfmpeg}>Install ffmpeg for me</Button>
 							</>
 						)
 					}
