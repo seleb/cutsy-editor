@@ -208,7 +208,11 @@ export function ViewEdit() {
 					event.preventDefault();
 					break;
 				case ' ':
-					togglePlaying();
+					if (event.shiftKey) {
+						togglePreview();
+					} else {
+						togglePlaying();
+					}
 					event.preventDefault();
 					break;
 				case 'm':

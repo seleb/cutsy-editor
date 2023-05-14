@@ -6,6 +6,7 @@ import { Icon } from './Icon';
 
 const shortcuts = [
 	['Space', 'Play/Pause'],
+	['Shift+Space', 'Preview clip'],
 	['M', 'Mute/Unmute'],
 	['ArrowRight', 'Forward'],
 	['ArrowLeft', 'Backward'],
