@@ -3,6 +3,7 @@ import { ChangeEventHandler, MouseEventHandler, useCallback } from 'react';
 import pkg from '../package.json';
 import { Button } from './Button';
 import { useSettings, useSettingsReset, useSettingsSet } from './ContextSettings';
+import { Debug } from './Debug';
 import { Icon } from './Icon';
 import { Page } from "./Page";
 import { PageHeader } from "./PageHeader";
@@ -55,14 +56,16 @@ export function ViewSettings() {
 					<label><input onChange={onRadio} type="radio" name="font" value="Boring" checked={settings.font === "Boring"} /> Boring</label>
 				</dd>
 
-				<dt>video folders</dt>
-				<dd>
-					<ul className={styles.folders}>
-						{settings.videoFolders.map((i, idx) => <li key={i}><button onClick={removeFolder} value={idx} title={`Remove folder "${i}"`}>{i} <Icon icon="x" /></button></li>)}
-						<li><button onClick={addFolder}>add new folder <Icon icon="+" /></button></li>
-					</ul>
-					<p>if no folders are set, your OS default video directory is used instead</p>
-				</dd>
+				<Debug>
+					<dt>video folders</dt>
+					<dd>
+						<ul className={styles.folders}>
+							{settings.videoFolders.map((i, idx) => <li key={i}><button onClick={removeFolder} value={idx} title={`Remove folder "${i}"`}>{i} <Icon icon="x" /></button></li>)}
+							<li><button onClick={addFolder}>add new folder <Icon icon="+" /></button></li>
+						</ul>
+						<p>if no folders are set, your OS default video directory is used instead</p>
+					</dd>
+				</Debug>
 
 				<dt>save audio</dt>
 				<dd>
