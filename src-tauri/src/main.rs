@@ -30,7 +30,7 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
     // allow overwriting
     .overwrite()
     // no audio
-    .arg("-an")
+    .no_audio()
     // no vysnc
     .arg("-vsync").arg(0.to_string())
     // seek
@@ -86,7 +86,7 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String, a
 
     // no audio
     if !audio {
-        command.arg("-an");
+        command.no_audio();
     }
 
     command
