@@ -27,6 +27,7 @@ const videosPerPage = 30;
 import { AllSubstringsIndexStrategy, Search, UnorderedSearchIndex } from 'js-search';
 import { useSettings } from './ContextSettings';
 import { Icon } from './Icon';
+import { getErrorMessage } from './getErrorMessage';
 import { isVideo } from './isVideo';
 import { toEditUrl } from './toEditUrl';
 
@@ -63,9 +64,7 @@ export function ViewVideos() {
 				setLoading(false);
 			} catch (err) {
 				console.error(err);
-				if (err instanceof Error) setError(err.message);
-				else if (typeof err === 'string') setError(err);
-				else setError('Unknown error');
+				setError(getErrorMessage(err));
 			}
 		})();
 	}, []);

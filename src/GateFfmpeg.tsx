@@ -6,6 +6,7 @@ import styles from './GateFfmpeg.module.scss';
 import { H } from './H';
 import { Loading } from './Loading';
 import { Page } from './Page';
+import { getErrorMessage } from './getErrorMessage';
 import { isDesktop } from './isDesktop';
 
 export function GateFfmpeg({ children }: PropsWithChildren<{}>) {
@@ -35,8 +36,7 @@ export function GateFfmpeg({ children }: PropsWithChildren<{}>) {
 		} catch (err) {
 			console.error(err);
 			setStateFfmpeg('error');
-			if (!(err instanceof Error)) throw err;
-			setInstallError(err.message);
+			setInstallError(getErrorMessage(err));
 		}
 	}, [stateFfmpeg]);
 

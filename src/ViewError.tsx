@@ -3,6 +3,7 @@ import { isRouteErrorResponse, useNavigate, useRouteError } from 'react-router';
 import { Button } from './Button';
 import { H } from './H';
 import styles from './ViewError.module.scss';
+import { getErrorMessage } from './getErrorMessage';
 
 function ContextualDetails() {
 	const error = useRouteError();
@@ -51,7 +52,7 @@ export function ViewError() {
 		try {
 			return JSON.stringify(error, undefined, '\t');
 		} catch {
-			return error instanceof Error ? error.message : 'Unknown error';
+			return getErrorMessage(error);
 		}
 	}, [error]);
 	return (
