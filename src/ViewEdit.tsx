@@ -528,12 +528,12 @@ export function ViewEdit() {
 						<span ref={refTime}>{0}</span> /&nbsp;<span>{toDuration(duration)}</span>
 					</span>
 					<div className={styles.zoom}>
-						<button onClick={zoomIn} title="Zoom in">
-							<Icon icon="zoomin" />
-						</button>
-						<span>{zoom}%</span>
 						<button onClick={zoomOut} title="Zoom out">
 							<Icon icon="zoomout" />
+						</button>
+						<span>{zoom}%</span>
+						<button onClick={zoomIn} title="Zoom in">
+							<Icon icon="zoomin" />
 						</button>
 					</div>
 					<div className={styles.save}>
