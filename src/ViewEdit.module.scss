@@ -6,6 +6,34 @@
 	height: 100%;
 }
 
+@keyframes fadein {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+.spinner {
+	display: none;
+	position: absolute;
+	right: 1rem;
+	bottom: 100%;
+	margin-bottom: 2.5rem;
+	font-size: 75%;
+	animation: fadein 1s ease-in-out both;
+	animation-delay: 0.4s;
+	pointer-events: initial;
+	color: transparent;
+	transition: color 0.1s ease-out;
+
+	&:hover {
+		color: inherit;
+	}
+}
+
 .video {
 	cursor: pointer;
 	min-height: 0;
@@ -13,6 +41,35 @@
 	background-color: var(--color-black);
 	object-fit: contain;
 	object-position: center;
+
+	// NETWORK_EMPTY - There is no data yet. Also, readyState is HAVE_NOTHING.
+	// &[data-network-state='0'] {}
+
+	// NETWORK_IDLE - HTMLMediaElement is active and has selected a resource, but is not using the network.
+	// &[data-network-state='1'] {}
+
+	// NETWORK_LOADING - The browser is downloading HTMLMediaElement data.
+	&[data-network-state='2'] + .controls > .spinner {
+		display: block;
+	}
+
+	// NETWORK_NO_SOURCE - No HTMLMediaElement src found.
+	&[data-network-state='3'] {
+		+ .controls::after {
+			content: 'no video source :(';
+			cursor: not-allowed;
+			display: flex;
+			background: rgb(var(--color-primary-bright-rgb) / 90%);
+			color: var(--color-black);
+			animation: fadein 0.5s both;
+			animation-delay: 1s;
+			position: absolute;
+			inset: 0;
+			z-index: 5;
+			justify-content: center;
+			align-items: center;
+		}
+	}
 }
 
 .controls {

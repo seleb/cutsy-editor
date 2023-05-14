@@ -14,6 +14,7 @@ import { useQueuePush, useVideo, useVideoSet } from './ContextApp';
 import { useSettings } from './ContextSettings';
 import { EditorHelp } from './EditorHelp';
 import { Icon } from './Icon';
+import { Spinner } from './Spinner';
 import { Title } from './Title';
 import styles from './ViewEdit.module.scss';
 import { clamp } from './clamp';
@@ -136,6 +137,17 @@ export function ViewEdit() {
 			elVideo.cancelVideoFrameCallback(vfc);
 		};
 	}, [getClip, preview]);
+
+	// check if buffering
+	useEffect(() => {
+		const elVideo = refVideo.current;
+		if (!elVideo) return undefined;
+		const interval = setInterval(() => {
+			elVideo.dataset.networkState = elVideo.networkState.toString(10);
+		}, 200);
+
+		return () => clearInterval(interval);
+	}, []);
 
 	// play/pause
 	useEffect(() => {
@@ -607,6 +619,7 @@ export function ViewEdit() {
 				loop
 			/>
 			<div className={styles.controls}>
+				<Spinner className={styles.spinner}>buffering</Spinner>
 				<div
 					className={styles.trackbarscroll}
 					onContextMenu={noContextMenu}
