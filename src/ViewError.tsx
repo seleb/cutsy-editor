@@ -19,7 +19,7 @@ function ContextualDetails() {
 				<strong>
 					{error.status} - {error.statusText}
 				</strong>
-				<p>This page doesn't exist!</p>
+				<p>This page doesn&apos;t exist!</p>
 			</div>
 		);
 

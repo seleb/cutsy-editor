@@ -39,7 +39,7 @@ export function ViewQueue() {
 						);
 					})}
 				</tbody>
-			</table> : <p>there's nothing in the queue :)</p>}
+			</table> : <p>there&apos;s nothing in the queue :)</p>}
 		</Page>
 	);
 }
