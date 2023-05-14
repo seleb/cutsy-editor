@@ -21,8 +21,9 @@ $sidebar: 4rem;
 	cursor: default;
 
 	:global(.h) {
-		font-size: 150%;
-		margin-block: 0.5rem;
+		font-size: 130%;
+		padding-block: 0.5rem;
+		overflow: hidden;
 		>strong {
 			display: inline-block;
 		}

@@ -1,12 +1,12 @@
 {
   "private": true,
-  "name": "clilp-editor",
+  "name": "cutsy-editor",
   "description": "a lil video clip editor",
   "type": "module",
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/seleb/clilp-editor"
+    "url": "https://github.com/seleb/cutsy-editor"
   },
   "scripts": {
     "start": "npm run tauri dev",

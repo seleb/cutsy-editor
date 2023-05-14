@@ -1,5 +1,5 @@
 [package]
-name = "clilp-editor"
+name = "cutsy-editor"
 version = "0.0.0"
 description = "a lil video clip editor"
 authors = ["you"]

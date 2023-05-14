@@ -4,12 +4,12 @@ import { NavLink } from 'react-router-dom';
 import { message, open } from '@tauri-apps/api/dialog';
 import { listen } from '@tauri-apps/api/event';
 import { useCallback, useEffect } from 'react';
-import { Clilp } from './Clilp';
 import { useQueue, useVideo } from './ContextApp';
 import { Debug } from './Debug';
 import { GateFfmpeg } from './GateFfmpeg';
 import { H, HLevel } from './H';
 import { Icon } from './Icon';
+import { Name } from './Name';
 import { Title } from './Title';
 import styles from './ViewRoot.module.scss';
 import { isVideo } from './isVideo';
@@ -46,10 +46,10 @@ export function ViewRoot() {
 
 	return (
 		<>
-			<Title>clilp</Title>
+			<Title>cutsy</Title>
 			<header className={styles.header}>
 				<H>
-					<Clilp />
+					<Name />
 				</H>
 				<nav>
 					<button title="Open file" onClick={onOpen}>

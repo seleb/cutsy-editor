@@ -1,9 +1,9 @@
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import { Button } from './Button';
-import { Clilp } from './Clilp';
 import styles from './GateFfmpeg.module.scss';
 import { H } from './H';
 import { Loading } from './Loading';
+import { Name } from './Name';
 import { Page } from './Page';
 import { installFfmpeg, isFfmpegInstalled } from './ffmpeg';
 import { getErrorMessage } from './getErrorMessage';
@@ -48,7 +48,7 @@ export function GateFfmpeg({ children }: PropsWithChildren<{}>) {
 	) : (
 		<Page className={styles.container}>
 			<H>
-				<Clilp /> setup
+				<Name /> setup
 			</H>
 			<section className={styles.splash}>
 				<Loading

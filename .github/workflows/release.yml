@@ -9,7 +9,7 @@ concurrency:
 
 env:
   ITCH_USER: seansleblanc
-  ITCH_GAME: clilp-editor
+  ITCH_GAME: cutsy-editor
   DISCORD_USERNAME: ${{ github.repository }}
   DISCORD_AVATAR: https://raw.githubusercontent.com/${{ github.repository }}/main/src/public/app-icon.png
 

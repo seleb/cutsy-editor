@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "clilp",
+    "productName": "cutsy",
     "version": "../package.json"
   },
   "tauri": {
@@ -58,7 +58,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "site.seans.clilp",
+      "identifier": "site.seans.cutsy",
       "targets": [
         "msi",
         "app",
@@ -79,7 +79,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "clilp",
+        "title": "cutsy",
         "width": 800,
         "height": 600
       }
