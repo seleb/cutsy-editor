@@ -513,11 +513,11 @@ export function ViewEdit() {
 	return (
 		<div className={styles.container}>
 			<Title>{['edit', name]}</Title>
-			<video ref={refVideo} onClick={togglePlaying} className={styles.video} controls={false} src={src} preload="auto" muted={muted} loop></video>
+			<video ref={refVideo} onClick={togglePlaying} className={styles.video} controls={false} src={src} preload="auto" muted={muted} loop />
 			<div className={styles.controls}>
 				<div className={styles.trackbarscroll} onContextMenu={noContextMenu} onWheel={onWheel}>
 					<div className={styles.trackbar} style={{ width: `${zoom}%` }} onContextMenu={noContextMenu} onMouseMove={onUpdatePlayhead}>
-						<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStartPlayhead} value={0} max={duration} onContextMenu={noContextMenu}></progress>
+						<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStartPlayhead} value={0} max={duration} onContextMenu={noContextMenu} />
 						<div ref={refClip} className={styles.clip} onPointerDown={onScrubStartClip} onContextMenu={noContextMenu}>
 							<Icon title="Drag start of clip" icon="pin" className={styles.start} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />
 							<Icon title="Drag end of clip" icon="pin" className={styles.end} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />

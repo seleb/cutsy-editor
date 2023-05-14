@@ -29,7 +29,7 @@ function Video({ path, name }: FileEntry) {
 	}, [path]);
 	return (
 		<Link to={to}>
-			<video aria-hidden="true" preload="metadata" src={src}></video>
+			<video aria-hidden="true" preload="metadata" src={src} />
 			<span>{name}</span>
 			<button type="button" title="Open in folder" onClick={openInFolder}>{<Icon icon="videos" />}</button>
 		</Link>
