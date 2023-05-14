@@ -467,7 +467,7 @@ export function ViewEdit() {
 						<Icon icon={muted ? 'muted' : 'sound'} />
 					</button>
 					<span className={styles.time}>
-						<span ref={refTime}>{0}</span> / <span>{toDuration(duration)}</span>
+						<span ref={refTime}>{0}</span> /&nbsp;<span>{toDuration(duration)}</span>
 					</span>
 					<div className={styles.save}>
 						<button disabled={saving} onClick={onSaveImage} title="Save image">
