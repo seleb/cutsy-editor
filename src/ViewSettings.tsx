@@ -161,7 +161,7 @@ export function ViewSettings() {
 						value={settings.itemsPerPage}
 						onInput={onNumber}
 						step={1}
-						min={1}
+						min={0}
 					/>
 				</dd>
 

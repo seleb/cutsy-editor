@@ -141,7 +141,7 @@ export function ViewVideos() {
 	const { totalPages, startIndex, endIndex, setPage } = usePagination({
 		totalItems: sorted.length,
 		initialPage: numPage,
-		initialPageSize: itemsPerPage,
+		initialPageSize: itemsPerPage || 1,
 	});
 	useLayoutEffect(() => {
 		setPage(numPage);
