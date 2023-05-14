@@ -42,6 +42,13 @@ export function ViewEdit() {
 		setMuted(s => !s);
 	}, []);
 
+	const togglePreview = useCallback(() => {
+		setPreview(s => {
+			setPaused(s);
+			return !s;
+		});
+	}, []);
+
 	// get video duration for scrubber
 	useEffect(() => {
 		const elVideo = refVideo.current;
@@ -82,6 +89,27 @@ export function ViewEdit() {
 			elVideo.cancelVideoFrameCallback(vfc);
 		};
 	}, []);
+
+	// update to preview clip only
+	useEffect(() => {
+		if (!preview) return;
+		let vfc: number;
+		const elVideo = refVideo.current;
+		const clip = getClip();
+		if (!elVideo || !clip) return;
+		const [start, end] = clip;
+		const onUpdate: VideoFrameRequestCallback = (_now, metadata) => {
+			if (metadata.mediaTime < start * elVideo.duration - FRAME || metadata.mediaTime > end * elVideo.duration) {
+				elVideo.currentTime = start * elVideo.duration + FRAME;
+			}
+			vfc = elVideo.requestVideoFrameCallback(onUpdate);
+		};
+		vfc = elVideo.requestVideoFrameCallback(onUpdate);
+
+		return () => {
+			elVideo.cancelVideoFrameCallback(vfc);
+		};
+	}, [preview]);
 
 	// play/pause
 	useEffect(() => {
@@ -147,6 +175,7 @@ export function ViewEdit() {
 			elVideo.currentTime = t;
 			elTime.textContent = toDuration(t);
 			updatePlayhead(t / elVideo.duration);
+			setPreview(false);
 			return t;
 		},
 		[updatePlayhead]
@@ -403,6 +432,9 @@ export function ViewEdit() {
 				<div className={styles.buttons}>
 					<button onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>
 						<Icon icon={paused ? 'play' : 'pause'} />
+					</button>
+					<button onClick={togglePreview} title={preview && !paused ? 'Stop preview' : 'Preview clip'}>
+						<Icon icon={preview && !paused ? 'noPreview' : 'preview'} />
 					</button>
 					<button onClick={toggleMuted} title={muted ? 'Unmute' : 'Mute'}>
 						<Icon icon={muted ? 'muted' : 'sound'} />
