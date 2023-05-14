@@ -1,11 +1,24 @@
 import { FileEntry, readDir } from '@tauri-apps/api/fs';
 import { BaseDirectory } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
-import { ChangeEventHandler, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+	ChangeEventHandler,
+	MouseEventHandler,
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { usePagination } from 'react-use-pagination';
 import { open } from '@tauri-apps/api/shell';
-import { AllSubstringsIndexStrategy, Search, UnorderedSearchIndex } from 'js-search';
+import {
+	AllSubstringsIndexStrategy,
+	Search,
+	UnorderedSearchIndex,
+} from 'js-search';
 import { H } from './H';
 import { Loading } from './Loading';
 import { Page } from './Page';
@@ -23,17 +36,27 @@ import { usePrevious } from './usePrevious';
 function Video({ path, name }: FileEntry) {
 	const src = useMemo(() => convertFileSrc(path), [path]);
 	const to = useMemo(() => toEditUrl(path), [path]);
-	const openInFolder = useCallback<MouseEventHandler>(async (event) => {
-		event.preventDefault();
-		open(`file:///${path.replace(/(?:.(?![\\/]))+$/, '').replace(/([\\/])\.[\\/]/g, '$1').replace(/([\\/])\.$/, '$1')}`)
-	}, [path]);
+	const openInFolder = useCallback<MouseEventHandler>(
+		async (event) => {
+			event.preventDefault();
+			open(
+				`file:///${path
+					.replace(/(?:.(?![\\/]))+$/, '')
+					.replace(/([\\/])\.[\\/]/g, '$1')
+					.replace(/([\\/])\.$/, '$1')}`
+			);
+		},
+		[path]
+	);
 	return (
 		<Link to={to}>
 			<video aria-hidden="true" preload="metadata" src={src} />
 			<span>{name}</span>
 			{/* button has title */}
 			{/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
-			<button type="button" title="Open in folder" onClick={openInFolder}><Icon icon="videos" /></button>
+			<button type="button" title="Open in folder" onClick={openInFolder}>
+				<Icon icon="videos" />
+			</button>
 		</Link>
 	);
 }
@@ -58,12 +81,19 @@ export function ViewVideos() {
 				search.addIndex('path');
 				let dirs: FileEntry[][];
 				if (videoFolders.length) {
-					dirs = await Promise.all(videoFolders.map(i => readDir(i, { recursive: true })));
+					dirs = await Promise.all(
+						videoFolders.map((i) => readDir(i, { recursive: true }))
+					);
 				} else {
-					dirs = [await readDir('.', { dir: BaseDirectory.Video, recursive: true })];
+					dirs = [
+						await readDir('.', { dir: BaseDirectory.Video, recursive: true }),
+					];
 				}
-				const flatten = (dir: FileEntry): FileEntry[] => (dir.children ? dir.children.flatMap(flatten) : [dir]);
-				const files = dirs.flatMap(i => i.flatMap(flatten)).filter(i => isVideo(i.path));
+				const flatten = (dir: FileEntry): FileEntry[] =>
+					dir.children ? dir.children.flatMap(flatten) : [dir];
+				const files = dirs
+					.flatMap((i) => i.flatMap(flatten))
+					.filter((i) => isVideo(i.path));
 				setLibrary(files);
 				setResults(files);
 				search.addDocuments(files);
@@ -85,10 +115,12 @@ export function ViewVideos() {
 		return num;
 	}, [page]);
 
-	const [sort, setSort] = useState<'sortAsc' | 'sortDesc' | 'sortNone'>('sortNone');
+	const [sort, setSort] = useState<'sortAsc' | 'sortDesc' | 'sortNone'>(
+		'sortNone'
+	);
 	const cycleSort = useCallback(() => {
 		setSort(
-			s =>
+			(s) =>
 				((
 					{
 						sortAsc: 'sortDesc',
@@ -101,7 +133,9 @@ export function ViewVideos() {
 	const sorted = useMemo(() => {
 		if (sort === 'sortNone') return results;
 		const copy = results.slice();
-		copy.sort(({ name: a = '' }, { name: b = '' }) => a?.localeCompare(b, undefined, { sensitivity: 'base' }));
+		copy.sort(({ name: a = '' }, { name: b = '' }) =>
+			a?.localeCompare(b, undefined, { sensitivity: 'base' })
+		);
 		if (sort === 'sortDesc') copy.reverse();
 		return copy;
 	}, [results, sort]);
@@ -125,7 +159,7 @@ export function ViewVideos() {
 	);
 
 	const onSearch = useCallback<ChangeEventHandler<HTMLInputElement>>(
-		event => {
+		(event) => {
 			const search = refSearch.current;
 			if (!search) return;
 			const query = event.currentTarget.value;
@@ -146,7 +180,9 @@ export function ViewVideos() {
 	const lastPage = usePrevious(numPage) || -1;
 	useEffect(() => {
 		if (Math.abs(numPage - lastPage) === 1 && numPage < lastPage) {
-			document.documentElement.scrollTo({ top: document.documentElement.scrollHeight });
+			document.documentElement.scrollTo({
+				top: document.documentElement.scrollHeight,
+			});
 		} else if (numPage !== lastPage) {
 			document.documentElement.scrollTo({ top: 0 });
 		}
@@ -156,13 +192,10 @@ export function ViewVideos() {
 		<Page>
 			<Title>videos</Title>
 			<PageHeader className={styles.header}>
-				<H className={styles.h}>
-					videos
-				</H>
-
+				<H className={styles.h}>videos</H>
 
 				<datalist id="list-videos">
-					{library.map(i => (
+					{library.map((i) => (
 						// datalist doesn't need label
 						// eslint-disable-next-line jsx-a11y/control-has-associated-label
 						<option key={i.path} value={i.name} />
@@ -170,10 +203,20 @@ export function ViewVideos() {
 				</datalist>
 				<div className={styles.search}>
 					<Icon icon="search" />
-					<input type="text" list="list-videos" placeholder="Search..." onChange={onSearch} />
+					<input
+						type="text"
+						list="list-videos"
+						placeholder="Search..."
+						onChange={onSearch}
+					/>
 				</div>
 
-				<span className={styles.count}>{results.length.toString(10).padStart(library.length.toString(10).length, '0')} /&nbsp;{library.length}</span>
+				<span className={styles.count}>
+					{results.length
+						.toString(10)
+						.padStart(library.length.toString(10).length, '0')}{' '}
+					/&nbsp;{library.length}
+				</span>
 				<button
 					type="button"
 					title={
@@ -188,7 +231,14 @@ export function ViewVideos() {
 					<Icon icon={sort} />
 				</button>
 
-				{totalPages > 0 && <PageNumbers className={styles.numbers} goto={goto} current={numPage} total={totalPages} />}
+				{totalPages > 0 && (
+					<PageNumbers
+						className={styles.numbers}
+						goto={goto}
+						current={numPage}
+						total={totalPages}
+					/>
+				)}
 			</PageHeader>
 			<Loading
 				loading={loading}
@@ -203,11 +253,13 @@ export function ViewVideos() {
 				msgNone="No videos ¯\_(ツ)_/¯"
 			>
 				<ul className={styles.videos}>
-					{sorted.slice(startIndex, (endIndex < 0 ? 0 : endIndex) + 1).map(video => (
-						<li key={video.path}>
-							<Video name={video.name} path={video.path} />
-						</li>
-					))}
+					{sorted
+						.slice(startIndex, (endIndex < 0 ? 0 : endIndex) + 1)
+						.map((video) => (
+							<li key={video.path}>
+								<Video name={video.name} path={video.path} />
+							</li>
+						))}
 				</ul>
 			</Loading>
 		</Page>

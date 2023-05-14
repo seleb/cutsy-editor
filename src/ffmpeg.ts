@@ -18,7 +18,15 @@ export function installFfmpeg() {
 	return invoke('install_ffmpeg');
 }
 
-export function saveImage({ input, output, time }: { input: string; output: string; time: number }) {
+export function saveImage({
+	input,
+	output,
+	time,
+}: {
+	input: string;
+	output: string;
+	time: number;
+}) {
 	return invoke<string>('vid_to_img', {
 		input,
 		output,
@@ -26,7 +34,19 @@ export function saveImage({ input, output, time }: { input: string; output: stri
 	});
 }
 
-export function saveClip({ input, output, start, duration, audio }: { input: string; output: string; start: number; duration: number; audio: boolean }) {
+export function saveClip({
+	input,
+	output,
+	start,
+	duration,
+	audio,
+}: {
+	input: string;
+	output: string;
+	start: number;
+	duration: number;
+	audio: boolean;
+}) {
 	return invoke<string>('vid_to_clip', {
 		input,
 		output,

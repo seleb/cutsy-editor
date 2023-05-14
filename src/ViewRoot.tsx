@@ -23,10 +23,13 @@ export function ViewRoot() {
 
 	// edit video on drag+dropping a video
 	useEffect(() => {
-		listen('tauri://file-drop', event => {
+		listen('tauri://file-drop', (event) => {
 			const file = (event.payload as string[])?.[0];
 			if (!file) return undefined;
-			if (!isVideo(file)) return message("File is not a supported video format :(", { type: 'error' });
+			if (!isVideo(file))
+				return message('File is not a supported video format :(', {
+					type: 'error',
+				});
 			navigate(toEditUrl(file));
 			return undefined;
 		});
@@ -39,7 +42,10 @@ export function ViewRoot() {
 		});
 		if (!file) return undefined;
 		file = typeof file === 'string' ? file : file[0];
-		if (!isVideo(file)) return message("File is not a supported video format :(", { type: 'error' });
+		if (!isVideo(file))
+			return message('File is not a supported video format :(', {
+				type: 'error',
+			});
 		navigate(toEditUrl(file));
 		return undefined;
 	}, [navigate]);
@@ -58,7 +64,11 @@ export function ViewRoot() {
 					<button type="button" title="Open file" onClick={onOpen}>
 						<Icon icon="open" />
 					</button>
-					<NavLink aria-disabled={!path} to={path ? `edit?v=${encodeURIComponent(path)}` : ''} title="Edit">
+					<NavLink
+						aria-disabled={!path}
+						to={path ? `edit?v=${encodeURIComponent(path)}` : ''}
+						title="Edit"
+					>
 						<Icon icon="edit" />
 					</NavLink>
 					<NavLink to="videos" title="Videos">

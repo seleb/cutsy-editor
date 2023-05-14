@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import { ComponentProps } from 'react';
 
 import styles from './Button.module.scss';
 
@@ -7,5 +7,13 @@ export function Button({
 	children,
 	...props
 }: ComponentProps<'button'>) {
-	return <button type="button" className={`${className} ${styles.button}`} {...props}>{children}</button>
+	return (
+		<button
+			type="button"
+			className={`${className} ${styles.button}`}
+			{...props}
+		>
+			{children}
+		</button>
+	);
 }

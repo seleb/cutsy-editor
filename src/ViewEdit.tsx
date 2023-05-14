@@ -1,5 +1,14 @@
 import { convertFileSrc } from '@tauri-apps/api/tauri';
-import { MouseEventHandler, PointerEventHandler, WheelEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+	MouseEventHandler,
+	PointerEventHandler,
+	WheelEventHandler,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQueuePush, useVideo, useVideoSet } from './ContextApp';
 import { useSettings } from './ContextSettings';
@@ -15,7 +24,10 @@ import { toDuration } from './toDuration';
 export function ViewEdit() {
 	const [search] = useSearchParams();
 	const pathEncoded = search.get('v') || '';
-	const pathDecoded = useMemo(() => decodeURIComponent(pathEncoded), [pathEncoded]);
+	const pathDecoded = useMemo(
+		() => decodeURIComponent(pathEncoded),
+		[pathEncoded]
+	);
 	const src = useMemo(() => convertFileSrc(pathDecoded), [pathDecoded]);
 	const name = useMemo(() => {
 		const basename = pathDecoded.split(/[\\/]/).pop();
@@ -36,14 +48,14 @@ export function ViewEdit() {
 	const [preview, setPreview] = useState(false);
 
 	const togglePlaying = useCallback(() => {
-		setPaused(s => !s);
+		setPaused((s) => !s);
 	}, []);
 	const toggleMuted = useCallback(() => {
-		setMuted(s => !s);
+		setMuted((s) => !s);
 	}, []);
 
 	const togglePreview = useCallback(() => {
-		setPreview(s => {
+		setPreview((s) => {
 			setPaused(s);
 			return !s;
 		});
@@ -100,7 +112,10 @@ export function ViewEdit() {
 			const clip = getClip();
 			if (!clip) return;
 			const [start, end] = clip;
-			if (metadata.mediaTime < start * elVideo.duration - FRAME || metadata.mediaTime > end * elVideo.duration) {
+			if (
+				metadata.mediaTime < start * elVideo.duration - FRAME ||
+				metadata.mediaTime > end * elVideo.duration
+			) {
 				elVideo.currentTime = start * elVideo.duration + FRAME;
 			}
 			vfc = elVideo.requestVideoFrameCallback(onUpdate);
@@ -146,11 +161,12 @@ export function ViewEdit() {
 	}, []);
 
 	const onUpdatePlayhead = useCallback<MouseEventHandler>(
-		event => {
+		(event) => {
 			const elPlayhead = refPlayhead.current;
 			if (!elPlayhead?.parentElement) return;
 			const rect = elPlayhead.parentElement.getBoundingClientRect();
-			const pos = (event.pageX - rect.left) / elPlayhead.parentElement.offsetWidth;
+			const pos =
+				(event.pageX - rect.left) / elPlayhead.parentElement.offsetWidth;
 			updatePlayhead(pos);
 		},
 		[updatePlayhead]
@@ -167,7 +183,11 @@ export function ViewEdit() {
 			let t: number;
 			if (loop && to < 0 && elVideo.currentTime < FRAME * 2) {
 				t = elVideo.duration - FRAME;
-			} else if (loop && to > elVideo.duration && elVideo.currentTime - elVideo.duration > -FRAME * 2) {
+			} else if (
+				loop &&
+				to > elVideo.duration &&
+				elVideo.currentTime - elVideo.duration > -FRAME * 2
+			) {
 				t = 0;
 			} else {
 				t = clamp(0, to, elVideo.duration - FRAME);
@@ -181,17 +201,24 @@ export function ViewEdit() {
 		[updatePlayhead]
 	);
 
-	const seekBy = useCallback((by: number) => {
-		const elVideo = refVideo.current;
-		if (!elVideo) return;
-		seek(elVideo.currentTime + by);
-	}, [seek]);
+	const seekBy = useCallback(
+		(by: number) => {
+			const elVideo = refVideo.current;
+			if (!elVideo) return;
+			seek(elVideo.currentTime + by);
+		},
+		[seek]
+	);
 
 	const centerTrack = useCallback(() => {
 		const elVideo = refVideo.current;
 		const elTrack = refProgress.current?.parentElement?.parentElement;
 		if (!elVideo?.duration || !elTrack) return;
-		elTrack.scrollTo({ left: elTrack.scrollWidth * elVideo.currentTime / elVideo.duration - elTrack.offsetWidth/2 });
+		elTrack.scrollTo({
+			left:
+				(elTrack.scrollWidth * elVideo.currentTime) / elVideo.duration -
+				elTrack.offsetWidth / 2,
+		});
 	}, []);
 
 	const onScrubStart = useCallback<
@@ -207,81 +234,88 @@ export function ViewEdit() {
 			/** called when scrubbing is released */
 			end?: (event: PointerEvent) => void;
 		}) => PointerEventHandler<Element>
-			>(
-			({ start, scrub, end }) =>
-				event => {
-					if (typeof start === 'function') {
-						const startVal = start(event.nativeEvent) !== false;
-						if (startVal === true) {
-							scrub?.(event.nativeEvent);
-						} else if (startVal === false) {
-							return;
-						}
-					} else if (start) {
+	>(
+		({ start, scrub, end }) =>
+			(event) => {
+				if (typeof start === 'function') {
+					const startVal = start(event.nativeEvent) !== false;
+					if (startVal === true) {
 						scrub?.(event.nativeEvent);
+					} else if (startVal === false) {
+						return;
 					}
-
-					const onScrubStop = (eventScrub: PointerEvent) => {
-						eventScrub.preventDefault();
-						if (scrub) window.removeEventListener('pointermove', scrub);
-						if (end) window.removeEventListener('pointerup', end);
-						window.removeEventListener('pointerup', onScrubStop);
-					};
-
-					if (scrub) window.addEventListener('pointermove', scrub);
-					if (end) window.addEventListener('pointerup', end);
-					window.addEventListener('pointerup', onScrubStop);
-				},
-			[]
-			);
-
-	const onUpdateClip = useCallback((start?: number, end?: number, slide?: number) => {
-		const elClip = refClip.current;
-		const clip = getClip();
-		if (!elClip || !clip) return;
-		const [oldStart, oldEnd] = clip;
-		let newStart = start ?? oldStart;
-		let newEnd = end ?? oldEnd;
-		if (newEnd < newStart) [newStart, newEnd] = [newEnd, newStart];
-		if (slide !== undefined) {
-			newStart += slide;
-			newEnd += slide;
-		}
-		elClip.style.left = `${clamp(0, newStart, 1) * 100}%`;
-		elClip.style.width = `${clamp(0, newEnd - newStart, 1 - newStart) * 100}%`;
-	}, [getClip]);
-
-	const onScrubStartPlayhead = useMemo(() => onScrubStart({
-		start: (event: PointerEvent) => {
-			if (event.shiftKey) {
-				const elVideo = refVideo.current;
-				const elProgress = refProgress.current as HTMLProgressElement;
-				if (!elVideo || !elVideo?.duration) return undefined;
-				event.preventDefault();
-				const rect = elProgress.getBoundingClientRect();
-				const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
-				
-				if (event.button && event.button === 2) {
-					onUpdateClip(undefined, pos);
-				} else {
-					onUpdateClip(pos, undefined);
+				} else if (start) {
+					scrub?.(event.nativeEvent);
 				}
-				return false;
-			} 
-			return true;
+
+				const onScrubStop = (eventScrub: PointerEvent) => {
+					eventScrub.preventDefault();
+					if (scrub) window.removeEventListener('pointermove', scrub);
+					if (end) window.removeEventListener('pointerup', end);
+					window.removeEventListener('pointerup', onScrubStop);
+				};
+
+				if (scrub) window.addEventListener('pointermove', scrub);
+				if (end) window.addEventListener('pointerup', end);
+				window.addEventListener('pointerup', onScrubStop);
+			},
+		[]
+	);
+
+	const onUpdateClip = useCallback(
+		(start?: number, end?: number, slide?: number) => {
+			const elClip = refClip.current;
+			const clip = getClip();
+			if (!elClip || !clip) return;
+			const [oldStart, oldEnd] = clip;
+			let newStart = start ?? oldStart;
+			let newEnd = end ?? oldEnd;
+			if (newEnd < newStart) [newStart, newEnd] = [newEnd, newStart];
+			if (slide !== undefined) {
+				newStart += slide;
+				newEnd += slide;
+			}
+			elClip.style.left = `${clamp(0, newStart, 1) * 100}%`;
+			elClip.style.width = `${
+				clamp(0, newEnd - newStart, 1 - newStart) * 100
+			}%`;
 		},
-		scrub: (event: PointerEvent) => {
-			const elVideo = refVideo.current;
-			const elProgress = refProgress.current as HTMLProgressElement;
-			if (!elVideo || !elVideo?.duration) return;
-			event.preventDefault();
-			const rect = elProgress.getBoundingClientRect();
-			const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
-			setPreview(false);
-			seek(pos * elVideo.duration, false);
-		},
-	}),
-	[onScrubStart, onUpdateClip, seek]
+		[getClip]
+	);
+
+	const onScrubStartPlayhead = useMemo(
+		() =>
+			onScrubStart({
+				start: (event: PointerEvent) => {
+					if (event.shiftKey) {
+						const elVideo = refVideo.current;
+						const elProgress = refProgress.current as HTMLProgressElement;
+						if (!elVideo || !elVideo?.duration) return undefined;
+						event.preventDefault();
+						const rect = elProgress.getBoundingClientRect();
+						const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
+
+						if (event.button && event.button === 2) {
+							onUpdateClip(undefined, pos);
+						} else {
+							onUpdateClip(pos, undefined);
+						}
+						return false;
+					}
+					return true;
+				},
+				scrub: (event: PointerEvent) => {
+					const elVideo = refVideo.current;
+					const elProgress = refProgress.current as HTMLProgressElement;
+					if (!elVideo || !elVideo?.duration) return;
+					event.preventDefault();
+					const rect = elProgress.getBoundingClientRect();
+					const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
+					setPreview(false);
+					seek(pos * elVideo.duration, false);
+				},
+			}),
+		[onScrubStart, onUpdateClip, seek]
 	);
 
 	const onScrubStartMarker = useMemo(() => {
@@ -295,16 +329,20 @@ export function ViewEdit() {
 				const elClip = refClip.current;
 				const elProgress = refProgress.current as HTMLProgressElement;
 				const clip = getClip();
-				if (!elVideo || !elVideo?.duration || !elClip || !elProgress || !clip) return undefined;
+				if (!elVideo || !elVideo?.duration || !elClip || !elProgress || !clip)
+					return undefined;
 
 				[start, end] = clip;
 				target = event.target as Element;
-				isStart = elClip.firstChild === target || elClip.firstChild?.contains(target) || false;
+				isStart =
+					elClip.firstChild === target ||
+					elClip.firstChild?.contains(target) ||
+					false;
 				if (event.button && event.button !== 1) {
 					event.preventDefault();
 					const pos = elVideo.currentTime / elVideo.duration;
 					if (isStart) {
-						onUpdateClip(pos, undefined)
+						onUpdateClip(pos, undefined);
 					} else {
 						onUpdateClip(undefined, pos);
 					}
@@ -319,10 +357,14 @@ export function ViewEdit() {
 				if (!elVideo || !elVideo?.duration || !elClip || !elProgress) return;
 				event.preventDefault();
 				const rect = elProgress.getBoundingClientRect();
-				const pos = clamp(0, (event.pageX - rect.left) / elProgress.offsetWidth, 1);
+				const pos = clamp(
+					0,
+					(event.pageX - rect.left) / elProgress.offsetWidth,
+					1
+				);
 				seek(pos * elVideo.duration, false);
 				if (isStart) {
-					onUpdateClip(pos, end)
+					onUpdateClip(pos, end);
 				} else {
 					onUpdateClip(start, pos);
 				}
@@ -330,40 +372,55 @@ export function ViewEdit() {
 		});
 	}, [getClip, onScrubStart, onUpdateClip, seek]);
 
-	const onScrubStartClip = useMemo(() => onScrubStart({
-		start: (event: PointerEvent) => {
-			if (event.target !== refClip.current) return false;
-			return undefined;
-		},
-		scrub: (event: PointerEvent) => {
-			const elProgress = refProgress.current as HTMLProgressElement;
-			const elClip = refProgress.current as HTMLProgressElement;
-			if (!elProgress || !elClip) return;
-			event.preventDefault();
-			const rect = elClip.getBoundingClientRect();
-			if ((event.movementX < 0 && event.pageX > rect.right) || (event.movementX > 0 && event.pageX < rect.left)) return;
-			onUpdateClip(undefined, undefined, event.movementX / elProgress.offsetWidth);
-		},
-	}), [onScrubStart, onUpdateClip]);
+	const onScrubStartClip = useMemo(
+		() =>
+			onScrubStart({
+				start: (event: PointerEvent) => {
+					if (event.target !== refClip.current) return false;
+					return undefined;
+				},
+				scrub: (event: PointerEvent) => {
+					const elProgress = refProgress.current as HTMLProgressElement;
+					const elClip = refProgress.current as HTMLProgressElement;
+					if (!elProgress || !elClip) return;
+					event.preventDefault();
+					const rect = elClip.getBoundingClientRect();
+					if (
+						(event.movementX < 0 && event.pageX > rect.right) ||
+						(event.movementX > 0 && event.pageX < rect.left)
+					)
+						return;
+					onUpdateClip(
+						undefined,
+						undefined,
+						event.movementX / elProgress.offsetWidth
+					);
+				},
+			}),
+		[onScrubStart, onUpdateClip]
+	);
 
 	const { saveAudio } = useSettings();
 
 	const queuePush = useQueuePush();
 
-	const onSaveImage = useCallback(
-		async () => {
-			const output = await saveAsImageLocation(name);
-			if (!output) return;
-			queuePush({ command: 'vid_to_img', input: pathDecoded, output, time: refVideo.current?.currentTime || 0 })
-		},
-		[name, queuePush, pathDecoded]
-	);
+	const onSaveImage = useCallback(async () => {
+		const output = await saveAsImageLocation(name);
+		if (!output) return;
+		queuePush({
+			command: 'vid_to_img',
+			input: pathDecoded,
+			output,
+			time: refVideo.current?.currentTime || 0,
+		});
+	}, [name, queuePush, pathDecoded]);
 
 	const onSaveClip = useCallback(async () => {
 		const elVideo = refVideo.current;
 		const elClip = refClip.current;
 		const clip = getClip();
-		if (!elVideo || !elClip || !clip) throw new Error('Could not find elements');
+		if (!elVideo || !elClip || !clip)
+			throw new Error('Could not find elements');
 		const [start, , dur] = clip;
 		const output = await saveAsVideoLocation(name);
 		if (!output) return;
@@ -381,7 +438,9 @@ export function ViewEdit() {
 		});
 	}, [getClip, name, queuePush, pathDecoded, muted, saveAudio]);
 
-	const noContextMenu = useCallback<MouseEventHandler<SVGSVGElement | HTMLElement>>(event => {
+	const noContextMenu = useCallback<
+		MouseEventHandler<SVGSVGElement | HTMLElement>
+	>((event) => {
 		event.preventDefault();
 	}, []);
 
@@ -392,8 +451,11 @@ export function ViewEdit() {
 		const elClip = refClip.current;
 		if (!elVideo || !elClip) return undefined;
 		return () => {
-			const clipStart = Number((elClip.style.left || '0%').replace('%', '')) / 100;
-			const clipEnd = Number((elClip.style.width || '100%').replace('%', '')) / 100 + clipStart;
+			const clipStart =
+				Number((elClip.style.left || '0%').replace('%', '')) / 100;
+			const clipEnd =
+				Number((elClip.style.width || '100%').replace('%', '')) / 100 +
+				clipStart;
 			setVideo({
 				path: pathEncoded,
 				clipStart,
@@ -410,11 +472,11 @@ export function ViewEdit() {
 
 	const [zoom, setZoom] = useState(100);
 	const zoomIn = useCallback(() => {
-		setZoom(zoom*2);
+		setZoom(zoom * 2);
 	}, [zoom]);
 	const zoomOut = useCallback(() => {
 		if (zoom > 100) {
-			setZoom(zoom/2);
+			setZoom(zoom / 2);
 		} else {
 			setZoom(100);
 		}
@@ -424,19 +486,22 @@ export function ViewEdit() {
 		centerTrack();
 	}, [centerTrack, zoom]);
 
-	const onWheel = useCallback<WheelEventHandler<HTMLDivElement>>((event) => {
-		if (event.ctrlKey || event.metaKey) {
-			if (event.deltaY > 0) {
-				zoomOut();
-			} else if (event.deltaY < 0) {
-				zoomIn();
+	const onWheel = useCallback<WheelEventHandler<HTMLDivElement>>(
+		(event) => {
+			if (event.ctrlKey || event.metaKey) {
+				if (event.deltaY > 0) {
+					zoomOut();
+				} else if (event.deltaY < 0) {
+					zoomIn();
+				}
+			} else if (event.deltaY) {
+				const elTrack = refProgress.current?.parentElement?.parentElement;
+				if (!elTrack) return;
+				elTrack.scrollBy({ left: event.deltaY });
 			}
-		} else if (event.deltaY) {
-			const elTrack = refProgress.current?.parentElement?.parentElement;
-			if (!elTrack) return;
-			elTrack.scrollBy({ left: event.deltaY });
-		}
-	}, [zoomIn, zoomOut]);
+		},
+		[zoomIn, zoomOut]
+	);
 
 	// keyboard shortcuts
 	useEffect(() => {
@@ -505,36 +570,105 @@ export function ViewEdit() {
 		return () => {
 			window.removeEventListener('keydown', onKey);
 		};
-	}, [getSkip, seekBy, togglePlaying, togglePreview, toggleMuted, zoomIn, zoomOut, centerTrack, onSaveClip]);
+	}, [
+		getSkip,
+		seekBy,
+		togglePlaying,
+		togglePreview,
+		toggleMuted,
+		zoomIn,
+		zoomOut,
+		centerTrack,
+		onSaveClip,
+	]);
 
 	if (!pathEncoded) throw new Error('No video path!');
 	return (
 		<div className={styles.container}>
 			<Title>{['edit', name]}</Title>
-			<video ref={refVideo} onClick={togglePlaying} className={styles.video} controls={false} src={src} preload="auto" muted={muted} loop />
+			<video
+				ref={refVideo}
+				onClick={togglePlaying}
+				className={styles.video}
+				controls={false}
+				src={src}
+				preload="auto"
+				muted={muted}
+				loop
+			/>
 			<div className={styles.controls}>
-				<div className={styles.trackbarscroll} onContextMenu={noContextMenu} onWheel={onWheel}>
-					<div className={styles.trackbar} style={{ width: `${zoom}%` }} onContextMenu={noContextMenu} onMouseMove={onUpdatePlayhead}>
-						<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStartPlayhead} value={0} max={duration} onContextMenu={noContextMenu} />
-						<div ref={refClip} className={styles.clip} onPointerDown={onScrubStartClip} onContextMenu={noContextMenu}>
-							<Icon title="Drag start of clip" icon="pin" className={styles.start} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />
-							<Icon title="Drag end of clip" icon="pin" className={styles.end} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />
+				<div
+					className={styles.trackbarscroll}
+					onContextMenu={noContextMenu}
+					onWheel={onWheel}
+				>
+					<div
+						className={styles.trackbar}
+						style={{ width: `${zoom}%` }}
+						onContextMenu={noContextMenu}
+						onMouseMove={onUpdatePlayhead}
+					>
+						<progress
+							className={styles.progress}
+							ref={refProgress}
+							onPointerDown={onScrubStartPlayhead}
+							value={0}
+							max={duration}
+							onContextMenu={noContextMenu}
+						/>
+						<div
+							ref={refClip}
+							className={styles.clip}
+							onPointerDown={onScrubStartClip}
+							onContextMenu={noContextMenu}
+						>
+							<Icon
+								title="Drag start of clip"
+								icon="pin"
+								className={styles.start}
+								onPointerDown={onScrubStartMarker}
+								onContextMenu={noContextMenu}
+							/>
+							<Icon
+								title="Drag end of clip"
+								icon="pin"
+								className={styles.end}
+								onPointerDown={onScrubStartMarker}
+								onContextMenu={noContextMenu}
+							/>
 						</div>
-						<div className={styles.playhead} ref={refPlayhead} aria-hidden="true" />
+						<div
+							className={styles.playhead}
+							ref={refPlayhead}
+							aria-hidden="true"
+						/>
 					</div>
 				</div>
 				<div className={styles.buttons}>
-					<button type="button" onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>
+					<button
+						type="button"
+						onClick={togglePlaying}
+						title={paused ? 'Play' : 'Pause'}
+					>
 						<Icon icon={paused ? 'play' : 'pause'} />
 					</button>
-					<button type="button" onClick={togglePreview} title={preview && !paused ? 'Stop preview' : 'Preview clip'}>
+					<button
+						type="button"
+						onClick={togglePreview}
+						title={preview && !paused ? 'Stop preview' : 'Preview clip'}
+					>
 						<Icon icon={preview && !paused ? 'noPreview' : 'preview'} />
 					</button>
-					<button type="button" onClick={toggleMuted} title={muted ? 'Unmute' : 'Mute'}>
+					<button
+						type="button"
+						onClick={toggleMuted}
+						title={muted ? 'Unmute' : 'Mute'}
+					>
 						<Icon icon={muted ? 'muted' : 'sound'} />
 					</button>
 					<span className={styles.time}>
-						<span ref={refTime}>{0}</span> /&nbsp;<span>{toDuration(duration)}</span>
+						<span ref={refTime}>{0}</span> /&nbsp;
+						<span>{toDuration(duration)}</span>
 					</span>
 					<div className={styles.zoom}>
 						<button type="button" onClick={zoomOut} title="Zoom out">

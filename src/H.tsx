@@ -2,19 +2,19 @@ import {
 	ComponentProps,
 	createContext,
 	PropsWithChildren,
-	useContext
-} from "react";
+	useContext,
+} from 'react';
 
 export const contextHeading = createContext(1);
 
-type Headings = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+type Headings = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
 function Heading({
 	level,
 	className,
 	...props
 }: ComponentProps<Headings> & {
-  level: number;
+	level: number;
 }) {
 	const Tag = `h${Math.max(1, Math.min(level, 6))}` as Headings;
 	return <Tag className={`${className} h`} {...props} />;
@@ -32,8 +32,8 @@ export function HLevel({ children }: PropsWithChildren<unknown>) {
 export function H({
 	plus = 0,
 	...props
-}: Omit<ComponentProps<typeof Heading>, "level"> & {
-  plus?: number;
+}: Omit<ComponentProps<typeof Heading>, 'level'> & {
+	plus?: number;
 }) {
 	const l = useContext(contextHeading) + plus;
 	return <Heading level={l} {...props} />;

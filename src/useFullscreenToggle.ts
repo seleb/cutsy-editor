@@ -10,7 +10,9 @@ export function useFullscreenToggle() {
 				appWindow.setFullscreen(false);
 				return;
 			}
-			const toggle = event.key === 'F11' || (event.key === 'Enter' && (event.altKey || event.metaKey));
+			const toggle =
+				event.key === 'F11' ||
+				(event.key === 'Enter' && (event.altKey || event.metaKey));
 			if (!toggle) return;
 			if (!(await appWindow.isFullscreen())) {
 				await appWindow.setFullscreen(true);

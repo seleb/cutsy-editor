@@ -1,21 +1,30 @@
-import { Dispatch, PropsWithChildren, createContext, useCallback, useContext, useReducer } from 'react';
+import {
+	Dispatch,
+	PropsWithChildren,
+	createContext,
+	useCallback,
+	useContext,
+	useReducer,
+} from 'react';
 
-type Command = {
-	command: 'vid_to_img'
-	input: string;
-	output: string;
-	/** time in microseconds */
-	time: number;
-} | {
-	command: 'vid_to_clip'
-	input: string;
-	output: string;
-	/** time in microseconds */
-	start: number;
-	/** time in microseconds */
-	duration: number;
-	audio: boolean;
-};
+type Command =
+	| {
+			command: 'vid_to_img';
+			input: string;
+			output: string;
+			/** time in microseconds */
+			time: number;
+	  }
+	| {
+			command: 'vid_to_clip';
+			input: string;
+			output: string;
+			/** time in microseconds */
+			start: number;
+			/** time in microseconds */
+			duration: number;
+			audio: boolean;
+	  };
 
 type State = {
 	/** last known video state */
@@ -44,10 +53,10 @@ type Action =
 	| {
 			type: 'queue-push';
 			command: Command;
-	}
+	  }
 	| {
 			type: 'queue-shift';
-	};
+	  };
 
 function reducer(state: State, action: Action) {
 	switch (action.type) {
@@ -93,12 +102,18 @@ export function useVideo() {
 
 export function useVideoSet() {
 	const dispatch = useContext(contextDispatch);
-	return useCallback((video?: State['video']) => dispatch({ type: 'video', video }), [dispatch]);
+	return useCallback(
+		(video?: State['video']) => dispatch({ type: 'video', video }),
+		[dispatch]
+	);
 }
 
 export function useQueuePush() {
 	const dispatch = useContext(contextDispatch);
-	return useCallback((command: Command) => dispatch({ type: 'queue-push', command }), [dispatch]);
+	return useCallback(
+		(command: Command) => dispatch({ type: 'queue-push', command }),
+		[dispatch]
+	);
 }
 
 export function useQueueShift() {

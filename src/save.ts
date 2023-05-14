@@ -1,5 +1,4 @@
-import { save } from "@tauri-apps/api/dialog";
-
+import { save } from '@tauri-apps/api/dialog';
 
 const filtersImages = [
 	{

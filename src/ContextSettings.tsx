@@ -1,5 +1,13 @@
 import { ask } from '@tauri-apps/api/dialog';
-import { Dispatch, PropsWithChildren, createContext, useCallback, useContext, useEffect, useReducer } from 'react';
+import {
+	Dispatch,
+	PropsWithChildren,
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useReducer,
+} from 'react';
 
 type State = {
 	theme: 'auto' | 'dark' | 'light';
@@ -54,7 +62,7 @@ try {
 		...persistedState,
 	};
 } catch (err) {
-	console.error("failed to load persisted settings", err);
+	console.error('failed to load persisted settings', err);
 	persistedState = initial;
 }
 
@@ -63,7 +71,7 @@ export function ContextSettings({ children }: PropsWithChildren<unknown>) {
 
 	useEffect(() => {
 		localStorage.setItem('state', JSON.stringify(state));
-	}, [state])
+	}, [state]);
 
 	useEffect(() => {
 		document.documentElement.dataset.font = state.font;
@@ -74,7 +82,9 @@ export function ContextSettings({ children }: PropsWithChildren<unknown>) {
 
 	return (
 		<contextState.Provider value={state}>
-			<contextDispatch.Provider value={dispatch}>{children}</contextDispatch.Provider>
+			<contextDispatch.Provider value={dispatch}>
+				{children}
+			</contextDispatch.Provider>
 		</contextState.Provider>
 	);
 }
@@ -85,13 +95,22 @@ export function useSettings() {
 
 export function useSettingsSet() {
 	const dispatch = useContext(contextDispatch);
-	return useCallback(<T extends keyof State>(key: T, value: State[T]) => dispatch({ type: 'set', key, value }), [dispatch]);
+	return useCallback(
+		<T extends keyof State>(key: T, value: State[T]) =>
+			dispatch({ type: 'set', key, value }),
+		[dispatch]
+	);
 }
 
 export function useSettingsReset() {
 	const dispatch = useContext(contextDispatch);
 	return useCallback(async () => {
-		if (!await ask('Are you sure? This action cannot be undone.', { type: 'warning' })) return;
+		if (
+			!(await ask('Are you sure? This action cannot be undone.', {
+				type: 'warning',
+			}))
+		)
+			return;
 		dispatch({ type: 'reset' });
 	}, [dispatch]);
 }

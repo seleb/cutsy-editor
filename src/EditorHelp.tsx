@@ -23,7 +23,11 @@ const shortcuts = [
 	['Ctrl+ArrowRight', 'End'],
 	['Ctrl+ArrowLeft', 'Start'],
 	['Ctrl+S', 'Save clip'],
-].map(([shortcut, label]) => [shortcut, shortcut.split(/(?<!\+)\+/), label]) as [string, string[], string][];
+].map(([shortcut, label]) => [
+	shortcut,
+	shortcut.split(/(?<!\+)\+/),
+	label,
+]) as [string, string[], string][];
 
 const replacements: { [key: string]: string } = {
 	Space: '␣',
@@ -57,7 +61,7 @@ function Shortcut({ keys, label }: { keys: string[]; label: string }) {
 
 export function EditorHelp() {
 	const [active, setActive] = useState(false);
-	const toggleActive = useCallback(() => setActive(s => !s), []);
+	const toggleActive = useCallback(() => setActive((s) => !s), []);
 	const refContainer = useRef<HTMLDivElement>(null);
 	useEffect(() => {
 		const elContainer = refContainer.current;
@@ -65,9 +69,15 @@ export function EditorHelp() {
 		elContainer.scrollTo({ left: 0, top: 0 });
 	}, [active]);
 	return (
-		<aside ref={refContainer} className={`${styles.container} ${active && styles.open}`}>
+		<aside
+			ref={refContainer}
+			className={`${styles.container} ${active && styles.open}`}
+		>
 			<div>
-				<Button title={`${active ? 'Close' : 'Open'} shortcuts`} onClick={toggleActive}>
+				<Button
+					title={`${active ? 'Close' : 'Open'} shortcuts`}
+					onClick={toggleActive}
+				>
 					<Icon icon={active ? 'x' : '?'} />
 				</Button>
 				<H>Shortcuts</H>

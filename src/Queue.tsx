@@ -35,7 +35,12 @@ export function Queue() {
 				setLast(first);
 			} catch (err) {
 				setLast(null);
-				await message(`Failed to save file.\nThere may be more details in the console.\n\n${getErrorMessage(err)}`, { title: 'Save error', type: 'error' });
+				await message(
+					`Failed to save file.\nThere may be more details in the console.\n\n${getErrorMessage(
+						err
+					)}`,
+					{ title: 'Save error', type: 'error' }
+				);
 			} finally {
 				shift();
 			}

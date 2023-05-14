@@ -13,7 +13,19 @@ function DebugPalette() {
 		<>
 			<H>Palette</H>
 			<ul className={styles.palette}>
-				{['primary', 'primary-muted', 'primary-bright', 'neutral-0', 'neutral-2', 'neutral-4', 'neutral-6', 'neutral-8', 'neutral-9', 'black', 'white'].map(i => (
+				{[
+					'primary',
+					'primary-muted',
+					'primary-bright',
+					'neutral-0',
+					'neutral-2',
+					'neutral-4',
+					'neutral-6',
+					'neutral-8',
+					'neutral-9',
+					'black',
+					'white',
+				].map((i) => (
 					<li
 						key={i}
 						style={{

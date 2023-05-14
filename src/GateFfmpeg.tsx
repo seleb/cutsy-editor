@@ -11,7 +11,9 @@ import { isDesktop } from './isDesktop';
 
 export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 	const [gated, setGated] = useState(true);
-	const [stateFfmpeg, setStateFfmpeg] = useState<'unknown' | 'installing' | 'error' | 'not-installed' | 'installed'>('unknown');
+	const [stateFfmpeg, setStateFfmpeg] = useState<
+		'unknown' | 'installing' | 'error' | 'not-installed' | 'installed'
+	>('unknown');
 	const [installError, setInstallError] = useState('');
 
 	useEffect(() => {
@@ -27,7 +29,8 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 	}, []);
 
 	const onInstallFfmpeg = useCallback(async () => {
-		if (stateFfmpeg !== 'not-installed') throw new Error(`Can't install in this state: ${stateFfmpeg}`);
+		if (stateFfmpeg !== 'not-installed')
+			throw new Error(`Can't install in this state: ${stateFfmpeg}`);
 		setStateFfmpeg('installing');
 		try {
 			await installFfmpeg();
@@ -44,7 +47,7 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 	}, []);
 
 	return !gated ? (
-		children as JSX.Element | null
+		(children as JSX.Element | null)
 	) : (
 		<Page className={styles.container}>
 			<H>
@@ -60,7 +63,8 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 							</>
 						) : (
 							<>
-								Installing <strong>ffmpeg</strong> (this may take a few minutes)...
+								Installing <strong>ffmpeg</strong> (this may take a few
+								minutes)...
 							</>
 						)
 					}
@@ -80,7 +84,9 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 						)
 					}
 				>
-					<p><strong>ffmpeg</strong> is ready!</p>
+					<p>
+						<strong>ffmpeg</strong> is ready!
+					</p>
 					<Button onClick={onContinue}>Continue</Button>
 				</Loading>
 			</section>

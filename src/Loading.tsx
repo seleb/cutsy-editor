@@ -1,5 +1,5 @@
-import { ElementType, PropsWithChildren, ReactNode } from "react";
-import { Spinner } from "./Spinner";
+import { ElementType, PropsWithChildren, ReactNode } from 'react';
+import { Spinner } from './Spinner';
 
 export function Loading({
 	loading = false,
