@@ -24,9 +24,10 @@ export function ViewRoot() {
 	useEffect(() => {
 		listen('tauri://file-drop', event => {
 			const file = (event.payload as string[])?.[0];
-			if (!file) return;
+			if (!file) return undefined;
 			if (!isVideo(file)) return message("File is not a supported video format :(", { type: 'error' });
 			navigate(toEditUrl(file));
+			return undefined;
 		});
 	}, [navigate]);
 
@@ -35,10 +36,11 @@ export function ViewRoot() {
 			multiple: false,
 			directory: false,
 		});
-		if (!file) return;
+		if (!file) return undefined;
 		file = typeof file === 'string' ? file : file[0];
 		if (!isVideo(file)) return message("File is not a supported video format :(", { type: 'error' });
 		navigate(toEditUrl(file));
+		return undefined;
 	}, []);
 
 	const { path } = useVideo();

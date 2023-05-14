@@ -52,7 +52,7 @@ export function ViewEdit() {
 	// get video duration for scrubber
 	useEffect(() => {
 		const elVideo = refVideo.current;
-		if (!elVideo) return;
+		if (!elVideo) return undefined;
 		const onLoaded = () => {
 			setDuration(elVideo.duration);
 		};
@@ -64,7 +64,7 @@ export function ViewEdit() {
 
 	const getClip = useCallback(() => {
 		const elClip = refClip.current;
-		if (!elClip) return;
+		if (!elClip) return undefined;
 		const start = Number((elClip.style.left || '0%').replace('%', '')) / 100;
 		const dur = Number((elClip.style.width || '100%').replace('%', '')) / 100;
 		const end = start + dur;
@@ -77,7 +77,7 @@ export function ViewEdit() {
 		const elVideo = refVideo.current;
 		const elProgress = refProgress.current;
 		const elTime = refTime.current;
-		if (!elVideo || !elProgress || !elTime) return;
+		if (!elVideo || !elProgress || !elTime) return undefined;
 		const onUpdate: VideoFrameRequestCallback = (_now, metadata) => {
 			elProgress.value = metadata.mediaTime;
 			elTime.textContent = toDuration(metadata.mediaTime);
@@ -92,10 +92,10 @@ export function ViewEdit() {
 
 	// update to preview clip only
 	useEffect(() => {
-		if (!preview) return;
+		if (!preview) return undefined;
 		let vfc: number;
 		const elVideo = refVideo.current;
-		if (!elVideo) return;
+		if (!elVideo) return undefined;
 		const onUpdate: VideoFrameRequestCallback = (_now, metadata) => {
 			const clip = getClip();
 			if (!clip) return;
@@ -162,7 +162,7 @@ export function ViewEdit() {
 			const elPlayhead = refPlayhead.current;
 			const elTime = refTime.current;
 			if (!elVideo || !elPlayhead || !elTime || !elVideo?.duration) {
-				return;
+				return undefined;
 			}
 			let t: number;
 			if (loop && to < 0 && elVideo.currentTime < FRAME * 2) {
@@ -257,7 +257,7 @@ export function ViewEdit() {
 				if (event.shiftKey) {
 					const elVideo = refVideo.current;
 					const elProgress = refProgress.current as HTMLProgressElement;
-					if (!elVideo || !elVideo?.duration) return;
+					if (!elVideo || !elVideo?.duration) return undefined;
 					event.preventDefault();
 					const rect = elProgress.getBoundingClientRect();
 					const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
@@ -297,7 +297,7 @@ export function ViewEdit() {
 				const elClip = refClip.current;
 				const elProgress = refProgress.current as HTMLProgressElement;
 				const clip = getClip();
-				if (!elVideo || !elVideo?.duration || !elClip || !elProgress || !clip) return;
+				if (!elVideo || !elVideo?.duration || !elClip || !elProgress || !clip) return undefined;
 
 				[start, end] = clip;
 				target = event.target as Element;
@@ -335,6 +335,7 @@ export function ViewEdit() {
 	const onScrubStartClip = useMemo(() => onScrubStart({
 			start: (event: PointerEvent) => {
 				if (event.target !== refClip.current) return false;
+				return undefined;
 			},
 			scrub: (event: PointerEvent) => {
 				const elProgress = refProgress.current as HTMLProgressElement;
@@ -391,7 +392,7 @@ export function ViewEdit() {
 	useEffect(() => {
 		const elVideo = refVideo.current;
 		const elClip = refClip.current;
-		if (!elVideo || !elClip) return;
+		if (!elVideo || !elClip) return undefined;
 		return () => {
 			const clipStart = Number((elClip.style.left || '0%').replace('%', '')) / 100;
 			const clipEnd = Number((elClip.style.width || '100%').replace('%', '')) / 100 + clipStart;
