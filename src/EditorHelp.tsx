@@ -79,8 +79,11 @@ export function EditorHelp() {
 			</dl>
 			<hr />
 			<H>Tips</H>
-			<p>right-click on clip markers to snap them to the current time</p>
-			<p>shift+click on timeline to snap start to cursor, shift+right-click to snap end to cursor</p>
+			<ul>
+				<li>right-click on clip markers to snap them to the current time</li>
+				<li>shift+click on timeline to snap start to cursor</li>
+				<li>shift+right-click to snap end to cursor</li>
+			</ul>
 		</aside>
 	);
 }

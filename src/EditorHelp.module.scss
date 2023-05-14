@@ -82,6 +82,10 @@
 		padding: 0.1rem 0.25rem;
 		margin-inline: 0.25rem;
 	}
+
+	ul {
+		padding-inline-start: 1.5rem;
+	}
 }
 
 .open {
@@ -89,7 +93,7 @@
 	border-top: none;
 	border-left: none;
 	max-width: min(calc(100% - 2rem), 15rem);
-	max-height: min(calc(100% - 2rem), 32rem);
+	max-height: min(calc(100% - 5rem), 47rem);
 	overflow: auto;
 	scrollbar-gutter: stable;
 	box-shadow: 4px 4px 8px var(--color-black);
