@@ -51,6 +51,7 @@ $sidebar: 4rem;
 			justify-content: center;
 			color: var(--color-primary);
 			position: relative;
+			transition: color 0.1s ease-out;
 			
 			&:global(.active) {
 				background-color: var(--color-neutral-2);
@@ -59,6 +60,15 @@ $sidebar: 4rem;
 
 			&[aria-disabled="true"] {
 				filter: saturate(0);
+			}
+
+			&:not([aria-disabled="true"]):not(:disabled):hover,
+			&:not([aria-disabled="true"]):not(:disabled):focus-visible {
+				color: var(--color-primary-bright);
+			}
+
+			&:not([aria-disabled="true"]):not(:disabled):active {
+				color: var(--color-primary-muted);
 			}
 
 			&[data-count]:not([data-count="0"])::after {
