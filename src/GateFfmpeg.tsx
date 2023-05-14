@@ -70,7 +70,7 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 							<>
 								<p>
 									This app requires{' '}
-									<a href="https://ffmpeg.org" target="_blank">
+									<a href="https://ffmpeg.org" target="_blank" rel="noreferrer">
 										ffmpeg
 									</a>{' '}
 									in order to edit clips.

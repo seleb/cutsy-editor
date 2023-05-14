@@ -103,10 +103,10 @@ export function ViewSettings() {
 				<dd>{pkg.version}</dd>
 
 				<dt>made by</dt>
-				<dd><a href="https://seans.site" target="_blank">sean</a></dd>
+				<dd><a href="https://seans.site" target="_blank" rel="noreferrer">sean</a></dd>
 
 				<dt>source</dt>
-				<dd><a href={pkg.repository.url} target="_blank">{pkg.name}</a></dd>
+				<dd><a href={pkg.repository.url} target="_blank" rel="noreferrer">{pkg.name}</a></dd>
 			</dl>
 		</Page>
 	);
