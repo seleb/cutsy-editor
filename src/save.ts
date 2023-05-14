@@ -38,6 +38,10 @@ const filtersVideos = [
 		extensions: ['gif'],
 	},
 	{
+		name: 'MP3 Audio',
+		extensions: ['mp3'],
+	},
+	{
 		name: 'All files',
 		extensions: ['*'],
 	},
