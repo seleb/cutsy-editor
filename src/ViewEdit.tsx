@@ -95,10 +95,11 @@ export function ViewEdit() {
 		if (!preview) return;
 		let vfc: number;
 		const elVideo = refVideo.current;
-		const clip = getClip();
-		if (!elVideo || !clip) return;
-		const [start, end] = clip;
+		if (!elVideo) return;
 		const onUpdate: VideoFrameRequestCallback = (_now, metadata) => {
+			const clip = getClip();
+			if (!clip) return;
+			const [start, end] = clip;
 			if (metadata.mediaTime < start * elVideo.duration - FRAME || metadata.mediaTime > end * elVideo.duration) {
 				elVideo.currentTime = start * elVideo.duration + FRAME;
 			}
