@@ -29,6 +29,10 @@
 			align-items: center;
 		}
 	}
+
+	input:invalid {
+		border-color: red;
+	}
 }
 
 .folders {
