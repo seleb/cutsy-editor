@@ -25,6 +25,7 @@
 	border-top: solid 1px var(--color-neutral-4);
 	position: relative;
 	contain: layout;
+	background: var(--color-black);
 }
 
 .progress {
@@ -41,11 +42,11 @@
 	}
 
 	&::-webkit-progress-bar {
-		background: var(--color-black);
+		background: transparent;
 	}
 
 	&::-moz-progress-bar {
-		background: var(--color-black);
+		background: transparent;
 	}
 }
 
