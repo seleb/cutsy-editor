@@ -33,6 +33,7 @@ export function ViewEdit() {
 	const [paused, setPaused] = useState(true);
 	const [muted, setMuted] = useState(false);
 	const [duration, setDuration] = useState(0);
+	const [preview, setPreview] = useState(false);
 
 	const togglePlaying = useCallback(() => {
 		setPaused(s => !s);
@@ -52,6 +53,15 @@ export function ViewEdit() {
 		return () => {
 			elVideo.removeEventListener('loadedmetadata', onLoaded);
 		};
+	}, []);
+
+	const getClip = useCallback(() => {
+		const elClip = refClip.current;
+		if (!elClip) return;
+		const start = Number((elClip.style.left || '0%').replace('%', '')) / 100;
+		const duration = Number((elClip.style.width || '100%').replace('%', '')) / 100;
+		const end = start + duration;
+		return [start, end, duration];
 	}, []);
 
 	// update to match video time
@@ -245,9 +255,9 @@ export function ViewEdit() {
 
 	const onUpdateClip = useCallback((start?: number, end?: number, slide?: number) => {
 		const elClip = refClip.current;
-		if (!elClip) return;
-		const oldStart = Number((elClip.style.left || '0%').replace('%', '')) / 100;
-		const oldEnd = Number((elClip.style.width || '100%').replace('%', '')) / 100 + oldStart;
+		const clip = getClip();
+		if (!elClip || !clip) return;
+		const [oldStart, oldEnd] = clip;
 		let newStart = start ?? oldStart;
 		let newEnd = end ?? oldEnd;
 		if (newEnd < newStart) [newStart, newEnd] = [newEnd, newStart];
@@ -269,11 +279,10 @@ export function ViewEdit() {
 				const elVideo = refVideo.current;
 				const elClip = refClip.current;
 				const elProgress = refProgress.current as HTMLProgressElement;
-				if (!elVideo || !elVideo?.duration || !elClip || !elProgress) return;
+				const clip = getClip();
+				if (!elVideo || !elVideo?.duration || !elClip || !elProgress || !clip) return;
 
-				start = Number((elClip.style.left || '0%').replace('%', '')) / 100;
-				end = Number((elClip.style.width || '100%').replace('%', '')) / 100 + start;
-
+				[start, end] = clip;
 				target = event.target as Element;
 				isStart = elClip.firstChild === target || elClip.firstChild?.contains(target) || false;
 				if (event.button && event.button !== 1) {
@@ -331,9 +340,9 @@ export function ViewEdit() {
 	const onSaveClip = useCallback(async () => {
 		const elVideo = refVideo.current;
 		const elClip = refClip.current;
-		if (!elVideo || !elClip) throw new Error('Could not find elements');
-		const start = Number((elClip.style.left || '0%').replace('%', '')) / 100;
-		const width = Number((elClip.style.width || '100%').replace('%', '')) / 100;
+		const clip = getClip();
+		if (!elVideo || !elClip || !clip) throw new Error('Could not find elements');
+		const [start, _, duration] = clip;
 		const output = await saveAsVideoLocation(name);
 		if (!output) return;
 		queuePush({
@@ -341,7 +350,7 @@ export function ViewEdit() {
 			input: pathDecoded,
 			output,
 			start: start * elVideo.duration || 0,
-			duration: width * elVideo.duration || 0,
+			duration: duration * elVideo.duration || 0,
 			audio: {
 				always: true,
 				never: false,
