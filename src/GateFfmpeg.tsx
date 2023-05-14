@@ -44,7 +44,7 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 	}, []);
 
 	return !gated ? (
-		<>{children}</>
+		children as JSX.Element | null
 	) : (
 		<Page className={styles.container}>
 			<H>
