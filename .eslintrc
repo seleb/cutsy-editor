@@ -3,8 +3,10 @@
 	"parser": "@typescript-eslint/parser",
 	"plugins": ["@typescript-eslint"],
 	"extends": [
-		"airbnb-base",
-		"airbnb-typescript/base",
+		"airbnb",
+		"airbnb/hooks",
+		"airbnb-typescript",
+		"plugin:react/jsx-runtime",
 		"plugin:@typescript-eslint/recommended",
 		"prettier",
 	],
