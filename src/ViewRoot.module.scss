@@ -65,12 +65,12 @@ $sidebar: 4rem;
 				filter: saturate(0);
 			}
 
-			&:not([aria-disabled="true"]):not(:disabled):hover,
-			&:not([aria-disabled="true"]):not(:disabled):focus-visible {
+			&:not([aria-disabled="true"], :disabled):hover,
+			&:not([aria-disabled="true"], :disabled):focus-visible {
 				color: var(--color-primary-bright);
 			}
 
-			&:not([aria-disabled="true"]):not(:disabled):active {
+			&:not([aria-disabled="true"], :disabled):active {
 				color: var(--color-primary-muted);
 			}
 

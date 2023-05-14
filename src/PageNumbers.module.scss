@@ -64,7 +64,7 @@
 		display: initial;
 	}
 
-	.button:not(.total):not(.current):not(.next):not(.prev) {
+	.button:not(.total, .current, .next, .prev) {
 		display: none;
 	}
 }
