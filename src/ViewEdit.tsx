@@ -436,7 +436,7 @@ export function ViewEdit() {
 		} else if (event.deltaY) {
 			const elTrack = refProgress.current?.parentElement?.parentElement;
 			if (!elTrack) return;
-			elTrack.scrollBy({ left: event.deltaY /*elTrack.offsetWidth*/ });
+			elTrack.scrollBy({ left: event.deltaY });
 		}
 	}, [zoomIn, zoomOut]);
 
