@@ -526,32 +526,32 @@ export function ViewEdit() {
 					</div>
 				</div>
 				<div className={styles.buttons}>
-					<button onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>
+					<button type="button" onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>
 						<Icon icon={paused ? 'play' : 'pause'} />
 					</button>
-					<button onClick={togglePreview} title={preview && !paused ? 'Stop preview' : 'Preview clip'}>
+					<button type="button" onClick={togglePreview} title={preview && !paused ? 'Stop preview' : 'Preview clip'}>
 						<Icon icon={preview && !paused ? 'noPreview' : 'preview'} />
 					</button>
-					<button onClick={toggleMuted} title={muted ? 'Unmute' : 'Mute'}>
+					<button type="button" onClick={toggleMuted} title={muted ? 'Unmute' : 'Mute'}>
 						<Icon icon={muted ? 'muted' : 'sound'} />
 					</button>
 					<span className={styles.time}>
 						<span ref={refTime}>{0}</span> /&nbsp;<span>{toDuration(duration)}</span>
 					</span>
 					<div className={styles.zoom}>
-						<button onClick={zoomOut} title="Zoom out">
+						<button type="button" onClick={zoomOut} title="Zoom out">
 							<Icon icon="zoomout" />
 						</button>
 						<span>{zoom}%</span>
-						<button onClick={zoomIn} title="Zoom in">
+						<button type="button" onClick={zoomIn} title="Zoom in">
 							<Icon icon="zoomin" />
 						</button>
 					</div>
 					<div className={styles.save}>
-						<button onClick={onSaveImage} title="Save image">
+						<button type="button" onClick={onSaveImage} title="Save image">
 							<Icon icon="exportImage" />
 						</button>
-						<button onClick={onSaveClip} title="Save clip">
+						<button type="button" onClick={onSaveClip} title="Save clip">
 							<Icon icon="exportClip" />
 						</button>
 					</div>

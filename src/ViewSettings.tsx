@@ -63,8 +63,8 @@ export function ViewSettings() {
 					<dt>video folders</dt>
 					<dd>
 						<ul className={styles.folders}>
-							{settings.videoFolders.map((i, idx) => <li key={i}><button onClick={removeFolder} value={idx} title={`Remove folder "${i}"`}>{i} <Icon icon="x" /></button></li>)}
-							<li><button onClick={addFolder}>add new folder <Icon icon="+" /></button></li>
+							{settings.videoFolders.map((i, idx) => <li key={i}><button type="button" onClick={removeFolder} value={idx} title={`Remove folder "${i}"`}>{i} <Icon icon="x" /></button></li>)}
+							<li><button type="button" onClick={addFolder}>add new folder <Icon icon="+" /></button></li>
 						</ul>
 						<p>if no folders are set, your OS default video directory is used instead</p>
 					</dd>

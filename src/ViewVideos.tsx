@@ -31,7 +31,7 @@ function Video({ path, name }: FileEntry) {
 		<Link to={to}>
 			<video aria-hidden="true" preload="metadata" src={src}></video>
 			<span>{name}</span>
-			<button title="Open in folder" onClick={openInFolder}>{<Icon icon="videos" />}</button>
+			<button type="button" title="Open in folder" onClick={openInFolder}>{<Icon icon="videos" />}</button>
 		</Link>
 	);
 }
@@ -171,6 +171,7 @@ export function ViewVideos() {
 
 				<span className={styles.count}>{results.length.toString(10).padStart(library.length.toString(10).length, '0')} /&nbsp;{library.length}</span>
 				<button
+					type="button"
 					title={
 						{
 							sortAsc: 'Sort alphabetical (ascending)',

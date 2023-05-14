@@ -7,5 +7,5 @@ export function Button({
 	children,
 	...props
 }: ComponentProps<'button'>) {
-	return <button className={`${className} ${styles.button}`} {...props}>{children}</button>
+	return <button type="button" className={`${className} ${styles.button}`} {...props}>{children}</button>
 }
