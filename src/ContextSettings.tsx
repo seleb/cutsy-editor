@@ -17,6 +17,8 @@ const initial: State = {
 	saveAudio: 'always',
 };
 
+export const availableSettings = Object.keys(initial) as (keyof State)[];
+
 type Action<T extends keyof State> =
 	| {
 			type: 'set';

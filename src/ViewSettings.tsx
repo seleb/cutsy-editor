@@ -2,7 +2,7 @@ import { open } from '@tauri-apps/api/dialog';
 import { ChangeEventHandler, MouseEventHandler, useCallback } from 'react';
 import pkg from '../package.json';
 import { Button } from './Button';
-import { useSettings, useSettingsReset, useSettingsSet } from './ContextSettings';
+import { availableSettings, useSettings, useSettingsReset, useSettingsSet } from './ContextSettings';
 import { Debug } from './Debug';
 import { Icon } from './Icon';
 import { Page } from "./Page";
@@ -33,8 +33,10 @@ export function ViewSettings() {
 
 	const onRadio = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
 		const el = event.currentTarget as HTMLInputElement;
+		// not guaranteed but safe enough
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
-		set(el.name, el.value);
+		if (availableSettings.includes(el.name)) set(el.name, el.value);
 	}, [set]);
 	return (
 		<Page>
