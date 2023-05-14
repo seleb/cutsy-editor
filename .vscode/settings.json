@@ -5,4 +5,7 @@
         "source.fixAll",
     ],
     "files.insertFinalNewline": true,
+    "stylelint.validate": [
+        "scss"
+    ],
 }
