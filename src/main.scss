@@ -49,6 +49,12 @@ h1 {
   text-align: center;
 }
 
+button {
+  svg {
+    pointer-events: none;
+  }
+}
+
 a,
 button,
 details>summary {
