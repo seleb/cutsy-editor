@@ -85,6 +85,16 @@
 	&::before {
 		animation-delay: 0.25s;
 	}
+
+	@media (prefers-reduced-motion) {
+		&::after {
+			animation: none;
+		}
+
+		&::before {
+			animation: none;
+		}
+	}
 }
 
 .message {
