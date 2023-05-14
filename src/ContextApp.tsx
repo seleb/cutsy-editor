@@ -1,10 +1,18 @@
+import { FileEntry } from '@tauri-apps/api/fs';
+import {
+	AllSubstringsIndexStrategy,
+	Search,
+	UnorderedSearchIndex,
+} from 'js-search';
 import {
 	Dispatch,
 	PropsWithChildren,
 	createContext,
 	useCallback,
 	useContext,
+	useEffect,
 	useReducer,
+	useState,
 } from 'react';
 
 type Command =
@@ -34,6 +42,7 @@ type State = {
 		clipEnd: number;
 	};
 	queue: Command[];
+	videos: FileEntry[];
 };
 
 const initial: State = {
@@ -43,12 +52,17 @@ const initial: State = {
 		clipEnd: 1,
 	},
 	queue: [],
+	videos: [],
 };
 
 type Action =
 	| {
 			type: 'video';
 			video?: State['video'];
+	  }
+	| {
+			type: 'videos';
+			videos: State['videos'];
 	  }
 	| {
 			type: 'queue-push';
@@ -62,6 +76,8 @@ function reducer(state: State, action: Action) {
 	switch (action.type) {
 		case 'video':
 			return { ...state, video: { ...initial.video, ...action.video } };
+		case 'videos':
+			return { ...state, videos: action.videos };
 		case 'queue-push':
 			return {
 				...state,
@@ -79,14 +95,29 @@ function reducer(state: State, action: Action) {
 
 const contextState = createContext<State>(initial);
 const contextDispatch = createContext<Dispatch<Action>>(() => {});
+const contextSearch = createContext<Search | null>(null);
 
 export function ContextApp({ children }: PropsWithChildren<unknown>) {
 	const [state, dispatch] = useReducer(reducer, initial);
 
+	const [search, setSearch] = useState<Search | null>(null);
+
+	useEffect(() => {
+		const s = new Search('path');
+		s.searchIndex = new UnorderedSearchIndex();
+		s.indexStrategy = new AllSubstringsIndexStrategy();
+		s.addIndex('name');
+		s.addIndex('path');
+		s.addDocuments(state.videos);
+		setSearch(s);
+	}, [state.videos]);
+
 	return (
 		<contextState.Provider value={state}>
 			<contextDispatch.Provider value={dispatch}>
-				{children}
+				<contextSearch.Provider value={search}>
+					{children}
+				</contextSearch.Provider>
 			</contextDispatch.Provider>
 		</contextState.Provider>
 	);
@@ -100,10 +131,22 @@ export function useVideo() {
 	return useContext(contextState).video;
 }
 
+export function useVideos() {
+	return useContext(contextState).videos;
+}
+
 export function useVideoSet() {
 	const dispatch = useContext(contextDispatch);
 	return useCallback(
 		(video?: State['video']) => dispatch({ type: 'video', video }),
+		[dispatch]
+	);
+}
+
+export function useVideosSet() {
+	const dispatch = useContext(contextDispatch);
+	return useCallback(
+		(videos: State['videos']) => dispatch({ type: 'videos', videos }),
 		[dispatch]
 	);
 }
@@ -119,4 +162,12 @@ export function useQueuePush() {
 export function useQueueShift() {
 	const dispatch = useContext(contextDispatch);
 	return useCallback(() => dispatch({ type: 'queue-shift' }), [dispatch]);
+}
+
+export function useSearch() {
+	const s = useContext(contextSearch);
+	return useCallback(
+		(query: string) => (s?.search(query) || []) as State['videos'],
+		[s]
+	);
 }
