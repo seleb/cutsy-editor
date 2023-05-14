@@ -29,6 +29,8 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
     FfmpegCommand::new()
     // allow overwriting
     .overwrite()
+    // automatically use hardware acceleration
+    .hwaccel("auto")
     // no audio
     .no_audio()
     // no vysnc
@@ -82,7 +84,9 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String, a
 
     command
     // allow overwriting
-    .overwrite();
+    .overwrite()
+    // automatically use hardware acceleration
+    .hwaccel("auto");
 
     // no audio
     if !audio {
