@@ -36,6 +36,7 @@ import { Icon } from './Icon';
 import { getErrorMessage } from './getErrorMessage';
 import { isVideo } from './isVideo';
 import { toEditUrl } from './toEditUrl';
+import { usePrevious } from './usePrevious';
 
 export function ViewVideos() {
 	const { videoFolders } = useSettings();
@@ -136,6 +137,17 @@ export function ViewVideos() {
 		},
 		[library]
 	);
+
+	// scroll down if going back 1 page,
+	// otherwise scroll up if changing page
+	const lastPage = usePrevious(numPage) || -1;
+	useEffect(() => {
+		if (Math.abs(numPage - lastPage) === 1 && numPage < lastPage) {
+			document.documentElement.scrollTo({ top: document.documentElement.scrollHeight });
+		} else if (numPage !== lastPage) {
+			document.documentElement.scrollTo({ top: 0 });
+		}
+	}, [numPage, lastPage]);
 
 	return (
 		<Page>
