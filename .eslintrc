@@ -33,6 +33,7 @@
 		"import/no-default-export": "error",
 
 		// stylistic preferences
+		"react/jsx-props-no-spreading": "off",
 		"@typescript-eslint/ban-ts-comment": "warn",
 		"no-console": "warn",
 		"@typescript-eslint/explicit-module-boundary-types": "off",
