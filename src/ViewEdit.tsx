@@ -18,7 +18,7 @@ export function ViewEdit() {
 	const pathDecoded = useMemo(() => decodeURIComponent(pathEncoded), [pathEncoded]);
 	const src = useMemo(() => convertFileSrc(pathDecoded), [pathDecoded]);
 	const name = useMemo(() => {
-		const basename = pathDecoded.split(/[\\\/]/).pop();
+		const basename = pathDecoded.split(/[\\/]/).pop();
 		const parts = basename?.split('.');
 		parts?.pop();
 		return parts?.join('.');

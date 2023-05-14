@@ -25,7 +25,7 @@ function Video({ path, name }: FileEntry) {
 	const to = useMemo(() => toEditUrl(path), [src]);
 	const openInFolder = useCallback<MouseEventHandler>(async (event) => {
 		event.preventDefault();
-		open(`file:///${path.replace(/(?:.(?![\\\/]))+$/, '').replace(/([\\\/])\.[\\\/]/g, '$1').replace(/([\\\/])\.$/, '$1')}`)
+		open(`file:///${path.replace(/(?:.(?![\\/]))+$/, '').replace(/([\\/])\.[\\/]/g, '$1').replace(/([\\/])\.$/, '$1')}`)
 	}, [path]);
 	return (
 		<Link to={to}>
