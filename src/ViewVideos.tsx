@@ -79,9 +79,9 @@ export function ViewVideos() {
 	}, []);
 
 	const numPage = useMemo(() => {
-		const numPage = parseInt(page || '0', 10);
-		if (Number.isNaN(numPage)) return 0;
-		return numPage;
+		const num = parseInt(page || '0', 10);
+		if (Number.isNaN(num)) return 0;
+		return num;
 	}, [page]);
 
 	const [sort, setSort] = useState<'sortAsc' | 'sortDesc' | 'sortNone'>('sortNone');
@@ -99,10 +99,10 @@ export function ViewVideos() {
 	}, []);
 	const sorted = useMemo(() => {
 		if (sort === 'sortNone') return results;
-		const sorted = results.slice();
-		sorted.sort(({ name: a = '' }, { name: b = '' }) => a?.localeCompare(b, undefined, { sensitivity: 'base' }));
-		if (sort === 'sortDesc') sorted.reverse();
-		return sorted;
+		const copy = results.slice();
+		copy.sort(({ name: a = '' }, { name: b = '' }) => a?.localeCompare(b, undefined, { sensitivity: 'base' }));
+		if (sort === 'sortDesc') copy.reverse();
+		return copy;
 	}, [results, sort]);
 
 	const { totalPages, startIndex, endIndex, setPage } = usePagination({

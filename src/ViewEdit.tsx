@@ -66,9 +66,9 @@ export function ViewEdit() {
 		const elClip = refClip.current;
 		if (!elClip) return;
 		const start = Number((elClip.style.left || '0%').replace('%', '')) / 100;
-		const duration = Number((elClip.style.width || '100%').replace('%', '')) / 100;
-		const end = start + duration;
-		return [start, end, duration];
+		const dur = Number((elClip.style.width || '100%').replace('%', '')) / 100;
+		const end = start + dur;
+		return [start, end, dur];
 	}, []);
 
 	// update to match video time
@@ -355,7 +355,7 @@ export function ViewEdit() {
 		const elClip = refClip.current;
 		const clip = getClip();
 		if (!elVideo || !elClip || !clip) throw new Error('Could not find elements');
-		const [start, , duration] = clip;
+		const [start, , dur] = clip;
 		const output = await saveAsVideoLocation(name);
 		if (!output) return;
 		queuePush({
@@ -363,7 +363,7 @@ export function ViewEdit() {
 			input: pathDecoded,
 			output,
 			start: start * elVideo.duration || 0,
-			duration: duration * elVideo.duration || 0,
+			duration: dur * elVideo.duration || 0,
 			audio: {
 				always: true,
 				never: false,

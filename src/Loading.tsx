@@ -8,9 +8,9 @@ export function Loading({
 	msgLoading = '',
 	msgError = 'Something went wrong',
 	msgNone = 'Nothing found',
-	Error = ({ children }) => <>{children}</>,
-	Loading = Spinner,
-	None = ({ children }) => <>{children}</>,
+	Error = ({ children: c }) => <>{c}</>,
+	Loading: LoadingTag = Spinner,
+	None = ({ children: c }) => <>{c}</>,
 	children,
 	...props
 }: PropsWithChildren<{
@@ -26,7 +26,7 @@ export function Loading({
 	None?: ElementType;
 }>) {
 	if (error) return <Error {...props}>{msgError}</Error>
-	if (loading) return <Loading {...props}>{msgLoading}</Loading>
+	if (loading) return <LoadingTag {...props}>{msgLoading}</LoadingTag>
 	if (count === 0) return <None {...props}>{msgNone}</None>
 	return <>{children}</>;
 }
