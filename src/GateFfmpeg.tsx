@@ -9,7 +9,7 @@ import { installFfmpeg, isFfmpegInstalled } from './ffmpeg';
 import { getErrorMessage } from './getErrorMessage';
 import { isDesktop } from './isDesktop';
 
-export function GateFfmpeg({ children }: PropsWithChildren<{}>) {
+export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 	const [gated, setGated] = useState(true);
 	const [stateFfmpeg, setStateFfmpeg] = useState<'unknown' | 'installing' | 'error' | 'not-installed' | 'installed'>('unknown');
 	const [installError, setInstallError] = useState('');

@@ -71,7 +71,7 @@ function reducer(state: State, action: Action) {
 const contextState = createContext<State>(initial);
 const contextDispatch = createContext<Dispatch<Action>>(() => {});
 
-export function ContextApp({ children }: PropsWithChildren<{}>) {
+export function ContextApp({ children }: PropsWithChildren<unknown>) {
 	const [state, dispatch] = useReducer(reducer, initial);
 
 	return (

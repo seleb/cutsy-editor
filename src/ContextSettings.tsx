@@ -58,7 +58,7 @@ try {
 	persistedState = initial;
 }
 
-export function ContextSettings({ children }: PropsWithChildren<{}>) {
+export function ContextSettings({ children }: PropsWithChildren<unknown>) {
 	const [state, dispatch] = useReducer(reducer, persistedState);
 
 	useEffect(() => {
