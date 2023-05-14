@@ -16,6 +16,7 @@ $white: #FFF;
 
 @mixin dark() {
 	color-scheme: dark;
+
 	--color-primary-rgb: #{rgbv($primary)};
 	--color-primary-bright-rgb: #{rgbv($primary-bright)};
 	--color-primary-muted-rgb: #{rgbv($primary-muted)};
@@ -31,6 +32,7 @@ $white: #FFF;
 
 @mixin light() {
 	color-scheme: light;
+
 	--color-primary-rgb: #{rgbv(darken($primary, 20%))};
 	--color-primary-bright-rgb: #{rgbv($primary-bright)};
 	--color-primary-muted-rgb: #{rgbv($primary-muted)};
