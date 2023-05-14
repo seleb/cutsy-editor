@@ -60,10 +60,8 @@ function Video({ path, name }: FileEntry) {
 		</Link>
 	);
 }
-const videosPerPage = 30;
-
 export function ViewVideos() {
-	const { videoFolders } = useSettings();
+	const { videoFolders, itemsPerPage } = useSettings();
 	const { page } = useParams();
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
@@ -143,7 +141,7 @@ export function ViewVideos() {
 	const { totalPages, startIndex, endIndex, setPage } = usePagination({
 		totalItems: sorted.length,
 		initialPage: numPage,
-		initialPageSize: videosPerPage,
+		initialPageSize: itemsPerPage,
 	});
 	useLayoutEffect(() => {
 		setPage(numPage);
