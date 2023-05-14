@@ -36,7 +36,7 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
     // no vysnc
     .arg("-vsync").arg(0.to_string())
     // seek
-    .arg("-ss").arg(time)
+    .seek(time)
     // input
     .input(path_input.as_os_str().to_str().unwrap())
     // one image
@@ -97,7 +97,7 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String, a
     // no vysnc
     .arg("-vsync").arg(0.to_string())
     // seek
-    .arg("-ss").arg(start)
+    .seek(start)
     // duration
     .duration(duration)
     // input
