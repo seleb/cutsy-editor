@@ -129,12 +129,12 @@ export function ViewEdit() {
 				return Infinity;
 			}
 			if (shiftKey) {
-				return duration * 0.3;
-			}
-			if (altKey) {
 				return duration * 0.1;
 			}
-			return duration * 0.05;
+			if (altKey) {
+				return duration * 0.05;
+			}
+			return duration * 0.01;
 		},
 		[duration]
 	);
