@@ -1,8 +1,10 @@
+import { message } from '@tauri-apps/api/dialog';
 import { open } from '@tauri-apps/api/shell';
 import { useEffect, useState } from 'react';
 import { useQueue, useQueueShift } from './ContextApp';
 import { useSettings } from './ContextSettings';
 import { saveClip, saveImage } from './ffmpeg';
+import { getErrorMessage } from './getErrorMessage';
 
 export function Queue() {
 	const [first] = useQueue();
@@ -19,19 +21,24 @@ export function Queue() {
 		setCurrent(first);
 		if (!first) return;
 		(async () => {
-			console.log('saving', first);
-			switch (first.command) {
-				case 'vid_to_img':
-					await saveImage(first);
-					break;
-				case 'vid_to_clip':
-					await saveClip(first);
-					break;
-				default:
-					throw new Error('Unsupported command');
+			try {
+				switch (first.command) {
+					case 'vid_to_img':
+						await saveImage(first);
+						break;
+					case 'vid_to_clip':
+						await saveClip(first);
+						break;
+					default:
+						throw new Error('Unsupported command');
+				}
+				setLast(first);
+			} catch (err) {
+				setLast(null);
+				await message(`Failed to save file.\nThere may be more details in the console.\n\n${getErrorMessage(err)}`, { title: 'Save error', type: 'error' });
+			} finally {
+				shift();
 			}
-			setLast(first);
-			shift();
 		})();
 	}, [first, current, shift]);
 
