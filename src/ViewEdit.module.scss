@@ -21,6 +21,8 @@
 }
 
 .trackbar {
+	border-bottom: solid 1px var(--color-neutral-4);
+	border-top: solid 1px var(--color-neutral-4);
 	position: relative;
 	contain: layout;
 }
