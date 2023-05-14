@@ -4,11 +4,11 @@
 }
 
 :root {
-	&[data-font='Bitch'] > body {
+	&[data-font='bitch'] > body {
 		font-family: Bitch, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 	}
 
-	&[data-font='Boring'] > body {
+	&[data-font='boring'] > body {
 		font-family: system-ui;
 	}
 }

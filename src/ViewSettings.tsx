@@ -107,20 +107,20 @@ export function ViewSettings() {
 							onChange={onRadio}
 							type="radio"
 							name="font"
-							value="Bitch"
-							checked={settings.font === 'Bitch'}
+							value="bitch"
+							checked={settings.font === 'bitch'}
 						/>{' '}
-						Bitch
+						bitch
 					</label>
 					<label>
 						<input
 							onChange={onRadio}
 							type="radio"
 							name="font"
-							value="Boring"
-							checked={settings.font === 'Boring'}
+							value="boring"
+							checked={settings.font === 'boring'}
 						/>{' '}
-						Boring
+						boring
 					</label>
 				</dd>
 

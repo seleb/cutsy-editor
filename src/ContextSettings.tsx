@@ -11,7 +11,7 @@ import {
 
 type State = {
 	theme: 'auto' | 'dark' | 'light';
-	font: 'Bitch' | 'Boring';
+	font: 'bitch' | 'boring';
 	openAfterSave: 'true' | 'false';
 	videoFolders: string[];
 	saveAudio: 'always' | 'never' | 'editor';
@@ -20,7 +20,7 @@ type State = {
 
 const initial: State = {
 	theme: 'auto',
-	font: 'Bitch',
+	font: 'bitch',
 	openAfterSave: 'true',
 	videoFolders: [],
 	saveAudio: 'always',
