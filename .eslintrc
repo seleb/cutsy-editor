@@ -30,6 +30,7 @@
 
 		"react/require-default-props": "off", // using TS instead of prop-types
 		"jsx-a11y/media-has-caption": "off", // videos are from the user with no way to get caption
+		"jsx-a11y/label-has-associated-control": ["error", { "assert": "either" }], // allow either instead of requiring both
 
 		// prefer named
 		"import/prefer-default-export": "off",
