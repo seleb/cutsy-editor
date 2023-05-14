@@ -3,9 +3,11 @@ import { invoke } from '@tauri-apps/api/tauri';
 export const FRAMES_PER_SECOND = 60;
 export const FRAME = 1 / FRAMES_PER_SECOND;
 
+/** ffmpeg always seems to be ~2 frames off */
+export const CORRECTION = -FRAME * 2;
+
 export function toMicroseconds(seconds: number) {
-	// ffmpeg always seems to be ~2 frames off
-	return Math.floor((seconds - FRAME * 2) * 1000000);
+	return Math.floor((seconds + CORRECTION) * 1000000);
 }
 
 export async function isFfmpegInstalled() {
