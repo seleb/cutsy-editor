@@ -66,6 +66,8 @@ export function ViewVideos() {
 				setLibrary(files);
 				setResults(files);
 				search.addDocuments(files);
+				// TS makes refs readonly, but this is written imperatively on purpose
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
 				refSearch.current = search;
 				setLoading(false);
