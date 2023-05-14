@@ -4,7 +4,7 @@
 	grid-template-columns: 5rem 1fr;
 	gap: 0.1rem 1rem;
 
-	>dt {
+	> dt {
 		text-align: right;
 		margin-top: 0.25rem;
 		line-height: 1;
@@ -14,7 +14,7 @@
 		}
 	}
 
-	>dd {
+	> dd {
 		margin: 0;
 	}
 }
@@ -22,7 +22,7 @@
 .settings {
 	row-gap: 1rem;
 
-	>dd {
+	> dd {
 		label {
 			display: flex;
 			gap: 0.5rem;
@@ -34,12 +34,12 @@
 .folders {
 	list-style: none;
 
-	>li {
+	> li {
 		&:not(:last-child) {
 			margin-bottom: 0.25rem;
 		}
 
-		>button {
+		> button {
 			display: flex;
 			align-items: center;
 			gap: 1rem;
@@ -47,9 +47,7 @@
 			border: solid 1px var(--color-neutral-4);
 			border-radius: 0.25rem;
 			text-align: initial;
-			transition:
-				border-color 0.1s ease-out,
-				background-color 0.1s ease-out;
+			transition: border-color 0.1s ease-out, background-color 0.1s ease-out;
 			word-break: break-word;
 
 			&:hover,

@@ -9,9 +9,7 @@
 	border-bottom-right-radius: 0.5rem;
 	padding-bottom: 0.5rem;
 	overflow: hidden;
-	transition:
-		max-width 0.1s ease-out,
-		max-height 0.1s ease-out;
+	transition: max-width 0.1s ease-out, max-height 0.1s ease-out;
 	contain: paint;
 
 	:global(.h) {
@@ -28,7 +26,7 @@
 		padding: 0.25rem;
 	}
 
-	>div {
+	> div {
 		position: sticky;
 		top: 0;
 		left: 0;
@@ -40,7 +38,7 @@
 			margin-inline-end: auto;
 		}
 
-		>button {
+		> button {
 			flex: none;
 			margin-inline-end: auto;
 			padding: 0;
@@ -55,9 +53,8 @@
 				width: 0.5rem;
 			}
 		}
-
 	}
-	
+
 	dl {
 		display: grid;
 		grid-template-columns: auto 1fr;
@@ -75,7 +72,7 @@
 	}
 
 	kbd:not(.multi),
-	.multi>kbd {
+	.multi > kbd {
 		font-size: 80%;
 		color: var(--color-neutral-9);
 		border: solid 1px var(--color-neutral-6);

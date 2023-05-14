@@ -8,9 +8,9 @@ $neutral-2: hsl(278deg 57% 5%);
 $neutral-4: hsl(289deg 35% 21%);
 $neutral-6: hsl(290deg 10% 53%);
 $neutral-8: hsl(300deg 11% 75%);
-$neutral-9: #FFF;
+$neutral-9: #fff;
 $black: #000;
-$white: #FFF;
+$white: #fff;
 
 @function rgbv($color) {
 	@return red($color) green($color) blue($color);
@@ -53,11 +53,11 @@ $white: #FFF;
 		@include light;
 	}
 
-	&[data-theme="dark"] {
+	&[data-theme='dark'] {
 		@include dark;
 	}
 
-	&[data-theme="light"] {
+	&[data-theme='light'] {
 		@include light;
 	}
 

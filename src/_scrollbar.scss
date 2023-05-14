@@ -1,25 +1,25 @@
 * {
-  /* Firefox */
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-neutral-4) rgb(var(--color-neutral-2-rgb) / 50%);
+	/* Firefox */
+	scrollbar-width: thin;
+	scrollbar-color: var(--color-neutral-4) rgb(var(--color-neutral-2-rgb) / 50%);
 
-  /* Chrome, Edge, and Safari */
-  &::-webkit-scrollbar {
-    width: 0.5rem;
-    height: 0.5rem;
-  }
+	/* Chrome, Edge, and Safari */
+	&::-webkit-scrollbar {
+		width: 0.5rem;
+		height: 0.5rem;
+	}
 
-  &::-webkit-scrollbar-track {
-    background-color: rgb(var(--color-neutral-2-rgb) / 50%);
-  }
+	&::-webkit-scrollbar-track {
+		background-color: rgb(var(--color-neutral-2-rgb) / 50%);
+	}
 
-  &::-webkit-scrollbar-corner {
-    background-color: rgb(var(--color-neutral-2-rgb) / 50%);
-  }
+	&::-webkit-scrollbar-corner {
+		background-color: rgb(var(--color-neutral-2-rgb) / 50%);
+	}
 
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--color-neutral-4);
-    border-radius: 2px;
-    border: none;
-  }
+	&::-webkit-scrollbar-thumb {
+		background-color: var(--color-neutral-4);
+		border-radius: 2px;
+		border: none;
+	}
 }

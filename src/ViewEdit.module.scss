@@ -53,10 +53,12 @@
 	contain: layout;
 	width: 100%;
 	background-color: var(--color-black);
-	background-image: repeating-linear-gradient(to right,
-			transparent,
-			transparent calc(5% - 2px),
-			rgb(var(--color-white-rgb) / 10%) 5%);
+	background-image: repeating-linear-gradient(
+		to right,
+		transparent,
+		transparent calc(5% - 2px),
+		rgb(var(--color-white-rgb) / 10%) 5%
+	);
 }
 
 .progress {
@@ -90,7 +92,7 @@
 	background-color: rgb(var(--color-primary-bright-rgb) / 25%);
 	pointer-events: none;
 
-	:not(:hover)>& {
+	:not(:hover) > & {
 		display: none;
 	}
 }
@@ -105,9 +107,7 @@
 	width: 100%;
 	height: 0.75rem;
 	cursor: grab;
-	transition:
-		background-color 0.1s ease-out,
-		border-color 0.1s ease-out;
+	transition: background-color 0.1s ease-out, border-color 0.1s ease-out;
 
 	&:hover:not(:has(:hover)) {
 		color: var(--color-white);
@@ -151,11 +151,11 @@
 		min-width: 2rem;
 		padding-block: 0.5rem;
 
-		[data-icon="pause"] {
+		[data-icon='pause'] {
 			margin-inline-end: 2px;
 		}
 
-		[data-icon="volume-xmark"] {
+		[data-icon='volume-xmark'] {
 			margin-inline-end: 2px;
 		}
 	}

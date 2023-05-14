@@ -17,7 +17,11 @@ $sidebar: 4rem;
 	left: 0;
 	width: $sidebar;
 	overflow: auto;
-	background-image: linear-gradient(to bottom, rgb(var(--color-neutral-4-rgb) / 50%) 10rem, rgb(var(--color-neutral-4-rgb) / 0%) max(15rem, 75vh));
+	background-image: linear-gradient(
+		to bottom,
+		rgb(var(--color-neutral-4-rgb) / 50%) 10rem,
+		rgb(var(--color-neutral-4-rgb) / 0%) max(15rem, 75vh)
+	);
 	user-select: none;
 	cursor: default;
 
@@ -26,13 +30,12 @@ $sidebar: 4rem;
 		padding-block: 0.5rem;
 		overflow: hidden;
 
-		>strong {
+		> strong {
 			display: inline-block;
 		}
 
-		
 		&:active {
-			>strong {
+			> strong {
 				animation: logo 0.5s ease-out both;
 			}
 		}
@@ -55,26 +58,26 @@ $sidebar: 4rem;
 			color: var(--color-primary);
 			position: relative;
 			transition: color 0.1s ease-out;
-			
+
 			&:global(.active) {
 				background-color: var(--color-neutral-2);
 				color: var(--color-primary-bright);
 			}
 
-			&[aria-disabled="true"] {
+			&[aria-disabled='true'] {
 				filter: saturate(0);
 			}
 
-			&:not([aria-disabled="true"], :disabled):hover,
-			&:not([aria-disabled="true"], :disabled):focus-visible {
+			&:not([aria-disabled='true'], :disabled):hover,
+			&:not([aria-disabled='true'], :disabled):focus-visible {
 				color: var(--color-primary-bright);
 			}
 
-			&:not([aria-disabled="true"], :disabled):active {
+			&:not([aria-disabled='true'], :disabled):active {
 				color: var(--color-primary-muted);
 			}
 
-			&[data-count]:not([data-count="0"])::after {
+			&[data-count]:not([data-count='0'])::after {
 				content: attr(data-count);
 				position: absolute;
 				top: 0.25rem;
@@ -96,8 +99,8 @@ $sidebar: 4rem;
 }
 
 .main {
-  width: 100%;
-  min-width: 0;
-  min-height: 0;
-  padding-left: $sidebar;
+	width: 100%;
+	min-width: 0;
+	min-height: 0;
+	padding-left: $sidebar;
 }

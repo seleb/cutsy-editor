@@ -1,75 +1,78 @@
-@import "reset";
-@import "theme";
-@import "font";
-@import "scrollbar";
+@import 'reset';
+@import 'theme';
+@import 'font';
+@import 'scrollbar';
 
 :root {
-  font-size: 16px;
-  line-height: 1.5;
-  tab-size: 2;
-  overflow: overlay;
-  scrollbar-gutter: stable;
-  accent-color: var(--color-primary);
-  color: var(--color-neutral-8);
-  background-color: var(--color-neutral-2);
-  background-image: linear-gradient(to top, rgb(var(--color-neutral-0-rgb) / 30%), rgb(var(--color-neutral-0-rgb) / 0%) 15rem);
-  background-attachment: fixed;
-  height: 100%;
+	font-size: 16px;
+	line-height: 1.5;
+	tab-size: 2;
+	overflow: overlay;
+	scrollbar-gutter: stable;
+	accent-color: var(--color-primary);
+	color: var(--color-neutral-8);
+	background-color: var(--color-neutral-2);
+	background-image: linear-gradient(
+		to top,
+		rgb(var(--color-neutral-0-rgb) / 30%),
+		rgb(var(--color-neutral-0-rgb) / 0%) 15rem
+	);
+	background-attachment: fixed;
+	height: 100%;
 }
 
 body {
-  height: 100%;
+	height: 100%;
 }
 
 #root {
-  height: 100%;
-  display: flex;
+	height: 100%;
+	display: flex;
 }
 
 ::selection {
-  background-color: var(--color-primary-bright);
-  color: var(--color-neutral-2);
+	background-color: var(--color-primary-bright);
+	color: var(--color-neutral-2);
 }
 
-
 a {
-  color: var(--color-primary);
-  text-decoration: inherit;
-  will-change: color;
-  transition: color 0.1s;
+	color: var(--color-primary);
+	text-decoration: inherit;
+	will-change: color;
+	transition: color 0.1s;
 }
 
 a,
 button,
-details>summary {
-  cursor: pointer;
+details > summary {
+	cursor: pointer;
 }
 
 a:hover,
 a:focus-visible {
-  color: var(--color-primary-bright);
+	color: var(--color-primary-bright);
 }
 
 h1 {
-  text-align: center;
+	text-align: center;
 }
 
 button {
-  svg {
-    pointer-events: none;
-  }
+	svg {
+		pointer-events: none;
+	}
 }
 
 input:disabled,
 button:disabled {
-  filter: saturate(0.25);
-  cursor: not-allowed;
+	filter: saturate(0.25);
+	cursor: not-allowed;
 }
 
 hr {
-  margin: 0;
-  width: 100%;
-  border: none;
-  height: 1px;
-  background-color: var(--color-neutral-4);
+	margin: 0;
+	width: 100%;
+	border: none;
+	height: 1px;
+	background-color: var(--color-neutral-4);
 }
