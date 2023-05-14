@@ -56,6 +56,10 @@ $sidebar: 4rem;
 				color: var(--color-primary-bright);
 			}
 
+			&[aria-disabled="true"] {
+				filter: saturate(0);
+			}
+
 			&[data-count]:not([data-count="0"])::after {
 				content: attr(data-count);
 				position: absolute;

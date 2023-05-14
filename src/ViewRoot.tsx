@@ -5,6 +5,7 @@ import { message, open } from '@tauri-apps/api/dialog';
 import { listen } from '@tauri-apps/api/event';
 import { useCallback, useEffect } from 'react';
 import { Clilp } from './Clilp';
+import { useVideo } from './ContextApp';
 import { Debug } from './Debug';
 import { GateFfmpeg } from './GateFfmpeg';
 import { H, HLevel } from './H';
@@ -40,6 +41,8 @@ export function ViewRoot() {
 		navigate(toEditUrl(file));
 	}, []);
 
+	const { path } = useVideo();
+
 	return (
 		<>
 			<Title>clilp</Title>
@@ -51,6 +54,9 @@ export function ViewRoot() {
 					<button title="Open file" onClick={onOpen}>
 						<Icon icon="open" />
 					</button>
+					<NavLink aria-disabled={!path} to={path ? `edit?v=${path}` : ''} title="Edit">
+						<Icon icon="edit" />
+					</NavLink>
 					<NavLink to="videos" title="Videos">
 						<Icon icon="videos" />
 					</NavLink>

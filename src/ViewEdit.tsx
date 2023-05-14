@@ -3,6 +3,7 @@ import { open } from '@tauri-apps/api/shell';
 import { convertFileSrc, invoke } from '@tauri-apps/api/tauri';
 import { MouseEventHandler, PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useVideo, useVideoSet } from './ContextApp';
 import { useSettings } from './ContextSettings';
 import { EditorHelp } from './EditorHelp';
 import { Icon } from './Icon';
@@ -452,6 +453,29 @@ export function ViewEdit() {
 	const noContextMenu = useCallback<MouseEventHandler<SVGSVGElement | HTMLElement>>(event => {
 		event.preventDefault();
 	}, []);
+
+	// save editor state
+	const setVideo = useVideoSet();
+	useEffect(() => {
+		const elVideo = refVideo.current;
+		const elClip = refClip.current;
+		if (!elVideo || !elClip) return;
+		return () => {
+			const clipStart = Number((elClip.style.left || '0%').replace('%', '')) / 100;
+			const clipEnd = Number((elClip.style.width || '100%').replace('%', '')) / 100 + clipStart;
+			setVideo({
+				path: pathEncoded,
+				clipStart,
+				clipEnd,
+			});
+		};
+	}, [pathEncoded]);
+
+	// reload clip
+	const lastVideo = useVideo();
+	useEffect(() => {
+		onUpdateClip(lastVideo.clipStart, lastVideo.clipEnd);
+	}, [lastVideo.clipStart, lastVideo.clipEnd]);
 
 	if (!pathEncoded) throw new Error('No video path!');
 	return (
