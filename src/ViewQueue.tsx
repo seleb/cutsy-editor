@@ -12,7 +12,7 @@ export function ViewQueue() {
 	return (
 		<Page>
 			<PageHeader>queue</PageHeader>
-			<table className={styles.queue}>
+			{queue.length > 0 ? <table className={styles.queue}>
 				<thead>
 					<tr>
 						<th>input</th>
@@ -39,7 +39,7 @@ export function ViewQueue() {
 						);
 					})}
 				</tbody>
-			</table>
+			</table> : <p>there's nothing in the queue :)</p>}
 		</Page>
 	);
 }
