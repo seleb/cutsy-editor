@@ -90,6 +90,8 @@ export function ViewEdit() {
 		const elProgress = refProgress.current;
 		const elTime = refTime.current;
 		if (!elVideo || !elProgress || !elTime) return undefined;
+
+		// update as video frames are available
 		const onUpdate: VideoFrameRequestCallback = (_now, metadata) => {
 			elProgress.value = metadata.mediaTime;
 			elTime.textContent = toDuration(metadata.mediaTime);
@@ -97,8 +99,16 @@ export function ViewEdit() {
 		};
 		vfc = elVideo.requestVideoFrameCallback(onUpdate);
 
+		// update on time events (less frequent, but frame callbacks aren't supported everywhere)
+		const onTimeUpdate = () => {
+			elProgress.value = elVideo.currentTime;
+			elTime.textContent = toDuration(elVideo.currentTime);
+		};
+		elVideo.addEventListener('timeupdate', onTimeUpdate);
+
 		return () => {
 			elVideo.cancelVideoFrameCallback(vfc);
+			elVideo.removeEventListener('timeupdate', onTimeUpdate);
 		};
 	}, []);
 
