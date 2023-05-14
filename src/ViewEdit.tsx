@@ -28,6 +28,10 @@ const filtersImages = [
 		extensions: ['jpg', 'jpeg'],
 	},
 	{
+		name: 'GIF Image',
+		extensions: ['gif'],
+	},
+	{
 		name: 'All files',
 		extensions: ['*'],
 	},
@@ -41,6 +45,10 @@ const filtersVideos = [
 	{
 		name: 'WebM Video',
 		extensions: ['webm'],
+	},
+	{
+		name: 'Animated GIF',
+		extensions: ['gif'],
 	},
 	{
 		name: 'All files',
