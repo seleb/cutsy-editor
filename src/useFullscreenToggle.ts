@@ -4,7 +4,7 @@ import { isDesktop } from './isDesktop';
 
 export function useFullscreenToggle() {
 	useEffect(() => {
-		if (!isDesktop) return;
+		if (!isDesktop) return undefined;
 		const onKey = async (event: KeyboardEvent) => {
 			if (event.key === 'Escape') {
 				appWindow.setFullscreen(false);
