@@ -163,38 +163,44 @@ export function ViewEdit() {
 	const updatePlayhead = useCallback((pos: number) => {
 		const elPlayhead = refPlayhead.current;
 		if (!elPlayhead) return;
-		elPlayhead.style.left = `${clamp(0, pos, 1)*100}%`;
+		elPlayhead.style.left = `${clamp(0, pos, 1) * 100}%`;
 	}, []);
 
-	const onUpdatePlayhead = useCallback<MouseEventHandler>((event) => {
-		const elPlayhead = refPlayhead.current;
-		if (!elPlayhead?.parentElement) return;
-		const rect = elPlayhead.parentElement.getBoundingClientRect();
-		const pos = (event.pageX - rect.left) / elPlayhead.parentElement.offsetWidth;
-		updatePlayhead(pos);
-	}, [updatePlayhead]);
+	const onUpdatePlayhead = useCallback<MouseEventHandler>(
+		event => {
+			const elPlayhead = refPlayhead.current;
+			if (!elPlayhead?.parentElement) return;
+			const rect = elPlayhead.parentElement.getBoundingClientRect();
+			const pos = (event.pageX - rect.left) / elPlayhead.parentElement.offsetWidth;
+			updatePlayhead(pos);
+		},
+		[updatePlayhead]
+	);
 
-	const seek = useCallback((to: number, loop = true) => {
-		const elVideo = refVideo.current;
-		const elPlayhead = refPlayhead.current;
-		const elTime = refTime.current;
-		if (!elVideo || !elPlayhead || !elTime || !elVideo?.duration) {
-			return;
-		}
-		let t: number;
-		if (loop && to < 0 && elVideo.currentTime < FRAME * 2) {
-			t = elVideo.duration - FRAME;
-		} else if (loop && to > elVideo.duration && elVideo.currentTime - elVideo.duration > -FRAME * 2) {
-			t = 0;
-		} else {
-			t = clamp(0, to, elVideo.duration - FRAME);
-		}
-		
-		elVideo.currentTime = t;
-		elTime.textContent = toDuration(t);
-		updatePlayhead(t / elVideo.duration);
-		return t;
-	}, [updatePlayhead]);
+	const seek = useCallback(
+		(to: number, loop = true) => {
+			const elVideo = refVideo.current;
+			const elPlayhead = refPlayhead.current;
+			const elTime = refTime.current;
+			if (!elVideo || !elPlayhead || !elTime || !elVideo?.duration) {
+				return;
+			}
+			let t: number;
+			if (loop && to < 0 && elVideo.currentTime < FRAME * 2) {
+				t = elVideo.duration - FRAME;
+			} else if (loop && to > elVideo.duration && elVideo.currentTime - elVideo.duration > -FRAME * 2) {
+				t = 0;
+			} else {
+				t = clamp(0, to, elVideo.duration - FRAME);
+			}
+
+			elVideo.currentTime = t;
+			elTime.textContent = toDuration(t);
+			updatePlayhead(t / elVideo.duration);
+			return t;
+		},
+		[updatePlayhead]
+	);
 
 	const seekBy = useCallback((by: number) => {
 		const elVideo = refVideo.current;
@@ -332,7 +338,7 @@ export function ViewEdit() {
 				isStart = elClip.firstChild === target || elClip.firstChild?.contains(target) || false;
 				if (event.button && event.button !== 1) {
 					event.preventDefault();
-					const pos = elVideo.currentTime/elVideo.duration;
+					const pos = elVideo.currentTime / elVideo.duration;
 					isStart ? onUpdateClip(pos, undefined) : onUpdateClip(undefined, pos);
 					return false;
 				}
@@ -349,10 +355,8 @@ export function ViewEdit() {
 				seek(pos * elVideo.duration, false);
 				isStart ? onUpdateClip(pos, end) : onUpdateClip(start, pos);
 			},
-		})
-	},
-		[onUpdateClip]
-	);
+		});
+	}, [onUpdateClip]);
 
 	const onScrubStartClip = useMemo(() => {
 		return onScrubStart({
@@ -373,28 +377,31 @@ export function ViewEdit() {
 
 	const [saving, setSavingClip] = useState(false);
 	const { openAfterSave, saveAudio } = useSettings();
-	const saveAndOpen = useCallback(async (options: Parameters<typeof save>[0], doSave: (output: string) => Promise<unknown>) => {
-		setSavingClip(true);
-		let output: string | null;
-		try {
-			output = await save(options);
-			if (!output) return; // cancelled
-			await doSave(output);
-		} catch (err) {
-			console.error(err);
-			await message(`Failed to save file.\nThere may be more details in the console.\n\n${err}`, { title: 'Save error', type: 'error' });
-			return;
-		} finally {
-			setSavingClip(false);
-		}
-		if (openAfterSave !== 'true') return;
-		try {
-			await open(`file:///${output}`);
-		} catch (err) {
-			console.error(err);
-			await message(`The file was saved, but clilp failed to open it.\nThere may be more details in the console.\n\n${err}`, { title: 'Open error', type: 'warning' });
-		}
-	}, [openAfterSave]);
+	const saveAndOpen = useCallback(
+		async (options: Parameters<typeof save>[0], doSave: (output: string) => Promise<unknown>) => {
+			setSavingClip(true);
+			let output: string | null;
+			try {
+				output = await save(options);
+				if (!output) return; // cancelled
+				await doSave(output);
+			} catch (err) {
+				console.error(err);
+				await message(`Failed to save file.\nThere may be more details in the console.\n\n${err}`, { title: 'Save error', type: 'error' });
+				return;
+			} finally {
+				setSavingClip(false);
+			}
+			if (openAfterSave !== 'true') return;
+			try {
+				await open(`file:///${output}`);
+			} catch (err) {
+				console.error(err);
+				await message(`The file was saved, but clilp failed to open it.\nThere may be more details in the console.\n\n${err}`, { title: 'Open error', type: 'warning' });
+			}
+		},
+		[openAfterSave]
+	);
 
 	const onSaveImage = useCallback(
 		() =>
@@ -420,10 +427,10 @@ export function ViewEdit() {
 					defaultPath: name,
 					filters: filtersVideos,
 				},
-				output =>{
+				output => {
 					const elVideo = refVideo.current;
 					const elClip = refClip.current;
-					if (!elVideo || !elClip) throw new Error("Could not find elements");
+					if (!elVideo || !elClip) throw new Error('Could not find elements');
 					const start = Number((elClip.style.left || '0%').replace('%', '')) / 100;
 					const width = Number((elClip.style.width || '100%').replace('%', '')) / 100;
 					return invoke<string>('vid_to_clip', {
@@ -432,16 +439,17 @@ export function ViewEdit() {
 						start: `${toMicroseconds(start * elVideo.duration || 0)}us`,
 						duration: `${toMicroseconds(width * elVideo.duration || 0)}us`,
 						audio: {
-							'always': true,
-							'never': false,
-							'editor': !muted,
+							always: true,
+							never: false,
+							editor: !muted,
 						}[saveAudio],
-					})}
+					});
+				}
 			),
 		[pathDecoded, name, saveAudio, muted]
 	);
 
-	const noContextMenu = useCallback<MouseEventHandler<SVGSVGElement | HTMLElement>>((event) => {
+	const noContextMenu = useCallback<MouseEventHandler<SVGSVGElement | HTMLElement>>(event => {
 		event.preventDefault();
 	}, []);
 
