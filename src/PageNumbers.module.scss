@@ -37,6 +37,13 @@
 	}
 }
 
+.next,
+.prev {
+	&:disabled {
+		opacity: 0.5;
+	}
+}
+
 .current {
 	color: var(--color-neutral-9);
 }

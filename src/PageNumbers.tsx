@@ -17,7 +17,7 @@ export function PageNumbers({ goto, current = 0, total }: { goto: (page: number)
 	}, [goto]);
 	return (
 		<nav className={styles.container}>
-			<button className={styles.button} onClick={onClick} disabled={current <= 0} value={current - 1} title="Previous page">
+			<button className={`${styles.button} ${styles.prev}`} onClick={onClick} disabled={current <= 0} value={current - 1} title="Previous page">
 				&lt;
 			</button>
 			<button className={`${styles.button} ${styles.first}`} onClick={onClick} disabled={current <= pad} value={0} title="First page">
@@ -39,7 +39,7 @@ export function PageNumbers({ goto, current = 0, total }: { goto: (page: number)
 			<button className={`${styles.button} ${styles.last}`} onClick={onClick} disabled={current >= total - pad - 1} value={total - 1} title="Last page">
 				{total}
 			</button>
-			<button className={styles.button} onClick={onClick} disabled={current >= total - 1} value={current + 1} title="Next page">
+			<button className={`${styles.button} ${styles.next}`} onClick={onClick} disabled={current >= total - 1} value={current + 1} title="Next page">
 				&gt;
 			</button>
 		</nav>
