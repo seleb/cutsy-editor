@@ -481,6 +481,12 @@ export function ViewEdit() {
 						centerTrack();
 					}
 					break;
+				case 's':
+					if (event.ctrlKey || event.metaKey) {
+						onSaveClip();
+						event.preventDefault();
+					}
+					break;
 				default:
 					break;
 			}

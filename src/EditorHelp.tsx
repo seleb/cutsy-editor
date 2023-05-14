@@ -22,6 +22,7 @@ const shortcuts = [
 	['Shift+ArrowLeft', 'Backward (faster)'],
 	['Ctrl+ArrowRight', 'End'],
 	['Ctrl+ArrowLeft', 'Start'],
+	['Ctrl+S', 'Save clip'],
 ].map(([shortcut, label]) => [shortcut, shortcut.split(/(?<!\+)\+/), label]) as [string, string[], string][];
 
 const replacements: { [key: string]: string } = {
