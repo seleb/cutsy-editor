@@ -1,4 +1,4 @@
-import { faAngleLeft, faAngleRight, faArrowDownUpAcrossLine, faBug, faEye, faEyeLowVision, faFileArrowUp, faFilm, faFolder, faGear, faMagnifyingGlass, faMapPin, faPause, faPhotoFilm, faPlay, faPlus, faQuestion, faScissors, faSortAlphaAsc, faSortAlphaDesc, faTriangleExclamation, faVolumeHigh, faVolumeXmark, faX } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faAngleRight, faArrowDownUpAcrossLine, faBug, faEye, faEyeLowVision, faFileArrowUp, faFilm, faFolder, faGear, faMagnifyingGlass, faMagnifyingGlassMinus, faMagnifyingGlassPlus, faMapPin, faPause, faPhotoFilm, faPlay, faPlus, faQuestion, faScissors, faSortAlphaAsc, faSortAlphaDesc, faTriangleExclamation, faVolumeHigh, faVolumeXmark, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ComponentProps, ForwardedRef, forwardRef } from 'react';
 
@@ -22,6 +22,8 @@ const icons = {
 	'edit': faScissors,
 	'preview': faEye,
 	'noPreview': faEyeLowVision,
+	'zoomin': faMagnifyingGlassPlus,
+	'zoomout': faMagnifyingGlassMinus,
 	'x': faX,
 	'?': faQuestion,
 	'+': faPlus,
