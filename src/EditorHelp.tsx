@@ -93,6 +93,10 @@ export function EditorHelp() {
 				<li>right-click on clip markers to snap them to the current time</li>
 				<li>shift+click on timeline to snap start to cursor</li>
 				<li>shift+right-click to snap end to cursor</li>
+				<li>
+					ffmpeg supports lots of file types: use <q>all files</q> when saving
+					to try less common formats
+				</li>
 			</ul>
 		</aside>
 	);
