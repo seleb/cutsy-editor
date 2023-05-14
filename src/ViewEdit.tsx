@@ -233,7 +233,7 @@ export function ViewEdit() {
 				if (end) window.addEventListener('pointerup', end);
 				window.addEventListener('pointerup', onScrubStop);
 			},
-		[seek]
+		[]
 	);
 
 	const onUpdateClip = useCallback((start?: number, end?: number, slide?: number) => {
