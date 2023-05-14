@@ -18,6 +18,7 @@ import {
 	faPlay,
 	faPlus,
 	faQuestion,
+	faRefresh,
 	faScissors,
 	faSortAlphaAsc,
 	faSortAlphaDesc,
@@ -56,6 +57,7 @@ const icons = {
 	'+': faPlus,
 	'<': faAngleLeft,
 	'>': faAngleRight,
+	refresh: faRefresh,
 };
 
 export const Icon = forwardRef(
