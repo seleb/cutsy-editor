@@ -11,14 +11,14 @@
 	color: var(--color-primary);
 	min-width: 1.5rem;
 
-	&:not(:disabled):hover,
-	&:not(:disabled):focus-visible {
-		color: var(--color-primary-bright);
-	}
-
 	&:disabled {
 		opacity: 0;
 		pointer-events: none;
+	}
+
+	&:not(:disabled):hover,
+	&:not(:disabled):focus-visible {
+		color: var(--color-primary-bright);
 	}
 }
 
