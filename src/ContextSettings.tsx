@@ -15,6 +15,7 @@ type State = {
 	openAfterSave: 'true' | 'false';
 	videoFolders: string[];
 	saveAudio: 'always' | 'never' | 'editor';
+	itemsPerPage: number;
 };
 
 const initial: State = {
@@ -23,6 +24,7 @@ const initial: State = {
 	openAfterSave: 'true',
 	videoFolders: [],
 	saveAudio: 'always',
+	itemsPerPage: 30,
 };
 
 export const availableSettings = Object.keys(initial) as (keyof State)[];
