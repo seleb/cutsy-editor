@@ -39,6 +39,7 @@
 
 .next,
 .prev {
+	margin-top: 3px;
 	&:disabled {
 		opacity: 0.5;
 	}

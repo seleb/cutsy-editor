@@ -1,4 +1,4 @@
-import { faArrowDownUpAcrossLine, faBug, faFileArrowUp, faFilm, faFolder, faGear, faMagnifyingGlass, faMapPin, faPause, faPhotoFilm, faPlay, faPlus, faQuestion, faSortAlphaAsc, faSortAlphaDesc, faTriangleExclamation, faVolumeHigh, faVolumeXmark, faX } from '@fortawesome/free-solid-svg-icons';
+import { faAngleLeft, faAngleRight, faArrowDownUpAcrossLine, faBug, faFileArrowUp, faFilm, faFolder, faGear, faMagnifyingGlass, faMapPin, faPause, faPhotoFilm, faPlay, faPlus, faQuestion, faSortAlphaAsc, faSortAlphaDesc, faTriangleExclamation, faVolumeHigh, faVolumeXmark, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ComponentProps, ForwardedRef, forwardRef } from 'react';
 
@@ -22,6 +22,8 @@ const icons = {
 	'x': faX,
 	'?': faQuestion,
 	'+': faPlus,
+	'<': faAngleLeft,
+	'>': faAngleRight,
 }
 
 export const Icon = forwardRef(({

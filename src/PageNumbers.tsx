@@ -1,10 +1,11 @@
 import { ComponentProps, useCallback } from 'react';
 
+import { Icon } from './Icon';
 import styles from './PageNumbers.module.scss';
 
 const pad = 2;
 
-export function PageNumbers({ goto, current = 0, total }: { goto: (page: number) => void; current?: number; total: number }) {
+export function PageNumbers({ goto, current = 0, total, className, ...props }: ComponentProps<'nav'> & { goto: (page: number) => void; current?: number; total: number }) {
 	const onClick = useCallback<NonNullable<ComponentProps<'button'>['onClick']>>(
 		event => {
 			return goto(parseInt(event.currentTarget.value, 10));
@@ -16,9 +17,9 @@ export function PageNumbers({ goto, current = 0, total }: { goto: (page: number)
 		return goto(parseInt(page || '', 10) - 1);
 	}, [goto]);
 	return (
-		<nav className={styles.container}>
+		<nav className={`${className} ${styles.container}`} {...props}>
 			<button className={`${styles.button} ${styles.prev}`} onClick={onClick} disabled={current <= 0} value={current - 1} title="Previous page">
-				&lt;
+				<Icon icon="<" />
 			</button>
 			<button className={`${styles.button} ${styles.first}`} onClick={onClick} disabled={current <= pad} value={0} title="First page">
 				{1}
@@ -40,7 +41,7 @@ export function PageNumbers({ goto, current = 0, total }: { goto: (page: number)
 				{total}
 			</button>
 			<button className={`${styles.button} ${styles.next}`} onClick={onClick} disabled={current >= total - 1} value={current + 1} title="Next page">
-				&gt;
+				<Icon icon=">" />
 			</button>
 		</nav>
 	);
