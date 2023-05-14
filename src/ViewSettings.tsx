@@ -1,5 +1,6 @@
 import { open } from '@tauri-apps/api/dialog';
 import { ChangeEventHandler, MouseEventHandler, useCallback } from 'react';
+// eslint-disable-next-line import/extensions
 import pkg from '../package.json';
 import { Button } from './Button';
 import { availableSettings, useSettings, useSettingsReset, useSettingsSet } from './ContextSettings';
