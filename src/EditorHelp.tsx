@@ -20,6 +20,7 @@ const shortcuts = [
 ].map(([shortcut, label]) => [shortcut, shortcut.split('+'), label]) as [string, string[], string][];
 
 const replacements: { [key: string]: string } = {
+	Space: '␣',
 	ArrowRight: '→',
 	ArrowLeft: '←',
 	ArrowUp: '↑',
