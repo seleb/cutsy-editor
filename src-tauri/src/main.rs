@@ -36,7 +36,7 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
     // seek
     .arg("-ss").arg(time)
     // input
-    .arg("-i").arg(path_input.as_os_str().to_str().unwrap())
+    .input(path_input.as_os_str().to_str().unwrap())
     // one image
     .arg("-update").arg(1.to_string())
     .arg("-frames:v").arg(1.to_string())
@@ -97,7 +97,7 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String, a
     // duration
     .duration(duration)
     // input
-    .arg("-i").arg(path_input.as_os_str().to_str().unwrap())
+    .input(path_input.as_os_str().to_str().unwrap())
     // output
     .output(path_output.as_os_str().to_str().unwrap())
     .spawn()
