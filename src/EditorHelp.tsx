@@ -5,24 +5,24 @@ import { H } from './H';
 import { Icon } from './Icon';
 
 const shortcuts = [
-	['Space', 'Play/Pause'],
-	['Shift+Space', 'Preview clip'],
-	['Ctrl+=', 'Zoom in'],
-	['Ctrl+-', 'Zoom out'],
-	['Ctrl+0', 'Reset Zoom'],
-	['0', 'Center track'],
-	['M', 'Mute/Unmute'],
-	['ArrowRight', 'Forward'],
-	['ArrowLeft', 'Backward'],
-	['.', 'Forward (frame)'],
-	[',', 'Backward (frame)'],
-	['Alt+ArrowRight', 'Forward (fast)'],
-	['Alt+ArrowLeft', 'Backward (fast)'],
-	['Shift+ArrowRight', 'Forward (faster)'],
-	['Shift+ArrowLeft', 'Backward (faster)'],
-	['Ctrl+ArrowRight', 'End'],
-	['Ctrl+ArrowLeft', 'Start'],
-	['Ctrl+S', 'Save clip'],
+	['Space', 'play/pause'],
+	['Shift+Space', 'preview clip'],
+	['Ctrl+=', 'zoom in'],
+	['Ctrl+-', 'zoom out'],
+	['Ctrl+0', 'reset zoom'],
+	['0', 'center track'],
+	['M', 'mute/unmute'],
+	['ArrowRight', 'forward'],
+	['ArrowLeft', 'vackward'],
+	['.', 'forward (frame)'],
+	[',', 'backward (frame)'],
+	['Alt+ArrowRight', 'forward (fast)'],
+	['Alt+ArrowLeft', 'backward (fast)'],
+	['Shift+ArrowRight', 'forward (faster)'],
+	['Shift+ArrowLeft', 'backward (faster)'],
+	['Ctrl+ArrowRight', 'end'],
+	['Ctrl+ArrowLeft', 'start'],
+	['Ctrl+S', 'save clip'],
 ].map(([shortcut, label]) => [
 	shortcut,
 	shortcut.split(/(?<!\+)\+/),
@@ -80,7 +80,7 @@ export function EditorHelp() {
 				>
 					<Icon icon={active ? 'x' : '?'} />
 				</Button>
-				<H>Shortcuts</H>
+				<H>shortcuts</H>
 			</div>
 			<dl>
 				{shortcuts.map(([shortcut, keys, label]) => (
@@ -88,7 +88,7 @@ export function EditorHelp() {
 				))}
 			</dl>
 			<hr />
-			<H>Tips</H>
+			<H>tips</H>
 			<ul>
 				<li>right-click on clip markers to snap them to the current time</li>
 				<li>shift+click on timeline to snap start to cursor</li>

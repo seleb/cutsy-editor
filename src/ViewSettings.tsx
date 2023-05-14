@@ -195,7 +195,7 @@ export function ViewSettings() {
 							value="editor"
 							checked={settings.saveAudio === 'editor'}
 						/>{' '}
-						respect editor mute button
+						export audio based on whether editor is muted
 					</label>
 				</dd>
 
@@ -219,7 +219,7 @@ export function ViewSettings() {
 							value="false"
 							checked={settings.openAfterSave === 'false'}
 						/>{' '}
-						no thanks
+						no thanks i can open my own files
 					</label>
 				</dd>
 
@@ -235,6 +235,13 @@ export function ViewSettings() {
 			<p>
 				this is a little editor i made to clip and convert videos in a way that
 				i like
+			</p>
+			<p>
+				it is mostly just a GUI for{' '}
+				<a href="https://ffmpeg.org" target="_blank" rel="noreferrer">
+					ffmpeg
+				</a>
+				, which can do many more things
 			</p>
 			<p>if you are using it i hope you like it too :)</p>
 			<dl className={styles.about}>
