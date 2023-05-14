@@ -23,7 +23,8 @@ export function PageNumbers({ goto, current = 0, total, className, ...props }: C
 				{1}
 			</button>
 			{new Array(pad).fill(0).map((_, idx, a) => (
-				<button type="button" key={idx} className={`${styles.button} ${styles.pad}`} onClick={onClick} disabled={current <= a.length - idx - 1} value={current - (a.length - idx)}>
+				// eslint-disable-next-line react/no-array-index-key
+				<button type="button" key={`${current}-${idx}`} className={`${styles.button} ${styles.pad}`} onClick={onClick} disabled={current <= a.length - idx - 1} value={current - (a.length - idx)}>
 					{current + 1 - (a.length - idx)}
 				</button>
 			))}
@@ -34,7 +35,8 @@ export function PageNumbers({ goto, current = 0, total, className, ...props }: C
 					/&nbsp;{total}
 			</span>
 			{new Array(pad).fill(0).map((_, idx) => (
-				<button type="button" key={idx} className={`${styles.button} ${styles.pad}`} onClick={onClick} disabled={current >= total - idx - 1} value={current + (idx + 1)}>
+				// eslint-disable-next-line react/no-array-index-key
+				<button type="button" key={`${current}-${idx}`} className={`${styles.button} ${styles.pad}`} onClick={onClick} disabled={current >= total - idx - 1} value={current + (idx + 1)}>
 					{current + 1 + (idx + 1)}
 				</button>
 			))}
