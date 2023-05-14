@@ -95,7 +95,7 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String, a
     // seek
     .arg("-ss").arg(start)
     // duration
-    .arg("-t").arg(duration)
+    .duration(duration)
     // input
     .arg("-i").arg(path_input.as_os_str().to_str().unwrap())
     // output
