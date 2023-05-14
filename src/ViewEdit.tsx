@@ -176,7 +176,6 @@ export function ViewEdit() {
 			elVideo.currentTime = t;
 			elTime.textContent = toDuration(t);
 			updatePlayhead(t / elVideo.duration);
-			setPreview(false);
 			return t;
 		},
 		[updatePlayhead]
@@ -276,6 +275,7 @@ export function ViewEdit() {
 				event.preventDefault();
 				const rect = elProgress.getBoundingClientRect();
 				const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
+				setPreview(false);
 				seek(pos * elVideo.duration, false);
 			},
 		}),
