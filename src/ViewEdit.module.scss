@@ -20,12 +20,45 @@
 	position: relative;
 }
 
+.trackbarscroll {
+	overflow: scroll;
+	width: 100%;
+
+	/* Firefox */
+	scrollbar-color: var(--color-neutral-6) transparent;
+  
+	/* Chrome, Edge, and Safari */
+	&::-webkit-scrollbar {
+	  width: 0.25rem;
+	  height: 0.25rem;
+	}
+  
+	&::-webkit-scrollbar-track {
+	  background-color: transparent;
+	}
+  
+	&::-webkit-scrollbar-corner {
+	  background-color: transparent;
+	}
+
+	&::-webkit-scrollbar-thumb {
+	  background-color: var(--color-neutral-6);
+	}
+}
+
 .trackbar {
 	border-bottom: solid 1px var(--color-neutral-4);
 	border-top: solid 1px var(--color-neutral-4);
 	position: relative;
 	contain: layout;
-	background: var(--color-black);
+	width: 100%;
+	background-color: var(--color-black);
+	background-image: repeating-linear-gradient(
+		to right,
+		transparent,
+		transparent calc(5% - 2px),
+		rgb(var(--color-white-rgb) / 10%) 5%
+	  );
 }
 
 .progress {
