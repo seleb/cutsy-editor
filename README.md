@@ -1,9 +1,11 @@
-# Tauri + React + Typescript
+# cutsy
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+![cutsy icon](./src/public/app-icon.png | height=64)
 
-[Tauri prequisites](https://tauri.app/v1/guides/getting-started/prerequisites)
+this is a little editor i made to clip and convert videos in a way that i like
 
-## Recommended IDE Setup
+## Development
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+- [Tauri prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites)
+- `npm start` to run in dev mode
+- `npm run build` to create build
