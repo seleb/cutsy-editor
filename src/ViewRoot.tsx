@@ -15,6 +15,7 @@ import styles from './ViewRoot.module.scss';
 import { isVideo } from './isVideo';
 import { toEditUrl } from './toEditUrl';
 import { useFullscreenToggle } from './useFullscreenToggle';
+
 export function ViewRoot() {
 	useFullscreenToggle();
 
