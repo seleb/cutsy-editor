@@ -4,12 +4,15 @@ type Command = {
 	command: 'vid_to_img'
 	input: string;
 	output: string;
+	/** time in microseconds */
 	time: number;
 } | {
 	command: 'vid_to_clip'
 	input: string;
 	output: string;
+	/** time in microseconds */
 	start: number;
+	/** time in microseconds */
 	duration: number;
 	audio: boolean;
 };
