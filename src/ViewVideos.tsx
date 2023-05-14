@@ -31,6 +31,8 @@ function Video({ path, name }: FileEntry) {
 		<Link to={to}>
 			<video aria-hidden="true" preload="metadata" src={src} />
 			<span>{name}</span>
+			{/* button has title */}
+			{/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
 			<button type="button" title="Open in folder" onClick={openInFolder}><Icon icon="videos" /></button>
 		</Link>
 	);
@@ -161,6 +163,8 @@ export function ViewVideos() {
 
 				<datalist id="list-videos">
 					{library.map(i => (
+						// datalist doesn't need label
+						// eslint-disable-next-line jsx-a11y/control-has-associated-label
 						<option key={i.path} value={i.name} />
 					))}
 				</datalist>
