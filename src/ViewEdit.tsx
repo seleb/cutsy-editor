@@ -1,5 +1,5 @@
 import { convertFileSrc } from '@tauri-apps/api/tauri';
-import { MouseEventHandler, PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { MouseEventHandler, PointerEventHandler, WheelEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQueuePush, useVideo, useVideoSet } from './ContextApp';
 import { useSettings } from './ContextSettings';
@@ -187,47 +187,12 @@ export function ViewEdit() {
 		seek(elVideo.currentTime + by);
 	}, []);
 
-	useEffect(() => {
-		const onKey = (event: KeyboardEvent) => {
-			const { key } = event;
-			switch (key) {
-				case 'ArrowRight':
-					seekBy(getSkip(event));
-					event.preventDefault();
-					break;
-				case 'ArrowLeft':
-					seekBy(-getSkip(event));
-					event.preventDefault();
-					break;
-				case '.':
-					seekBy(FRAME);
-					event.preventDefault();
-					break;
-				case ',':
-					seekBy(-FRAME);
-					event.preventDefault();
-					break;
-				case ' ':
-					if (event.shiftKey) {
-						togglePreview();
-					} else {
-						togglePlaying();
-					}
-					event.preventDefault();
-					break;
-				case 'm':
-					toggleMuted();
-					event.preventDefault();
-					break;
-				default:
-					break;
-			}
-		};
-		window.addEventListener('keydown', onKey);
-		return () => {
-			window.removeEventListener('keydown', onKey);
-		};
-	}, [getSkip, seekBy, togglePlaying, toggleMuted]);
+	const centerTrack = useCallback(() => {
+		const elVideo = refVideo.current;
+		const elTrack = refProgress.current?.parentElement?.parentElement;
+		if (!elVideo?.duration || !elTrack) return;
+		elTrack.scrollTo({ left: elTrack.scrollWidth * elVideo.currentTime / elVideo.duration - elTrack.offsetWidth/2 });
+	}, []);
 
 	const onScrubStart = useCallback<
 		(options: {
@@ -419,19 +384,114 @@ export function ViewEdit() {
 		onUpdateClip(lastVideo.clipStart, lastVideo.clipEnd);
 	}, [lastVideo.clipStart, lastVideo.clipEnd]);
 
+	const [zoom, setZoom] = useState(100);
+	const zoomIn = useCallback(() => {
+		setZoom(zoom*2);
+	}, [zoom]);
+	const zoomOut = useCallback(() => {
+		if (zoom > 100) {
+			setZoom(zoom/2);
+		} else {
+			setZoom(100);
+		}
+	}, [zoom]);
+
+	useEffect(() => {
+		centerTrack();
+	}, [zoom]);
+
+	const onWheel = useCallback<WheelEventHandler<HTMLDivElement>>((event) => {
+		if (event.ctrlKey || event.metaKey) {
+			if (event.deltaY > 0) {
+				zoomOut();
+			} else if (event.deltaY < 0) {
+				zoomIn();
+			}
+		} else if (event.deltaY) {
+			const elTrack = refProgress.current?.parentElement?.parentElement;
+			if (!elTrack) return;
+			elTrack.scrollBy({ left: event.deltaY /*elTrack.offsetWidth*/ });
+		}
+	}, [zoomIn, zoomOut]);
+
+	// keyboard shortcuts
+	useEffect(() => {
+		const onKey = (event: KeyboardEvent) => {
+			const { key } = event;
+			switch (key) {
+				case 'ArrowRight':
+					seekBy(getSkip(event));
+					event.preventDefault();
+					break;
+				case 'ArrowLeft':
+					seekBy(-getSkip(event));
+					event.preventDefault();
+					break;
+				case '.':
+					seekBy(FRAME);
+					event.preventDefault();
+					break;
+				case ',':
+					seekBy(-FRAME);
+					event.preventDefault();
+					break;
+				case ' ':
+					if (event.shiftKey) {
+						togglePreview();
+					} else {
+						togglePlaying();
+					}
+					event.preventDefault();
+					break;
+				case 'm':
+					toggleMuted();
+					event.preventDefault();
+					break;
+				case '=':
+					if (event.ctrlKey || event.metaKey) {
+						zoomIn();
+						event.preventDefault();
+					}
+					break;
+				case '-':
+					if (event.ctrlKey || event.metaKey) {
+						zoomOut();
+						event.preventDefault();
+					}
+					break;
+				case '0':
+					if (event.ctrlKey || event.metaKey) {
+						setZoom(100);
+						event.preventDefault();
+					} else {
+						centerTrack();
+					}
+					break;
+				default:
+					break;
+			}
+		};
+		window.addEventListener('keydown', onKey);
+		return () => {
+			window.removeEventListener('keydown', onKey);
+		};
+	}, [getSkip, seekBy, togglePlaying, togglePreview, toggleMuted, zoomIn, zoomOut, centerTrack]);
+
 	if (!pathEncoded) throw new Error('No video path!');
 	return (
 		<div className={styles.container}>
 			<Title>{['edit', name]}</Title>
 			<video ref={refVideo} onClick={togglePlaying} className={styles.video} controls={false} src={src} preload="auto" muted={muted} loop></video>
 			<div className={styles.controls}>
-				<div className={styles.trackbar} onContextMenu={noContextMenu} onMouseMove={onUpdatePlayhead}>
-					<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStartPlayhead} value={0} max={duration} onContextMenu={noContextMenu}></progress>
-					<div ref={refClip} className={styles.clip} onPointerDown={onScrubStartClip} onContextMenu={noContextMenu}>
-						<Icon title="Drag start of clip" icon="pin" className={styles.start} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />
-						<Icon title="Drag end of clip" icon="pin" className={styles.end} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />
+				<div className={styles.trackbarscroll} onContextMenu={noContextMenu} onWheel={onWheel}>
+					<div className={styles.trackbar} style={{ width: `${zoom}%` }} onContextMenu={noContextMenu} onMouseMove={onUpdatePlayhead}>
+						<progress className={styles.progress} ref={refProgress} onPointerDown={onScrubStartPlayhead} value={0} max={duration} onContextMenu={noContextMenu}></progress>
+						<div ref={refClip} className={styles.clip} onPointerDown={onScrubStartClip} onContextMenu={noContextMenu}>
+							<Icon title="Drag start of clip" icon="pin" className={styles.start} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />
+							<Icon title="Drag end of clip" icon="pin" className={styles.end} onPointerDown={onScrubStartMarker} onContextMenu={noContextMenu} />
+						</div>
+						<div className={styles.playhead} ref={refPlayhead} aria-hidden="true" />
 					</div>
-					<div className={styles.playhead} ref={refPlayhead} aria-hidden="true" />
 				</div>
 				<div className={styles.buttons}>
 					<button onClick={togglePlaying} title={paused ? 'Play' : 'Pause'}>
@@ -446,6 +506,15 @@ export function ViewEdit() {
 					<span className={styles.time}>
 						<span ref={refTime}>{0}</span> /&nbsp;<span>{toDuration(duration)}</span>
 					</span>
+					<div className={styles.zoom}>
+						<button onClick={zoomIn} title="Zoom in">
+							<Icon icon="zoomin" />
+						</button>
+						<span>{zoom}%</span>
+						<button onClick={zoomOut} title="Zoom out">
+							<Icon icon="zoomout" />
+						</button>
+					</div>
 					<div className={styles.save}>
 						<button onClick={onSaveImage} title="Save image">
 							<Icon icon="exportImage" />
