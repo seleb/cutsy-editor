@@ -4,6 +4,7 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import { ContextApp } from './ContextApp';
 import { ContextSettings } from './ContextSettings';
 import './main.scss';
+import { Queue } from './Queue';
 import { ViewDebug } from './ViewDebug';
 import { ViewEdit } from './ViewEdit';
 import { ViewError } from './ViewError';
@@ -30,6 +31,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
 		<ContextSettings>
 			<ContextApp>
+				<Queue />
 				<RouterProvider router={router} />
 			</ContextApp>
 		</ContextSettings>

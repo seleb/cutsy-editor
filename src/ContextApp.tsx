@@ -74,11 +74,11 @@ const contextDispatch = createContext<Dispatch<Action>>(() => {});
 export function ContextApp({ children }: PropsWithChildren<{}>) {
 	const [state, dispatch] = useReducer(reducer, initial);
 
-	// TODO: queue management
-
 	return (
 		<contextState.Provider value={state}>
-			<contextDispatch.Provider value={dispatch}>{children}</contextDispatch.Provider>
+			<contextDispatch.Provider value={dispatch}>
+				{children}
+			</contextDispatch.Provider>
 		</contextState.Provider>
 	);
 }
@@ -99,4 +99,9 @@ export function useVideoSet() {
 export function useQueuePush() {
 	const dispatch = useContext(contextDispatch);
 	return useCallback((command: Command) => dispatch({ type: 'queue-push', command }), [dispatch]);
+}
+
+export function useQueueShift() {
+	const dispatch = useContext(contextDispatch);
+	return useCallback(() => dispatch({ type: 'queue-shift' }), [dispatch]);
 }
