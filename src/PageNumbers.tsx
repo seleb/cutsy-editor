@@ -30,9 +30,9 @@ export function PageNumbers({ goto, current = 0, total, className, ...props }: C
 			<button className={`${styles.button} ${styles.current}`} onClick={jump} disabled={total <= 1} title="Jump to page">
 				{current + 1}
 			</button>
-				<span className={`${styles.button} ${styles.total}`}>
+			<span className={`${styles.button} ${styles.total}`}>
 					/&nbsp;{total}
-				</span>
+			</span>
 			{new Array(pad).fill(0).map((_, idx) => (
 				<button key={idx} className={`${styles.button} ${styles.pad}`} onClick={onClick} disabled={current >= total - idx - 1} value={current + (idx + 1)}>
 					{current + 1 + (idx + 1)}

@@ -207,33 +207,33 @@ export function ViewEdit() {
 			/** called when scrubbing is released */
 			end?: (event: PointerEvent) => void;
 		}) => PointerEventHandler<Element>
-	>(
-		({ start, scrub, end }) =>
-			event => {
-				if (typeof start === 'function') {
-					const startVal = start(event.nativeEvent) !== false;
-					if (startVal === true) {
+			>(
+			({ start, scrub, end }) =>
+				event => {
+					if (typeof start === 'function') {
+						const startVal = start(event.nativeEvent) !== false;
+						if (startVal === true) {
+							scrub?.(event.nativeEvent);
+						} else if (startVal === false) {
+							return;
+						}
+					} else if (start) {
 						scrub?.(event.nativeEvent);
-					} else if (startVal === false) {
-						return;
 					}
-				} else if (start) {
-					scrub?.(event.nativeEvent);
-				}
 
-				const onScrubStop = (eventScrub: PointerEvent) => {
-					eventScrub.preventDefault();
-					if (scrub) window.removeEventListener('pointermove', scrub);
-					if (end) window.removeEventListener('pointerup', end);
-					window.removeEventListener('pointerup', onScrubStop);
-				};
+					const onScrubStop = (eventScrub: PointerEvent) => {
+						eventScrub.preventDefault();
+						if (scrub) window.removeEventListener('pointermove', scrub);
+						if (end) window.removeEventListener('pointerup', end);
+						window.removeEventListener('pointerup', onScrubStop);
+					};
 
-				if (scrub) window.addEventListener('pointermove', scrub);
-				if (end) window.addEventListener('pointerup', end);
-				window.addEventListener('pointerup', onScrubStop);
-			},
-		[]
-	);
+					if (scrub) window.addEventListener('pointermove', scrub);
+					if (end) window.addEventListener('pointerup', end);
+					window.addEventListener('pointerup', onScrubStop);
+				},
+			[]
+			);
 
 	const onUpdateClip = useCallback((start?: number, end?: number, slide?: number) => {
 		const elClip = refClip.current;
@@ -269,7 +269,7 @@ export function ViewEdit() {
 					}
 					return false;
 				} 
-					return true;
+				return true;
 				
 			},
 			scrub: (event: PointerEvent) => {
@@ -333,20 +333,20 @@ export function ViewEdit() {
 	}, [onUpdateClip]);
 
 	const onScrubStartClip = useMemo(() => onScrubStart({
-			start: (event: PointerEvent) => {
-				if (event.target !== refClip.current) return false;
-				return undefined;
-			},
-			scrub: (event: PointerEvent) => {
-				const elProgress = refProgress.current as HTMLProgressElement;
-				const elClip = refProgress.current as HTMLProgressElement;
-				if (!elProgress || !elClip) return;
-				event.preventDefault();
-				const rect = elClip.getBoundingClientRect();
-				if ((event.movementX < 0 && event.pageX > rect.right) || (event.movementX > 0 && event.pageX < rect.left)) return;
-				onUpdateClip(undefined, undefined, event.movementX / elProgress.offsetWidth);
-			},
-		}), [onUpdateClip]);
+		start: (event: PointerEvent) => {
+			if (event.target !== refClip.current) return false;
+			return undefined;
+		},
+		scrub: (event: PointerEvent) => {
+			const elProgress = refProgress.current as HTMLProgressElement;
+			const elClip = refProgress.current as HTMLProgressElement;
+			if (!elProgress || !elClip) return;
+			event.preventDefault();
+			const rect = elClip.getBoundingClientRect();
+			if ((event.movementX < 0 && event.pageX > rect.right) || (event.movementX > 0 && event.pageX < rect.left)) return;
+			onUpdateClip(undefined, undefined, event.movementX / elProgress.offsetWidth);
+		},
+	}), [onUpdateClip]);
 
 	const { openAfterSave, saveAudio } = useSettings();
 

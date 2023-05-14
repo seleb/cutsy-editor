@@ -52,7 +52,7 @@ export function ViewDebug() {
 			<Title>debug</Title>
 			<Page>
 				<PageHeader>
-				<H>debug</H>
+					<H>debug</H>
 				</PageHeader>
 				<HLevel>
 					<div>
