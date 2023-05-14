@@ -46,7 +46,7 @@ export function ViewSettings() {
 			// not guaranteed but safe enough
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			if (availableSettings.includes(el.name)) set(el.name, Number(el.value));
+			if (availableSettings.includes(el.name)) set(el.name, el.value);
 		},
 		[set]
 	);
@@ -57,7 +57,7 @@ export function ViewSettings() {
 			// not guaranteed but safe enough
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-ignore
-			if (availableSettings.includes(el.name)) set(el.name, el.value);
+			if (availableSettings.includes(el.name)) set(el.name, Number(el.value));
 		},
 		[set]
 	);
