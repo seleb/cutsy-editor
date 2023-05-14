@@ -262,7 +262,11 @@ export function ViewEdit() {
 					const rect = elProgress.getBoundingClientRect();
 					const pos = (event.pageX - rect.left) / elProgress.offsetWidth;
 					
-					event.button && event.button === 2 ? onUpdateClip(undefined, pos) : onUpdateClip(pos, undefined);
+					if (event.button && event.button === 2) {
+						onUpdateClip(undefined, pos);
+					} else {
+						onUpdateClip(pos, undefined);
+					}
 					return false;
 				} else {
 					return true;
@@ -301,7 +305,11 @@ export function ViewEdit() {
 				if (event.button && event.button !== 1) {
 					event.preventDefault();
 					const pos = elVideo.currentTime / elVideo.duration;
-					isStart ? onUpdateClip(pos, undefined) : onUpdateClip(undefined, pos);
+					if (isStart) {
+						onUpdateClip(pos, undefined)
+					} else {
+						onUpdateClip(undefined, pos);
+					}
 					return false;
 				}
 				return true;
@@ -315,7 +323,11 @@ export function ViewEdit() {
 				const rect = elProgress.getBoundingClientRect();
 				const pos = clamp(0, (event.pageX - rect.left) / elProgress.offsetWidth, 1);
 				seek(pos * elVideo.duration, false);
-				isStart ? onUpdateClip(pos, end) : onUpdateClip(start, pos);
+				if (isStart) {
+					onUpdateClip(pos, end)
+				} else {
+					onUpdateClip(start, pos);
+				}
 			},
 		});
 	}, [onUpdateClip]);
