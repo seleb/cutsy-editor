@@ -10,12 +10,12 @@ export function toMicroseconds(seconds: number) {
 	return Math.floor((seconds + CORRECTION) * 1000000);
 }
 
-export async function isFfmpegInstalled() {
-	return await invoke('is_ffmpeg_installed');
+export function isFfmpegInstalled() {
+	return invoke('is_ffmpeg_installed');
 }
 
-export async function installFfmpeg() {
-	return await invoke('install_ffmpeg');
+export function installFfmpeg() {
+	return invoke('install_ffmpeg');
 }
 
 export function saveImage({ input, output, time }: { input: string; output: string; time: number }) {
