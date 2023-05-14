@@ -41,7 +41,7 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
     .input(path_input.as_os_str().to_str().unwrap())
     // one image
     .arg("-update").arg(1.to_string())
-    .arg("-frames:v").arg(1.to_string())
+    .frames(1)
     // lossless
     .arg("-lossless").arg(1.to_string())
     .arg("-compression_level").arg(6.to_string())
