@@ -63,7 +63,9 @@ export function ViewVideos() {
 				setLoading(false);
 			} catch (err) {
 				console.error(err);
-				setError(err instanceof Error ? err.message : 'Unknown error');
+				if (err instanceof Error) setError(err.message);
+				else if (typeof err === 'string') setError(err);
+				else setError('Unknown error');
 			}
 		})();
 	}, []);
