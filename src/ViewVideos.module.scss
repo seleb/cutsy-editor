@@ -45,11 +45,34 @@
 				width: 100%;
 				padding: 0.5rem;
 				z-index: 3;
+				padding-inline-end: 3rem;
+			}
+			
+			> button {
+				opacity: 0;
+				position: absolute;
+				bottom: 0;
+				right: 0;
+				width: 3rem;
+				height: 3rem;
+				padding: 1rem;
+				z-index: 3;
+				transition: opacity 0.1s ease-out;
 			}
 
 			&:hover,
-			&:focus-visible {
+			&:focus-visible,
+			&:focus-within {
 				color: var(--color-white);
+
+				> button {
+					opacity: 0.8;
+
+					&:not(:active):hover,
+					&:not(:active):focus-visible {
+						opacity: 1;
+					}
+				}
 
 				&::before {
 					opacity: 0.5;

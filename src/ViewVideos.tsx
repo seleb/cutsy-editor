@@ -1,7 +1,7 @@
 import { FileEntry, readDir } from '@tauri-apps/api/fs';
 import { BaseDirectory } from '@tauri-apps/api/path';
 import { convertFileSrc } from '@tauri-apps/api/tauri';
-import { ChangeEventHandler, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEventHandler, MouseEventHandler, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { usePagination } from 'react-use-pagination';
 import { H } from './H';
@@ -15,15 +15,21 @@ import styles from './ViewVideos.module.scss';
 function Video({ path, name }: FileEntry) {
 	const src = useMemo(() => convertFileSrc(path), [path]);
 	const to = useMemo(() => toEditUrl(path), [src]);
+	const openInFolder = useCallback<MouseEventHandler>(async (event) => {
+		event.preventDefault();
+		open(`file:///${path.replace(/(?:.(?![\\\/]))+$/, '').replace(/([\\\/])\.[\\\/]/g, '$1').replace(/([\\\/])\.$/, '$1')}`)
+	}, [path]);
 	return (
 		<Link to={to}>
 			<video aria-hidden="true" preload="metadata" src={src}></video>
 			<span>{name}</span>
+			<button title="Open in folder" onClick={openInFolder}>{<Icon icon="videos" />}</button>
 		</Link>
 	);
 }
 const videosPerPage = 30;
 
+import { open } from '@tauri-apps/api/shell';
 import { AllSubstringsIndexStrategy, Search, UnorderedSearchIndex } from 'js-search';
 import { useSettings } from './ContextSettings';
 import { Icon } from './Icon';
