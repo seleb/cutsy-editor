@@ -166,6 +166,10 @@
 	cursor: grab;
 	transition: background-color 0.1s ease-out, border-color 0.1s ease-out;
 
+	&:active {
+		cursor: grabbing;
+	}
+
 	&:hover:not(:has(:hover)) {
 		color: var(--color-white);
 		border-top-color: var(--color-white);
