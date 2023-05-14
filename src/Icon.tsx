@@ -36,6 +36,4 @@ export const Icon = forwardRef(({
 	...props
 }: Omit<ComponentProps<typeof FontAwesomeIcon>, 'icon'> & {
 	icon: keyof typeof icons;
-}, ref: ForwardedRef<SVGSVGElement>) => {
-	return <FontAwesomeIcon ref={ref} icon={icons[icon]} {...props} />
-})
+}, ref: ForwardedRef<SVGSVGElement>) => <FontAwesomeIcon ref={ref} icon={icons[icon]} {...props} />)

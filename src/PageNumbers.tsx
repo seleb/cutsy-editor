@@ -7,9 +7,7 @@ const pad = 2;
 
 export function PageNumbers({ goto, current = 0, total, className, ...props }: ComponentProps<'nav'> & { goto: (page: number) => void; current?: number; total: number }) {
 	const onClick = useCallback<NonNullable<ComponentProps<'button'>['onClick']>>(
-		event => {
-			return goto(parseInt(event.currentTarget.value, 10));
-		},
+		event => goto(parseInt(event.currentTarget.value, 10)),
 		[goto]
 	);
 	const jump = useCallback<NonNullable<ComponentProps<'button'>['onClick']>>(async () => {

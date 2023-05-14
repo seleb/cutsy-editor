@@ -332,8 +332,7 @@ export function ViewEdit() {
 		});
 	}, [onUpdateClip]);
 
-	const onScrubStartClip = useMemo(() => {
-		return onScrubStart({
+	const onScrubStartClip = useMemo(() => onScrubStart({
 			start: (event: PointerEvent) => {
 				if (event.target !== refClip.current) return false;
 			},
@@ -346,8 +345,7 @@ export function ViewEdit() {
 				if ((event.movementX < 0 && event.pageX > rect.right) || (event.movementX > 0 && event.pageX < rect.left)) return;
 				onUpdateClip(undefined, undefined, event.movementX / elProgress.offsetWidth);
 			},
-		});
-	}, [onUpdateClip]);
+		}), [onUpdateClip]);
 
 	const { openAfterSave, saveAudio } = useSettings();
 
