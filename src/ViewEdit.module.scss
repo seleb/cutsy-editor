@@ -118,6 +118,10 @@
 		min-width: 2rem;
 		padding-block: 0.5rem;
 
+		[data-icon="pause"] {
+			margin-inline-end: 2px;
+		}
+
 		[data-icon="volume-xmark"] {
 			margin-inline-end: 2px;
 		}
