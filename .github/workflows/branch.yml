@@ -15,3 +15,13 @@ jobs:
         with:
           linux: ${{ matrix.platform.name == 'ubuntu-20.04' }}
       - uses: JonasKruckenberg/tauri-build@v1
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - run: npm run lint
+      - run: npm run stylelint
