@@ -1,61 +1,17 @@
-import { message, save } from '@tauri-apps/api/dialog';
-import { open } from '@tauri-apps/api/shell';
-import { convertFileSrc, invoke } from '@tauri-apps/api/tauri';
+import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { MouseEventHandler, PointerEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useVideo, useVideoSet } from './ContextApp';
 import { useSettings } from './ContextSettings';
 import { EditorHelp } from './EditorHelp';
 import { Icon } from './Icon';
-import { Loading } from './Loading';
 import { Title } from './Title';
 import styles from './ViewEdit.module.scss';
 import { clamp } from './clamp';
+import { saveClip, saveImage } from './ffmpeg';
 
 const FRAMES_PER_SECOND = 60;
 const FRAME = 1 / FRAMES_PER_SECOND;
-
-const filtersImages = [
-	{
-		name: 'PNG Image',
-		extensions: ['png'],
-	},
-	{
-		name: 'WebP Image',
-		extensions: ['webp'],
-	},
-	{
-		name: 'JPEG Image',
-		extensions: ['jpg', 'jpeg'],
-	},
-	{
-		name: 'GIF Image',
-		extensions: ['gif'],
-	},
-	{
-		name: 'All files',
-		extensions: ['*'],
-	},
-];
-
-const filtersVideos = [
-	{
-		name: 'MP4 Video',
-		extensions: ['mp4'],
-	},
-	{
-		name: 'WebM Video',
-		extensions: ['webm'],
-	},
-	{
-		name: 'Animated GIF',
-		extensions: ['gif'],
-	},
-	{
-		name: 'All files',
-		extensions: ['*'],
-	},
-];
 
 function toMicroseconds(seconds: number) {
 	// ffmpeg always seems to be ~2 frames off
@@ -376,79 +332,32 @@ export function ViewEdit() {
 		});
 	}, [onUpdateClip]);
 
-	const [saving, setSavingClip] = useState(false);
 	const { openAfterSave, saveAudio } = useSettings();
-	const saveAndOpen = useCallback(
-		async (options: Parameters<typeof save>[0], doSave: (output: string) => Promise<unknown>) => {
-			setSavingClip(true);
-			let output: string | null;
-			try {
-				output = await save(options);
-				if (!output) return; // cancelled
-				await doSave(output);
-			} catch (err) {
-				console.error(err);
-				await message(`Failed to save file.\nThere may be more details in the console.\n\n${err}`, { title: 'Save error', type: 'error' });
-				return;
-			} finally {
-				setSavingClip(false);
-			}
-			if (openAfterSave !== 'true') return;
-			try {
-				await open(`file:///${output}`);
-			} catch (err) {
-				console.error(err);
-				await message(`The file was saved, but clilp failed to open it.\nThere may be more details in the console.\n\n${err}`, { title: 'Open error', type: 'warning' });
-			}
-		},
-		[openAfterSave]
-	);
 
 	const onSaveImage = useCallback(
-		() =>
-			saveAndOpen(
-				{
-					defaultPath: name,
-					filters: filtersImages,
-				},
-				output =>
-					invoke<string>('vid_to_img', {
-						input: pathDecoded,
-						output,
-						time: `${toMicroseconds(refVideo.current?.currentTime || 0)}us`,
-					})
-			),
-		[pathDecoded, name]
+		() => saveImage({ defaultPath: name, input: pathDecoded, time: toMicroseconds(refVideo.current?.currentTime || 0), open: openAfterSave === 'true' }),
+		[pathDecoded, name, openAfterSave]
 	);
 
-	const onSaveClip = useCallback(
-		() =>
-			saveAndOpen(
-				{
-					defaultPath: name,
-					filters: filtersVideos,
-				},
-				output => {
-					const elVideo = refVideo.current;
-					const elClip = refClip.current;
-					if (!elVideo || !elClip) throw new Error('Could not find elements');
-					const start = Number((elClip.style.left || '0%').replace('%', '')) / 100;
-					const width = Number((elClip.style.width || '100%').replace('%', '')) / 100;
-					return invoke<string>('vid_to_clip', {
-						input: pathDecoded,
-						output,
-						start: `${toMicroseconds(start * elVideo.duration || 0)}us`,
-						duration: `${toMicroseconds(width * elVideo.duration || 0)}us`,
-						audio: {
-							always: true,
-							never: false,
-							editor: !muted,
-						}[saveAudio],
-					});
-				}
-			),
-		[pathDecoded, name, saveAudio, muted]
-	);
+	const onSaveClip = useCallback(() => {
+		const elVideo = refVideo.current;
+		const elClip = refClip.current;
+		if (!elVideo || !elClip) throw new Error('Could not find elements');
+		const start = Number((elClip.style.left || '0%').replace('%', '')) / 100;
+		const width = Number((elClip.style.width || '100%').replace('%', '')) / 100;
+		return saveClip({
+			defaultPath: name,
+			input: pathDecoded,
+			start: toMicroseconds(start * elVideo.duration || 0),
+			duration: toMicroseconds(width * elVideo.duration || 0),
+			audio: {
+				always: true,
+				never: false,
+				editor: !muted,
+			}[saveAudio],
+			open: openAfterSave === 'true',
+		});
+	}, [pathDecoded, name, saveAudio, muted, openAfterSave]);
 
 	const noContextMenu = useCallback<MouseEventHandler<SVGSVGElement | HTMLElement>>(event => {
 		event.preventDefault();
@@ -502,15 +411,14 @@ export function ViewEdit() {
 						<span ref={refTime}>{0}</span> /&nbsp;<span>{toDuration(duration)}</span>
 					</span>
 					<div className={styles.save}>
-						<button disabled={saving} onClick={onSaveImage} title="Save image">
+						<button onClick={onSaveImage} title="Save image">
 							<Icon icon="exportImage" />
 						</button>
-						<button disabled={saving} onClick={onSaveClip} title="Save clip">
+						<button onClick={onSaveClip} title="Save clip">
 							<Icon icon="exportClip" />
 						</button>
 					</div>
 				</div>
-				<Loading className={styles.saving} loading={saving} msgLoading="saving..." />
 			</div>
 			<EditorHelp />
 		</div>
