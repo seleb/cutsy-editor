@@ -11,6 +11,14 @@ import { PageHeader } from './PageHeader';
 import { PageNumbers } from './PageNumbers';
 import { Title } from './Title';
 import styles from './ViewVideos.module.scss';
+import { open } from '@tauri-apps/api/shell';
+import { AllSubstringsIndexStrategy, Search, UnorderedSearchIndex } from 'js-search';
+import { useSettings } from './ContextSettings';
+import { Icon } from './Icon';
+import { getErrorMessage } from './getErrorMessage';
+import { isVideo } from './isVideo';
+import { toEditUrl } from './toEditUrl';
+import { usePrevious } from './usePrevious';
 
 function Video({ path, name }: FileEntry) {
 	const src = useMemo(() => convertFileSrc(path), [path]);
@@ -28,15 +36,6 @@ function Video({ path, name }: FileEntry) {
 	);
 }
 const videosPerPage = 30;
-
-import { open } from '@tauri-apps/api/shell';
-import { AllSubstringsIndexStrategy, Search, UnorderedSearchIndex } from 'js-search';
-import { useSettings } from './ContextSettings';
-import { Icon } from './Icon';
-import { getErrorMessage } from './getErrorMessage';
-import { isVideo } from './isVideo';
-import { toEditUrl } from './toEditUrl';
-import { usePrevious } from './usePrevious';
 
 export function ViewVideos() {
 	const { videoFolders } = useSettings();
