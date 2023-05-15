@@ -1,6 +1,6 @@
 # cutsy
 
-![cutsy icon](./src/public/app-icon.png | height=64)
+<img alt="cutsy logo" src="https://raw.githubusercontent.com/seleb/cutsy-editor/main/src/public/app-icon.png" width="64" height="64" />
 
 this is a little editor i made to clip and convert videos in a way that i like
 
