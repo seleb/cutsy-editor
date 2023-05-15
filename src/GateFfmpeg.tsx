@@ -59,11 +59,11 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 					msgLoading={
 						stateFfmpeg === 'unknown' ? (
 							<>
-								Checking <strong>ffmpeg</strong> installation...
+								checking <strong>ffmpeg</strong> installation...
 							</>
 						) : (
 							<>
-								Installing <strong>ffmpeg</strong> (this may take a few
+								installing <strong>ffmpeg</strong> (this may take a few
 								minutes)...
 							</>
 						)
@@ -79,7 +79,7 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 									</a>{' '}
 									in order to edit clips.
 								</p>
-								<Button onClick={onInstallFfmpeg}>Install ffmpeg for me</Button>
+								<Button onClick={onInstallFfmpeg}>install ffmpeg for me</Button>
 							</>
 						)
 					}
@@ -87,7 +87,7 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 					<p>
 						<strong>ffmpeg</strong> is ready!
 					</p>
-					<Button onClick={onContinue}>Continue</Button>
+					<Button onClick={onContinue}>continue</Button>
 				</Loading>
 			</section>
 		</Page>
