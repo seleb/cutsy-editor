@@ -64,6 +64,7 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
         // FfmpegEvent::Progress(p) => println!("Progress: {} / 00:00:15", p.time),
       _ => {}
     });
+        .create_no_window()
 
     if errors.len() > 0 {
         return Err(errors.join("; ".into()));
@@ -87,6 +88,7 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String, a
     .overwrite()
     // automatically use hardware acceleration
     .hwaccel("auto");
+        .create_no_window()
 
     // no audio
     if !audio {
