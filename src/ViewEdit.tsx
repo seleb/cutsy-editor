@@ -574,9 +574,11 @@ export function ViewEdit() {
 					if (event.ctrlKey || event.metaKey) {
 						setZoom(100);
 						event.preventDefault();
-					} else {
-						centerTrack();
 					}
+					break;
+				case 'c':
+					centerTrack();
+					event.preventDefault();
 					break;
 				case 's':
 					if (event.ctrlKey || event.metaKey) {

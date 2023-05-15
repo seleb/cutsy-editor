@@ -10,7 +10,7 @@ const shortcuts = [
 	['Ctrl+=', 'zoom in'],
 	['Ctrl+-', 'zoom out'],
 	['Ctrl+0', 'reset zoom'],
-	['0', 'center track'],
+	['C', 'center track'],
 	['M', 'mute/unmute'],
 	['ArrowRight', 'forward'],
 	['ArrowLeft', 'vackward'],
