@@ -13,7 +13,7 @@ const shortcuts = [
 	['C', 'center track'],
 	['M', 'mute/unmute'],
 	['ArrowRight', 'forward'],
-	['ArrowLeft', 'vackward'],
+	['ArrowLeft', 'backward'],
 	['.', 'forward (frame)'],
 	[',', 'backward (frame)'],
 	['Alt+ArrowRight', 'forward (fast)'],
