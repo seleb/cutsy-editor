@@ -3,9 +3,12 @@
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
+use ffmpeg_sidecar::{
+    command::FfmpegCommand,
+    event::{FfmpegEvent, LogLevel},
+};
 use std::path::Path;
 use tauri::Manager;
-use ffmpeg_sidecar::{command::FfmpegCommand, event::{FfmpegEvent, LogLevel}};
 
 #[tauri::command]
 fn is_ffmpeg_installed() -> bool {
@@ -27,44 +30,52 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
 
     let mut errors: Vec<String> = vec![];
     FfmpegCommand::new()
-    // allow overwriting
-    .overwrite()
-    // automatically use hardware acceleration
-    .hwaccel("auto")
-    // no audio
-    .no_audio()
-    // no vysnc
-    .arg("-vsync").arg(0.to_string())
-    // seek
-    .seek(time)
-    // input
-    .input(path_input.as_os_str().to_str().unwrap())
-    // one image
-    .arg("-update").arg(1.to_string())
-    .frames(1)
-    // lossless
-    .arg("-lossless").arg(1.to_string())
-    .arg("-compression_level").arg(6.to_string())
-    .arg("-quality").arg(100.to_string())
-    .arg("-qscale").arg(100.to_string())
-    .arg("-qmin").arg(1.to_string())
-    .arg("-q:v").arg(1.to_string())
-    // output
-    .output(path_output.as_os_str().to_str().unwrap())
-    .spawn()
-    .unwrap()
-    .iter()
-    .unwrap()
-    .for_each(|e| match e {
-        // FfmpegEvent::Log(LogLevel::Unknown, e) => println!("Unknown: {}", e),
-        // FfmpegEvent::Log(LogLevel::Info, e) => println!("Info: {}", e),
-        // FfmpegEvent::Log(LogLevel::Warning, e) => println!("Warning: {}", e),
-        FfmpegEvent::Log(LogLevel::Error, e) => errors.push(e.clone()),
-        FfmpegEvent::Log(LogLevel::Fatal, e) => errors.push(e.clone()),
-        // FfmpegEvent::Progress(p) => println!("Progress: {} / 00:00:15", p.time),
-      _ => {}
-    });
         .create_no_window()
+        // allow overwriting
+        .overwrite()
+        // automatically use hardware acceleration
+        .hwaccel("auto")
+        // no audio
+        .no_audio()
+        // no vysnc
+        .arg("-vsync")
+        .arg(0.to_string())
+        // seek
+        .seek(time)
+        // input
+        .input(path_input.as_os_str().to_str().unwrap())
+        // one image
+        .arg("-update")
+        .arg(1.to_string())
+        .frames(1)
+        // lossless
+        .arg("-lossless")
+        .arg(1.to_string())
+        .arg("-compression_level")
+        .arg(6.to_string())
+        .arg("-quality")
+        .arg(100.to_string())
+        .arg("-qscale")
+        .arg(100.to_string())
+        .arg("-qmin")
+        .arg(1.to_string())
+        .arg("-q:v")
+        .arg(1.to_string())
+        // output
+        .output(path_output.as_os_str().to_str().unwrap())
+        .spawn()
+        .unwrap()
+        .iter()
+        .unwrap()
+        .for_each(|e| match e {
+            // FfmpegEvent::Log(LogLevel::Unknown, e) => println!("Unknown: {}", e),
+            // FfmpegEvent::Log(LogLevel::Info, e) => println!("Info: {}", e),
+            // FfmpegEvent::Log(LogLevel::Warning, e) => println!("Warning: {}", e),
+            FfmpegEvent::Log(LogLevel::Error, e) => errors.push(e.clone()),
+            FfmpegEvent::Log(LogLevel::Fatal, e) => errors.push(e.clone()),
+            // FfmpegEvent::Progress(p) => println!("Progress: {} / 00:00:15", p.time),
+            _ => {}
+        });
 
     if errors.len() > 0 {
         return Err(errors.join("; ".into()));
@@ -73,7 +84,13 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
 }
 
 #[tauri::command(async)]
-fn vid_to_clip(input: String, output: String, start: String, duration: String, audio: bool) -> Result<(), String> {
+fn vid_to_clip(
+    input: String,
+    output: String,
+    start: String,
+    duration: String,
+    audio: bool,
+) -> Result<(), String> {
     let path_input = Path::new(&input);
     let path_output = Path::new(&output);
     if !path_input.exists() {
@@ -84,11 +101,11 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String, a
     let mut command = FfmpegCommand::new();
 
     command
-    // allow overwriting
-    .overwrite()
-    // automatically use hardware acceleration
-    .hwaccel("auto");
         .create_no_window()
+        // allow overwriting
+        .overwrite()
+        // automatically use hardware acceleration
+        .hwaccel("auto");
 
     // no audio
     if !audio {
@@ -96,29 +113,30 @@ fn vid_to_clip(input: String, output: String, start: String, duration: String, a
     }
 
     command
-    // no vysnc
-    .arg("-vsync").arg(0.to_string())
-    // seek
-    .seek(start)
-    // duration
-    .duration(duration)
-    // input
-    .input(path_input.as_os_str().to_str().unwrap())
-    // output
-    .output(path_output.as_os_str().to_str().unwrap())
-    .spawn()
-    .unwrap()
-    .iter()
-    .unwrap()
-    .for_each(|e| match e {
-        // FfmpegEvent::Log(LogLevel::Unknown, e) => println!("Unknown: {}", e),
-        // FfmpegEvent::Log(LogLevel::Info, e) => println!("Info: {}", e),
-        // FfmpegEvent::Log(LogLevel::Warning, e) => println!("Warning: {}", e),
-        FfmpegEvent::Log(LogLevel::Error, e) => errors.push(e.clone()),
-        FfmpegEvent::Log(LogLevel::Fatal, e) => errors.push(e.clone()),
-        // FfmpegEvent::Progress(p) => println!("Progress: {} / 00:00:15", p.time),
-      _ => {}
-    });
+        // no vysnc
+        .arg("-vsync")
+        .arg(0.to_string())
+        // seek
+        .seek(start)
+        // duration
+        .duration(duration)
+        // input
+        .input(path_input.as_os_str().to_str().unwrap())
+        // output
+        .output(path_output.as_os_str().to_str().unwrap())
+        .spawn()
+        .unwrap()
+        .iter()
+        .unwrap()
+        .for_each(|e| match e {
+            // FfmpegEvent::Log(LogLevel::Unknown, e) => println!("Unknown: {}", e),
+            // FfmpegEvent::Log(LogLevel::Info, e) => println!("Info: {}", e),
+            // FfmpegEvent::Log(LogLevel::Warning, e) => println!("Warning: {}", e),
+            FfmpegEvent::Log(LogLevel::Error, e) => errors.push(e.clone()),
+            FfmpegEvent::Log(LogLevel::Fatal, e) => errors.push(e.clone()),
+            // FfmpegEvent::Progress(p) => println!("Progress: {} / 00:00:15", p.time),
+            _ => {}
+        });
 
     if errors.len() > 0 {
         return Err(errors.join("; ".into()));
