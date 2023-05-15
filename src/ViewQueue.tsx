@@ -3,6 +3,7 @@ import { Icon } from './Icon';
 import { Page } from './Page';
 import { PageHeader } from './PageHeader';
 import { Spinner } from './Spinner';
+import { Title } from './Title';
 
 import styles from './ViewQueue.module.scss';
 import { toDuration } from './toDuration';
@@ -11,6 +12,7 @@ export function ViewQueue() {
 	const queue = useQueue();
 	return (
 		<Page>
+			<Title>queue</Title>
 			<PageHeader>queue</PageHeader>
 			{queue.length > 0 ? (
 				<table className={styles.queue}>
