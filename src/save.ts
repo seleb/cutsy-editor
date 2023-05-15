@@ -41,6 +41,10 @@ const filtersVideos = [
 		extensions: ['mp3'],
 	},
 	{
+		name: 'PNG Sequence (include "%d" in file name)',
+		extensions: ['png'],
+	},
+	{
 		name: 'All files',
 		extensions: ['*'],
 	},
