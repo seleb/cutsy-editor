@@ -55,7 +55,7 @@ export function ViewRoot() {
 
 	return (
 		<>
-			<Title>cutsy</Title>
+			<Title />
 			<header className={styles.header}>
 				<H>
 					<Name />
