@@ -30,7 +30,7 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 
 	const onInstallFfmpeg = useCallback(async () => {
 		if (stateFfmpeg !== 'not-installed')
-			throw new Error(`Can't install in this state: ${stateFfmpeg}`);
+			throw new Error(`can't install in this state: ${stateFfmpeg}`);
 		setStateFfmpeg('installing');
 		try {
 			await installFfmpeg();
@@ -70,10 +70,27 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 					}
 					error={stateFfmpeg === 'not-installed' || stateFfmpeg === 'error'}
 					msgError={
-						installError || (
+						installError ? (
+							<>
+								<p>something went wrong installing ffmpeg!</p>
+								<p>
+									this may be a permissions issue: try running this setup as an
+									admin or{' '}
+									<a
+										href="https://ffmpeg.org/download.html"
+										target="_blank"
+										rel="noreferrer"
+									>
+										installing ffmpeg
+									</a>{' '}
+									on your own
+								</p>
+								<pre>{installError}</pre>
+							</>
+						) : (
 							<>
 								<p>
-									This app requires{' '}
+									this app requires{' '}
 									<a href="https://ffmpeg.org" target="_blank" rel="noreferrer">
 										ffmpeg
 									</a>{' '}

@@ -16,8 +16,12 @@ fn is_ffmpeg_installed() -> bool {
 }
 
 #[tauri::command(async)]
-fn install_ffmpeg() {
-    ffmpeg_sidecar::download::auto_download().unwrap();
+fn install_ffmpeg() -> Result<(), ()> {
+    if let Ok(()) = ffmpeg_sidecar::download::auto_download() {
+        Ok(())
+    } else {
+        Err(())
+    }
 }
 
 #[tauri::command(async)]
