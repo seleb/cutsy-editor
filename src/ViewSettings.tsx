@@ -241,7 +241,7 @@ export function ViewSettings() {
 				<a href="https://ffmpeg.org" target="_blank" rel="noreferrer">
 					ffmpeg
 				</a>
-				, which can do many more things
+				, which can do many more things but can be tedious or overwhelming
 			</p>
 			<p>if you are using it i hope you like it too :)</p>
 			<dl className={styles.about}>
