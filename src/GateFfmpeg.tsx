@@ -19,11 +19,17 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 	useEffect(() => {
 		if (!isDesktop) return;
 		(async () => {
-			if (await isFfmpegInstalled()) {
-				setStateFfmpeg('installed');
-				setGated(false);
-			} else {
-				setStateFfmpeg('not-installed');
+			try {
+				if (await isFfmpegInstalled()) {
+					setStateFfmpeg('installed');
+					setGated(false);
+				} else {
+					setStateFfmpeg('not-installed');
+				}
+			} catch (err) {
+				console.error(err);
+				setStateFfmpeg('error');
+				setInstallError(getErrorMessage(err));
 			}
 		})();
 	}, []);
@@ -72,7 +78,7 @@ export function GateFfmpeg({ children }: PropsWithChildren<unknown>) {
 					msgError={
 						installError ? (
 							<>
-								<p>something went wrong installing ffmpeg!</p>
+								<p>something went wrong with ffmpeg!</p>
 								<p>
 									this may be a permissions issue: try running this setup as an
 									admin or{' '}
