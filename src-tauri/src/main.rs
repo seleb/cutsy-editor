@@ -4,8 +4,10 @@
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
 use ffmpeg_sidecar::{command::FfmpegCommand, paths::ffmpeg_path};
+use std::{
+    path::Path,
+    process::{Command, Stdio},
 };
-use std::path::Path;
 use tauri::Manager;
 
 // create the error type that represents all errors possible in our program
@@ -31,17 +33,24 @@ impl serde::Serialize for Error {
     }
 }
 
-#[tauri::command(async)]
-fn is_ffmpeg_installed() -> bool {
-    ffmpeg_sidecar::command::ffmpeg_is_installed()
+#[tauri::command]
+async fn is_ffmpeg_installed() -> Result<bool, Error> {
+    match Command::new(ffmpeg_path())
+        .arg("-version")
+        .stderr(Stdio::null())
+        .stdout(Stdio::null())
+        .spawn()
+    {
+        Ok(_) => Ok(true),
+        Err(_) => Ok(false),
+    }
 }
 
-#[tauri::command(async)]
-fn install_ffmpeg() -> Result<(), ()> {
-    if let Ok(()) = ffmpeg_sidecar::download::auto_download() {
-        Ok(())
-    } else {
-        Err(())
+#[tauri::command]
+async fn install_ffmpeg() -> Result<(), Error> {
+    match ffmpeg_sidecar::download::auto_download() {
+        Ok(_) => Ok(()),
+        Err(e) => Err(Error::from(e)),
     }
 }
 
