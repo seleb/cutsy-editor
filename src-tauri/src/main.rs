@@ -3,9 +3,7 @@
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
-use ffmpeg_sidecar::{
-    command::FfmpegCommand,
-    event::{FfmpegEvent, LogLevel},
+use ffmpeg_sidecar::{command::FfmpegCommand, paths::ffmpeg_path};
 };
 use std::path::Path;
 use tauri::Manager;
