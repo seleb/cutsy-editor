@@ -47,12 +47,12 @@ fn install_ffmpeg() -> Result<(), ()> {
     }
 }
 
-#[tauri::command(async)]
-fn vid_to_img(input: String, output: String, time: String) -> Result<(), String> {
+#[tauri::command]
+async fn vid_to_img(input: String, output: String, time: String) -> Result<(), Error> {
     let path_input = Path::new(&input);
     let path_output = Path::new(&output);
     if !path_input.exists() {
-        return Err("Source video does not exist".into());
+        return Err(Error::Other("Source video does not exist".into()));
     }
 
     let mut errors: Vec<String> = vec![];
@@ -90,38 +90,30 @@ fn vid_to_img(input: String, output: String, time: String) -> Result<(), String>
         .arg(1.to_string())
         // output
         .output(path_output.as_os_str().to_str().unwrap())
-        .spawn()
-        .unwrap()
-        .iter()
-        .unwrap()
-        .for_each(|e| match e {
-            // FfmpegEvent::Log(LogLevel::Unknown, e) => println!("Unknown: {}", e),
-            // FfmpegEvent::Log(LogLevel::Info, e) => println!("Info: {}", e),
-            // FfmpegEvent::Log(LogLevel::Warning, e) => println!("Warning: {}", e),
-            FfmpegEvent::Log(LogLevel::Error, e) => errors.push(e.clone()),
-            FfmpegEvent::Log(LogLevel::Fatal, e) => errors.push(e.clone()),
-            // FfmpegEvent::Progress(p) => println!("Progress: {} / 00:00:15", p.time),
-            _ => {}
-        });
+        // spawn + catch errors
+        .spawn()?
+        .iter()?
+        .filter_errors()
+        .for_each(|e| errors.push(e));
 
     if errors.len() > 0 {
-        return Err(errors.join("; ".into()));
+        return Err(Error::Other(errors.join("; ".into())));
     }
     Ok(())
 }
 
-#[tauri::command(async)]
-fn vid_to_clip(
+#[tauri::command]
+async fn vid_to_clip(
     input: String,
     output: String,
     start: String,
     duration: String,
     audio: bool,
-) -> Result<(), String> {
+) -> Result<(), Error> {
     let path_input = Path::new(&input);
     let path_output = Path::new(&output);
     if !path_input.exists() {
-        return Err("Source video does not exist".into());
+        return Err(Error::Other("Source video does not exist".into()));
     }
 
     let mut errors: Vec<String> = vec![];
@@ -151,22 +143,13 @@ fn vid_to_clip(
         .input(path_input.as_os_str().to_str().unwrap())
         // output
         .output(path_output.as_os_str().to_str().unwrap())
-        .spawn()
-        .unwrap()
-        .iter()
-        .unwrap()
-        .for_each(|e| match e {
-            // FfmpegEvent::Log(LogLevel::Unknown, e) => println!("Unknown: {}", e),
-            // FfmpegEvent::Log(LogLevel::Info, e) => println!("Info: {}", e),
-            // FfmpegEvent::Log(LogLevel::Warning, e) => println!("Warning: {}", e),
-            FfmpegEvent::Log(LogLevel::Error, e) => errors.push(e.clone()),
-            FfmpegEvent::Log(LogLevel::Fatal, e) => errors.push(e.clone()),
-            // FfmpegEvent::Progress(p) => println!("Progress: {} / 00:00:15", p.time),
-            _ => {}
-        });
+        .spawn()?
+        .iter()?
+        .filter_errors()
+        .for_each(|e| errors.push(e));
 
     if errors.len() > 0 {
-        return Err(errors.join("; ".into()));
+        return Err(Error::Other(errors.join("; ".into())));
     }
     Ok(())
 }
