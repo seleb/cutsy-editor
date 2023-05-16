@@ -35,7 +35,7 @@ impl serde::Serialize for Error {
 
 #[tauri::command]
 fn is_ffmpeg_installed() -> bool {
-    return ffmpeg_sidecar::command::ffmpeg_is_installed();
+    ffmpeg_sidecar::command::ffmpeg_is_installed()
 }
 
 #[tauri::command(async)]
