@@ -531,11 +531,11 @@ export function ViewEdit() {
 			const { key } = event;
 			switch (key) {
 				case 'ArrowRight':
-					seekBy(getSkip(event));
+					seekBy(getSkip(event) * (100 / zoom));
 					event.preventDefault();
 					break;
 				case 'ArrowLeft':
-					seekBy(-getSkip(event));
+					seekBy(-getSkip(event) * (100 / zoom));
 					event.preventDefault();
 					break;
 				case '.':
@@ -600,6 +600,7 @@ export function ViewEdit() {
 		togglePlaying,
 		togglePreview,
 		toggleMuted,
+		zoom,
 		zoomIn,
 		zoomOut,
 		centerTrack,
