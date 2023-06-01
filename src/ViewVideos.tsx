@@ -71,13 +71,8 @@ export function ViewVideos() {
 	const setVideos = useVideosSet();
 	const search = useSearch();
 	const [query, setQuery] = useState(searchParams.get('q') || '');
-	const [sort, setSort] = useState<
-		| 'sortModifiedAsc'
-		| 'sortModifiedDesc'
-		| 'sortAlphaAsc'
-		| 'sortAlphaDesc'
-		| 'sortNone'
-	>('sortModifiedDesc');
+	const [sort, setSort] = useState<'mtime' | 'title' | 'size'>('mtime');
+	const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 	const navigate = useNavigate();
 
 	const numPage = useMemo(() => {
@@ -92,18 +87,17 @@ export function ViewVideos() {
 		[query, search, videos]
 	);
 	const sorted = useMemo(() => {
-		if (sort === 'sortNone') return filteredVideos;
 		const copy = filteredVideos.slice();
-		if (sort.startsWith('sortAlpha')) {
+		if (sort === 'title') {
 			copy.sort(({ name: a = '' }, { name: b = '' }) =>
 				a?.localeCompare(b, undefined, { sensitivity: 'base' })
 			);
-		} else if (sort.startsWith('sortModified')) {
-			copy.sort(({ mtime: a = 0 }, { mtime: b = 0 }) => a - b);
+		} else {
+			copy.sort(({ [sort]: a = 0 }, { [sort]: b = 0 }) => a - b);
 		}
-		if (sort.endsWith('Desc')) copy.reverse();
+		if (sortDir === 'desc') copy.reverse();
 		return copy;
-	}, [filteredVideos, sort]);
+	}, [filteredVideos, sort, sortDir]);
 
 	const loadVideos = useCallback(async () => {
 		try {
@@ -138,20 +132,16 @@ export function ViewVideos() {
 		}
 	}, [setVideos, videoFolders]);
 
-	const cycleSort = useCallback(() => {
-		setSort(
-			(s) =>
-				((
-					{
-						sortModifiedAsc: 'sortModifiedDesc',
-						sortModifiedDesc: 'sortAlphaAsc',
-						sortAlphaAsc: 'sortAlphaDesc',
-						sortAlphaDesc: 'sortNone',
-						sortNone: 'sortModifiedAsc',
-					} as const
-				)[s])
-		);
-	}, []);
+	const toggleSortDir = useCallback(
+		() => setSortDir((s) => (s === 'asc' ? 'desc' : 'asc')),
+		[]
+	);
+	const onChangeSort = useCallback<ChangeEventHandler<HTMLSelectElement>>(
+		(event) => {
+			setSort(event.currentTarget.value as typeof sort);
+		},
+		[]
+	);
 
 	const { totalPages, startIndex, endIndex, setPage } = usePagination({
 		totalItems: sorted.length,
@@ -201,7 +191,6 @@ export function ViewVideos() {
 			<Title>videos</Title>
 			<PageHeader className={styles.header}>
 				<H className={styles.h}>videos</H>
-
 				<datalist id="list-videos">
 					{videos.map((i) => (
 						// datalist doesn't need label
@@ -222,29 +211,30 @@ export function ViewVideos() {
 						onChange={onSearch}
 					/>
 				</div>
-
 				<span className={styles.count}>
 					{sorted.length
 						.toString(10)
 						.padStart(videos.length.toString(10).length, '0')}{' '}
 					/&nbsp;{videos.length}
 				</span>
+				Sort by
+				<select value={sort} onChange={onChangeSort}>
+					<option value="mtime">Date modified</option>
+					<option value="title">Title</option>
+					<option value="size">Size</option>
+				</select>
 				<button
 					type="button"
 					title={
 						{
-							sortModifiedAsc: 'Sort date modified (ascending)',
-							sortModifiedDesc: 'Sort date modified (descending)',
-							sortAlphaAsc: 'Sort alphabetical (ascending)',
-							sortAlphaDesc: 'Sort alphabetical (descending)',
-							sortNone: 'No sort (system order)',
-						}[sort]
+							asc: 'Ascending',
+							desc: 'Descending',
+						}[sortDir]
 					}
-					onClick={cycleSort}
+					onClick={toggleSortDir}
 				>
-					<Icon icon={sort} />
+					<Icon icon={sortDir} />
 				</button>
-
 				{totalPages > 0 && (
 					<PageNumbers
 						className={styles.numbers}
