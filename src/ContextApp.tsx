@@ -34,7 +34,7 @@ type Command =
 			audio: boolean;
 	  };
 
-export type VideoType = FileEntry & { mtime: number };
+export type VideoType = FileEntry & { mtime: number; size: number };
 
 type State = {
 	/** last known video state */

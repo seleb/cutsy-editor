@@ -125,7 +125,7 @@ export function ViewVideos() {
 				.filter((i) => isVideo(i.path)) as VideoType[];
 			await Promise.all(
 				files.map(async (i) => {
-					i.mtime = await invoke('filemodified', { filename: i.path });
+					[i.mtime, i.size] = await invoke('filestat', { filename: i.path });
 				})
 			);
 
