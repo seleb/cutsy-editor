@@ -34,6 +34,8 @@ type Command =
 			audio: boolean;
 	  };
 
+export type VideoType = FileEntry & { mtime: number };
+
 type State = {
 	/** last known video state */
 	video: {
@@ -42,7 +44,7 @@ type State = {
 		clipEnd: number;
 	};
 	queue: Command[];
-	videos: FileEntry[];
+	videos: VideoType[];
 };
 
 const initial: State = {

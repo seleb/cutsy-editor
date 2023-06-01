@@ -161,6 +161,23 @@ async fn vid_to_clip(
     Ok(())
 }
 
+// adapted from https://github.com/tauri-apps/tauri/issues/996#issuecomment-1263279485
+#[tauri::command]
+fn filemodified(filename: &str) -> Result<u64, String> {
+    use std::fs;
+    use std::time::UNIX_EPOCH;
+
+    let metadata = fs::metadata(filename).expect("Failed to stat file");
+    let time = metadata.modified().expect("Failed to get mtime");
+    let millis = time
+        .duration_since(UNIX_EPOCH)
+        .expect("Failed to calculate mtime")
+        .as_millis();
+
+    let u64millis = u64::try_from(millis).expect("Number too large");
+    return Ok(u64millis);
+}
+
 fn main() {
     tauri::Builder::default()
         .setup(|app| {
@@ -178,6 +195,7 @@ fn main() {
             install_ffmpeg,
             vid_to_img,
             vid_to_clip,
+            filemodified,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -1,7 +1,7 @@
 import { FileEntry, readDir } from '@tauri-apps/api/fs';
 import { BaseDirectory } from '@tauri-apps/api/path';
 import { open } from '@tauri-apps/api/shell';
-import { convertFileSrc } from '@tauri-apps/api/tauri';
+import { convertFileSrc, invoke } from '@tauri-apps/api/tauri';
 import {
 	ChangeEventHandler,
 	MouseEventHandler,
@@ -18,7 +18,7 @@ import {
 	useSearchParams,
 } from 'react-router-dom';
 import { usePagination } from 'react-use-pagination';
-import { useSearch, useVideos, useVideosSet } from './ContextApp';
+import { VideoType, useSearch, useVideos, useVideosSet } from './ContextApp';
 import { useSettings } from './ContextSettings';
 import { H } from './H';
 import { Icon } from './Icon';
@@ -71,9 +71,13 @@ export function ViewVideos() {
 	const setVideos = useVideosSet();
 	const search = useSearch();
 	const [query, setQuery] = useState(searchParams.get('q') || '');
-	const [sort, setSort] = useState<'sortAsc' | 'sortDesc' | 'sortNone'>(
-		'sortNone'
-	);
+	const [sort, setSort] = useState<
+		| 'sortModifiedAsc'
+		| 'sortModifiedDesc'
+		| 'sortAlphaAsc'
+		| 'sortAlphaDesc'
+		| 'sortNone'
+	>('sortModifiedDesc');
 	const navigate = useNavigate();
 
 	const numPage = useMemo(() => {
@@ -90,10 +94,14 @@ export function ViewVideos() {
 	const sorted = useMemo(() => {
 		if (sort === 'sortNone') return filteredVideos;
 		const copy = filteredVideos.slice();
-		copy.sort(({ name: a = '' }, { name: b = '' }) =>
-			a?.localeCompare(b, undefined, { sensitivity: 'base' })
-		);
-		if (sort === 'sortDesc') copy.reverse();
+		if (sort.startsWith('sortAlpha')) {
+			copy.sort(({ name: a = '' }, { name: b = '' }) =>
+				a?.localeCompare(b, undefined, { sensitivity: 'base' })
+			);
+		} else if (sort.startsWith('sortModified')) {
+			copy.sort(({ mtime: a = 0 }, { mtime: b = 0 }) => a - b);
+		}
+		if (sort.endsWith('Desc')) copy.reverse();
 		return copy;
 	}, [filteredVideos, sort]);
 
@@ -114,7 +122,13 @@ export function ViewVideos() {
 				dir.children ? dir.children.flatMap(flatten) : [dir];
 			const files = dirs
 				.flatMap((i) => i.flatMap(flatten))
-				.filter((i) => isVideo(i.path));
+				.filter((i) => isVideo(i.path)) as VideoType[];
+			await Promise.all(
+				files.map(async (i) => {
+					i.mtime = await invoke('filemodified', { filename: i.path });
+				})
+			);
+
 			setVideos(files);
 		} catch (err) {
 			console.error(err);
@@ -129,9 +143,11 @@ export function ViewVideos() {
 			(s) =>
 				((
 					{
-						sortAsc: 'sortDesc',
-						sortDesc: 'sortNone',
-						sortNone: 'sortAsc',
+						sortModifiedAsc: 'sortModifiedDesc',
+						sortModifiedDesc: 'sortAlphaAsc',
+						sortAlphaAsc: 'sortAlphaDesc',
+						sortAlphaDesc: 'sortNone',
+						sortNone: 'sortModifiedAsc',
 					} as const
 				)[s])
 		);
@@ -217,8 +233,10 @@ export function ViewVideos() {
 					type="button"
 					title={
 						{
-							sortAsc: 'Sort alphabetical (ascending)',
-							sortDesc: 'Sort alphabetical (descending)',
+							sortModifiedAsc: 'Sort date modified (ascending)',
+							sortModifiedDesc: 'Sort date modified (descending)',
+							sortAlphaAsc: 'Sort alphabetical (ascending)',
+							sortAlphaDesc: 'Sort alphabetical (descending)',
 							sortNone: 'No sort (system order)',
 						}[sort]
 					}
