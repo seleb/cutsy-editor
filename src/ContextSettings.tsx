@@ -16,6 +16,8 @@ type State = {
 	videoFolders: string[];
 	saveAudio: 'always' | 'never' | 'editor';
 	itemsPerPage: number;
+	sort: 'mtime' | 'title' | 'size';
+	sortDir: 'asc' | 'desc';
 };
 
 const initial: State = {
@@ -25,6 +27,8 @@ const initial: State = {
 	videoFolders: [],
 	saveAudio: 'always',
 	itemsPerPage: 30,
+	sort: 'mtime',
+	sortDir: 'desc',
 };
 
 export const availableSettings = Object.keys(initial) as (keyof State)[];

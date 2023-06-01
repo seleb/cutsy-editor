@@ -19,7 +19,7 @@ import {
 } from 'react-router-dom';
 import { usePagination } from 'react-use-pagination';
 import { VideoType, useSearch, useVideos, useVideosSet } from './ContextApp';
-import { useSettings } from './ContextSettings';
+import { useSettings, useSettingsSet } from './ContextSettings';
 import { H } from './H';
 import { Icon } from './Icon';
 import { Loading } from './Loading';
@@ -63,7 +63,8 @@ function Video({ path, name }: FileEntry) {
 }
 export function ViewVideos() {
 	const [searchParams] = useSearchParams();
-	const { videoFolders, itemsPerPage } = useSettings();
+	const { videoFolders, itemsPerPage, sort, sortDir } = useSettings();
+	const setSetting = useSettingsSet();
 	const { page } = useParams();
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
@@ -71,8 +72,6 @@ export function ViewVideos() {
 	const setVideos = useVideosSet();
 	const search = useSearch();
 	const [query, setQuery] = useState(searchParams.get('q') || '');
-	const [sort, setSort] = useState<'mtime' | 'title' | 'size'>('mtime');
-	const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 	const navigate = useNavigate();
 
 	const numPage = useMemo(() => {
@@ -133,14 +132,14 @@ export function ViewVideos() {
 	}, [setVideos, videoFolders]);
 
 	const toggleSortDir = useCallback(
-		() => setSortDir((s) => (s === 'asc' ? 'desc' : 'asc')),
-		[]
+		() => setSetting('sortDir', sortDir === 'asc' ? 'desc' : 'asc'),
+		[setSetting, sortDir]
 	);
 	const onChangeSort = useCallback<ChangeEventHandler<HTMLSelectElement>>(
 		(event) => {
-			setSort(event.currentTarget.value as typeof sort);
+			setSetting('sort', event.currentTarget.value as typeof sort);
 		},
-		[]
+		[setSetting]
 	);
 
 	const { totalPages, startIndex, endIndex, setPage } = usePagination({
