@@ -434,6 +434,10 @@ export function ViewEdit() {
 			input: pathDecoded,
 			output,
 			time: refVideo.current?.currentTime || 0,
+			x: 0,
+			y: 0,
+			w: 1,
+			h: 1,
 		});
 	}, [name, queuePush, pathDecoded]);
 
@@ -457,6 +461,10 @@ export function ViewEdit() {
 				never: false,
 				editor: !muted,
 			}[saveAudio],
+			x: 0,
+			y: 0,
+			w: 1,
+			h: 1,
 		});
 	}, [getClip, name, queuePush, pathDecoded, muted, saveAudio]);
 
@@ -482,6 +490,12 @@ export function ViewEdit() {
 				path: pathEncoded,
 				clipStart,
 				clipEnd,
+				crop: {
+					x: 0,
+					y: 0,
+					w: 1,
+					h: 1,
+				},
 			});
 		};
 	}, [pathEncoded, setVideo]);

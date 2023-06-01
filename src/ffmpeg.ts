@@ -22,15 +22,27 @@ export function saveImage({
 	input,
 	output,
 	time,
+	x,
+	y,
+	w,
+	h,
 }: {
 	input: string;
 	output: string;
 	time: number;
+	x: number;
+	y: number;
+	w: number;
+	h: number;
 }) {
 	return invoke<string>('vid_to_img', {
 		input,
 		output,
 		time: `${toMicroseconds(time)}us`,
+		x: x.toString(10),
+		y: y.toString(10),
+		w: w.toString(10),
+		h: h.toString(10),
 	});
 }
 
@@ -40,12 +52,20 @@ export function saveClip({
 	start,
 	duration,
 	audio,
+	x,
+	y,
+	w,
+	h,
 }: {
 	input: string;
 	output: string;
 	start: number;
 	duration: number;
 	audio: boolean;
+	x: number;
+	y: number;
+	w: number;
+	h: number;
 }) {
 	return invoke<string>('vid_to_clip', {
 		input,
@@ -53,5 +73,9 @@ export function saveClip({
 		start: `${toMicroseconds(start)}us`,
 		duration: `${toMicroseconds(duration)}us`,
 		audio,
+		x: x.toString(10),
+		y: y.toString(10),
+		w: w.toString(10),
+		h: h.toString(10),
 	});
 }

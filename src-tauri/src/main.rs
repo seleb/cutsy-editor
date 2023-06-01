@@ -54,8 +54,33 @@ async fn install_ffmpeg() -> Result<(), Error> {
     }
 }
 
+fn crop(command: &mut FfmpegCommand, x: &String, y: &String, w: &String, h: &String, video: bool) {
+    if w != "1" || h != "1" {
+        command.arg("-filter:v").arg(format!(
+            "crop=floor(in_w*{}+0.5):floor(in_h*{}+0.5):floor(in_w*{}+0.5):floor(in_h*{}+0.5){}",
+            w,
+            h,
+            x,
+            y,
+            if video {
+                ",pad=ceil(in_w/2)*2:ceil(in_h/2)*2"
+            } else {
+                ""
+            }
+        ));
+    }
+}
+
 #[tauri::command]
-async fn vid_to_img(input: String, output: String, time: String) -> Result<(), Error> {
+async fn vid_to_img(
+    input: String,
+    output: String,
+    time: String,
+    x: String,
+    y: String,
+    w: String,
+    h: String,
+) -> Result<(), Error> {
     let path_input = Path::new(&input);
     let path_output = Path::new(&output);
     if !path_input.exists() {
@@ -63,7 +88,8 @@ async fn vid_to_img(input: String, output: String, time: String) -> Result<(), E
     }
 
     let mut errors: Vec<String> = vec![];
-    FfmpegCommand::new()
+    let mut command = FfmpegCommand::new();
+    command
         .create_no_window()
         // allow overwriting
         .overwrite()
@@ -94,7 +120,12 @@ async fn vid_to_img(input: String, output: String, time: String) -> Result<(), E
         .arg("-qmin")
         .arg(1.to_string())
         .arg("-q:v")
-        .arg(1.to_string())
+        .arg(1.to_string());
+
+    // crop
+    crop(&mut command, &x, &y, &w, &h, false);
+
+    command
         // output
         .output(path_output.as_os_str().to_str().unwrap())
         // spawn + catch errors
@@ -116,6 +147,10 @@ async fn vid_to_clip(
     start: String,
     duration: String,
     audio: bool,
+    x: String,
+    y: String,
+    w: String,
+    h: String,
 ) -> Result<(), Error> {
     let path_input = Path::new(&input);
     let path_output = Path::new(&output);
@@ -147,7 +182,12 @@ async fn vid_to_clip(
         // duration
         .duration(duration)
         // input
-        .input(path_input.as_os_str().to_str().unwrap())
+        .input(path_input.as_os_str().to_str().unwrap());
+
+    // crop
+    crop(&mut command, &x, &y, &w, &h, true);
+
+    command
         // output
         .output(path_output.as_os_str().to_str().unwrap())
         .spawn()?

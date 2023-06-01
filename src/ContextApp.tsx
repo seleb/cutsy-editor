@@ -22,6 +22,10 @@ type Command =
 			output: string;
 			/** time in microseconds */
 			time: number;
+			x: number;
+			y: number;
+			w: number;
+			h: number;
 	  }
 	| {
 			command: 'vid_to_clip';
@@ -32,6 +36,10 @@ type Command =
 			/** time in microseconds */
 			duration: number;
 			audio: boolean;
+			x: number;
+			y: number;
+			w: number;
+			h: number;
 	  };
 
 export type VideoType = FileEntry & { mtime: number; size: number };
