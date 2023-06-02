@@ -246,7 +246,15 @@ export function ViewSettings() {
 			<p>if you are using it i hope you like it too :)</p>
 			<dl className={styles.about}>
 				<dt>version</dt>
-				<dd>{pkg.version}</dd>
+				<dd>
+					<a
+						href={`${pkg.repository.url}/releases`}
+						target="_blank"
+						rel="noreferrer"
+					>
+						{pkg.version}
+					</a>
+				</dd>
 
 				<dt>made by</dt>
 				<dd>
