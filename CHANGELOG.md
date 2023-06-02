@@ -1,3 +1,17 @@
+# [1.1.0](https://github.com/seleb/cutsy-editor/compare/v1.0.2...v1.1.0) (2023-06-02)
+
+
+### Features
+
+* add "date modified" sort ([46c6927](https://github.com/seleb/cutsy-editor/commit/46c69276869c70869954d0be52a789fc1ddb40ad))
+* add "size" sort + separate sort method/direction ([93f3bf0](https://github.com/seleb/cutsy-editor/commit/93f3bf0c98f805c02c41fa5629b6ef02f368246a))
+* add crop instruction to help menu ([e5b300d](https://github.com/seleb/cutsy-editor/commit/e5b300d889890965714a5182401b8d438cf6f104))
+* add cropping to video editor view ([bd56f3e](https://github.com/seleb/cutsy-editor/commit/bd56f3e7ad6fb134007b53fd4ea5618b806985ff))
+* arrow keys skip based on zoom level ([e6637d2](https://github.com/seleb/cutsy-editor/commit/e6637d22ce4565ee42e8c170171194f075476930))
+* improve UI on videos view ([28567a4](https://github.com/seleb/cutsy-editor/commit/28567a4d3304c4e99735dd27921efe10abae9286))
+* persist sort method + direction ([2b9f13f](https://github.com/seleb/cutsy-editor/commit/2b9f13fc2b374f767089c85f82d0587b58972127))
+* version number in settings links to releases with changelog ([43b2cbb](https://github.com/seleb/cutsy-editor/commit/43b2cbb7d6da36b69ddfcbd03e1c862ec46d6c12))
+
 ## [1.0.2](https://github.com/seleb/cutsy-editor/compare/v1.0.1...v1.0.2) (2023-05-16)
 
 
