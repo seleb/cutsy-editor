@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/seleb/cutsy-editor/compare/v1.1.0...v1.1.1) (2023-06-02)
+
+
+### Bug Fixes
+
+* crop build error ([6e6e6d9](https://github.com/seleb/cutsy-editor/commit/6e6e6d9e4e3a40e1d3f96e49e8bd1f5989543ff0))
+
 # [1.1.0](https://github.com/seleb/cutsy-editor/compare/v1.0.2...v1.1.0) (2023-06-02)
 
 
