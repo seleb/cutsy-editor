@@ -585,7 +585,6 @@ export function ViewEdit() {
 				path: pathEncoded,
 				clipStart,
 				clipEnd,
-				crop: getCrop(),
 			});
 		};
 	}, [pathEncoded, setVideo, getCrop]);
