@@ -42,6 +42,7 @@ export function ViewEdit() {
 	const refTime = useRef<HTMLElement>(null);
 	const refClip = useRef<HTMLDivElement>(null);
 	const refPlayhead = useRef<HTMLDivElement>(null);
+	const refCrop = useRef<HTMLButtonElement>(null);
 
 	const [paused, setPaused] = useState(true);
 	const [muted, setMuted] = useState(false);
@@ -69,6 +70,7 @@ export function ViewEdit() {
 		const onLoaded = () => {
 			setDuration(elVideo.duration);
 		};
+
 		elVideo.addEventListener('loadedmetadata', onLoaded);
 		return () => {
 			elVideo.removeEventListener('loadedmetadata', onLoaded);
@@ -82,6 +84,16 @@ export function ViewEdit() {
 		const dur = Number((elClip.style.width || '100%').replace('%', '')) / 100;
 		const end = start + dur;
 		return [start, end, dur];
+	}, []);
+
+	const getCrop = useCallback(() => {
+		const elCrop = refCrop.current;
+		if (!elCrop) return { x: 0, y: 0, w: 1, h: 1 };
+		const x = Number(elCrop.dataset.x || '0');
+		const y = Number(elCrop.dataset.y || '0');
+		const w = Number(elCrop.dataset.w || '1');
+		const h = Number(elCrop.dataset.h || '1');
+		return { x, y, w, h };
 	}, []);
 
 	// update to match video time
@@ -284,6 +296,95 @@ export function ViewEdit() {
 		[]
 	);
 
+	const onUpdateCrop = useCallback(
+		({
+			x1,
+			y1,
+			x2,
+			y2,
+		}: {
+			x1: number;
+			y1: number;
+			x2: number;
+			y2: number;
+		}) => {
+			const elCrop = refCrop.current;
+			if (!elCrop) return;
+			if (x2 < x1) [x1, x2] = [x2, x1];
+			if (y2 < y1) [y1, y2] = [y2, y1];
+			x1 = clamp(0, x1, 1);
+			y1 = clamp(0, y1, 1);
+			x2 = clamp(0, x2, 1);
+			y2 = clamp(0, y2, 1);
+			const w = x2 - x1;
+			const h = y2 - y1;
+			elCrop.dataset.x = x1.toString(10);
+			elCrop.dataset.y = y1.toString(10);
+			elCrop.dataset.w = w.toString(10);
+			elCrop.dataset.h = h.toString(10);
+			elCrop.style.clipPath = `polygon(
+				0% 0%, 0% 100%, 100% 100%, 100% 0, 0% 0%,
+
+				${(x1 + 0) * 100}% ${(y1 + 0) * 100}%,
+				${(x1 + w) * 100}% ${(y1 + 0) * 100}%,
+				${(x1 + w) * 100}% ${(y1 + h) * 100}%,
+				${(x1 + 0) * 100}% ${(y1 + h) * 100}%,
+				${(x1 + 0) * 100}% ${(y1 + 0) * 100}%
+				)`;
+		},
+		[]
+	);
+
+	const onCropStart = useMemo(() => {
+		let x1 = 0;
+		let y1 = 0;
+		let x2: number;
+		let y2: number;
+		return onScrubStart({
+			start: (event: PointerEvent) => {
+				const elVideo = refVideo.current;
+				const elCrop = refCrop.current;
+				if (!elVideo || !elCrop) return;
+				event.preventDefault();
+
+				elCrop.style.aspectRatio = `${elVideo.videoWidth} / ${elVideo.videoHeight}`;
+				const rect = elCrop.getBoundingClientRect();
+				x1 = (event.pageX - rect.left) / elCrop.offsetWidth;
+				y1 = (event.pageY - elCrop.offsetTop) / elCrop.offsetHeight;
+			},
+			scrub: (event: PointerEvent) => {
+				const elCrop = refCrop.current;
+				if (!elCrop) return;
+				event.preventDefault();
+				const rect = elCrop.getBoundingClientRect();
+				x2 = (event.pageX - rect.left) / elCrop.offsetWidth;
+				y2 = (event.pageY - elCrop.offsetTop) / elCrop.offsetHeight;
+				if (
+					Math.abs(x2 - x1) * elCrop.offsetWidth > 1 &&
+					Math.abs(y2 - y1) * elCrop.offsetHeight > 1
+				) {
+					onUpdateCrop({ x1, y1, x2, y2 });
+				}
+			},
+			end: (event: PointerEvent) => {
+				const elCrop = refCrop.current;
+				if (!elCrop) return;
+				event.preventDefault();
+				if (
+					!(
+						Math.abs((x2 ?? x1) - x1) * elCrop.offsetWidth > 1 &&
+						Math.abs((y2 ?? y1) - y1) * elCrop.offsetHeight > 1
+					)
+				) {
+					togglePlaying();
+				}
+			},
+		});
+	}, [onScrubStart, onUpdateCrop, togglePlaying]);
+	const removeCrop = useCallback(() => {
+		onUpdateCrop({ x1: 0, y1: 0, x2: 1, y2: 1 });
+	}, [onUpdateCrop]);
+
 	const onUpdateClip = useCallback(
 		(start?: number, end?: number, slide?: number) => {
 			const elClip = refClip.current;
@@ -434,12 +535,9 @@ export function ViewEdit() {
 			input: pathDecoded,
 			output,
 			time: refVideo.current?.currentTime || 0,
-			x: 0,
-			y: 0,
-			w: 1,
-			h: 1,
+			...getCrop(),
 		});
-	}, [name, queuePush, pathDecoded]);
+	}, [name, queuePush, pathDecoded, getCrop]);
 
 	const onSaveClip = useCallback(async () => {
 		const elVideo = refVideo.current;
@@ -461,12 +559,9 @@ export function ViewEdit() {
 				never: false,
 				editor: !muted,
 			}[saveAudio],
-			x: 0,
-			y: 0,
-			w: 1,
-			h: 1,
+			...getCrop(),
 		});
-	}, [getClip, name, queuePush, pathDecoded, muted, saveAudio]);
+	}, [getClip, getCrop, name, queuePush, pathDecoded, muted, saveAudio]);
 
 	const noContextMenu = useCallback<
 		MouseEventHandler<SVGSVGElement | HTMLElement>
@@ -490,15 +585,10 @@ export function ViewEdit() {
 				path: pathEncoded,
 				clipStart,
 				clipEnd,
-				crop: {
-					x: 0,
-					y: 0,
-					w: 1,
-					h: 1,
-				},
+				crop: getCrop(),
 			});
 		};
-	}, [pathEncoded, setVideo]);
+	}, [pathEncoded, setVideo, getCrop]);
 
 	// reload clip
 	const lastVideo = useVideo();
@@ -625,16 +715,26 @@ export function ViewEdit() {
 	return (
 		<div className={styles.container}>
 			<Title>{['edit', name]}</Title>
-			<video
-				ref={refVideo}
-				onClick={togglePlaying}
-				className={styles.video}
-				controls={false}
-				src={src}
-				preload="auto"
-				muted={muted}
-				loop
-			/>
+			<div className={styles.videocontainer}>
+				<video
+					ref={refVideo}
+					onPointerDown={onCropStart}
+					className={styles.video}
+					controls={false}
+					src={src}
+					preload="auto"
+					muted={muted}
+					loop
+				/>
+				<button
+					ref={refCrop}
+					type="button"
+					className={styles.crop}
+					aria-label="Remove crop"
+					title="Remove crop"
+					onClick={removeCrop}
+				/>
+			</div>
 			<div className={styles.controls}>
 				<Spinner className={styles.spinner}>buffering</Spinner>
 				<div
