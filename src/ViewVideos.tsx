@@ -216,24 +216,26 @@ export function ViewVideos() {
 						.padStart(videos.length.toString(10).length, '0')}{' '}
 					/&nbsp;{videos.length}
 				</span>
-				Sort by
-				<select value={sort} onChange={onChangeSort}>
-					<option value="mtime">Date modified</option>
-					<option value="title">Title</option>
-					<option value="size">Size</option>
-				</select>
-				<button
-					type="button"
-					title={
-						{
-							asc: 'Ascending',
-							desc: 'Descending',
-						}[sortDir]
-					}
-					onClick={toggleSortDir}
-				>
-					<Icon icon={sortDir} />
-				</button>
+				<div className={styles.sortby}>
+					Sort by
+					<select value={sort} onChange={onChangeSort}>
+						<option value="mtime">Date modified</option>
+						<option value="title">Title</option>
+						<option value="size">Size</option>
+					</select>
+					<button
+						type="button"
+						title={
+							{
+								asc: 'Ascending',
+								desc: 'Descending',
+							}[sortDir]
+						}
+						onClick={toggleSortDir}
+					>
+						<Icon icon={sortDir} />
+					</button>
+				</div>
 				{totalPages > 0 && (
 					<PageNumbers
 						className={styles.numbers}
