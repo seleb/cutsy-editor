@@ -168,7 +168,7 @@ export function ViewVideos() {
 	useEffect(() => {
 		if (videos.length) return;
 		loadVideos();
-	}, [videos, loadVideos]);
+	}, [videos.length, loadVideos]);
 	useLayoutEffect(() => {
 		setPage(numPage);
 	}, [numPage, setPage]);
