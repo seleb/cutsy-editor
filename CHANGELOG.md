@@ -1,3 +1,11 @@
+## [1.1.2](https://github.com/seleb/cutsy-editor/compare/v1.1.1...v1.1.2) (2023-06-12)
+
+
+### Bug Fixes
+
+* simplify hotkey regex ([b06aef8](https://github.com/seleb/cutsy-editor/commit/b06aef80b88bf41f39edf8bc406c4fa80a292ec0))
+* unnecessary refreshing when there are no videos ([8401e16](https://github.com/seleb/cutsy-editor/commit/8401e1692027ca0dfe24e63868565e77ec32c24f))
+
 ## [1.1.1](https://github.com/seleb/cutsy-editor/compare/v1.1.0...v1.1.1) (2023-06-02)
 
 
