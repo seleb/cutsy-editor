@@ -25,7 +25,7 @@ const shortcuts = [
 	['Ctrl+S', 'save clip'],
 ].map(([shortcut, label]) => [
 	shortcut,
-	shortcut.split(/(?<!\+)\+/),
+	shortcut.split(/\+/),
 	label,
 ]) as [string, string[], string][];
 
