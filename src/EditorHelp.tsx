@@ -23,11 +23,11 @@ const shortcuts = [
 	['Ctrl+ArrowRight', 'end'],
 	['Ctrl+ArrowLeft', 'start'],
 	['Ctrl+S', 'save clip'],
-].map(([shortcut, label]) => [
-	shortcut,
-	shortcut.split(/\+/),
-	label,
-]) as [string, string[], string][];
+].map(([shortcut, label]) => [shortcut, shortcut.split(/\+/), label]) as [
+	string,
+	string[],
+	string
+][];
 
 const replacements: { [key: string]: string } = {
 	Space: '␣',
