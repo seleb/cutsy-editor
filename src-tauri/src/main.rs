@@ -221,6 +221,7 @@ fn filestat(filename: &str) -> Result<[u64; 2], String> {
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_persisted_scope::init())
         .setup(|app| {
             // automatically open devtools in debug builds
             #[cfg(debug_assertions)]
