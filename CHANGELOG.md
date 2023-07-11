@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/seleb/cutsy-editor/compare/v1.1.2...v1.2.0) (2023-07-11)
+
+
+### Features
+
+* add setting for selecting video folders ([8cdd83c](https://github.com/seleb/cutsy-editor/commit/8cdd83c49546f094ab8b71d5ea2e4517b3151c4e))
+
 ## [1.1.2](https://github.com/seleb/cutsy-editor/compare/v1.1.1...v1.1.2) (2023-06-12)
 
 
