@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/seleb/cutsy-editor/compare/v1.2.0...v1.2.1) (2023-08-12)
+
+
+### Bug Fixes
+
+* malformed URI when opening some files ([baf6b23](https://github.com/seleb/cutsy-editor/commit/baf6b234faba5a6b751d6ec5d1e8e14fdeac32bd))
+
 # [1.2.0](https://github.com/seleb/cutsy-editor/compare/v1.1.2...v1.2.0) (2023-07-11)
 
 
