@@ -24,18 +24,14 @@ import { toDuration } from './toDuration';
 
 export function ViewEdit() {
 	const [search] = useSearchParams();
-	const pathEncoded = search.get('v') || '';
-	const pathDecoded = useMemo(
-		() => decodeURIComponent(pathEncoded),
-		[pathEncoded]
-	);
-	const src = useMemo(() => convertFileSrc(pathDecoded), [pathDecoded]);
+	const path = search.get('v') || '';
+	const src = useMemo(() => convertFileSrc(path), [path]);
 	const name = useMemo(() => {
-		const basename = pathDecoded.split(/[\\/]/).pop();
+		const basename = path.split(/[\\/]/).pop();
 		const parts = basename?.split('.');
 		parts?.pop();
 		return parts?.join('.');
-	}, [pathDecoded]);
+	}, [path]);
 
 	const refVideo = useRef<HTMLVideoElement>(null);
 	const refProgress = useRef<HTMLProgressElement>(null);
@@ -532,12 +528,12 @@ export function ViewEdit() {
 		if (!output) return;
 		queuePush({
 			command: 'vid_to_img',
-			input: pathDecoded,
+			input: path,
 			output,
 			time: refVideo.current?.currentTime || 0,
 			...getCrop(),
 		});
-	}, [name, queuePush, pathDecoded, getCrop]);
+	}, [name, queuePush, path, getCrop]);
 
 	const onSaveClip = useCallback(async () => {
 		const elVideo = refVideo.current;
@@ -550,7 +546,7 @@ export function ViewEdit() {
 		if (!output) return;
 		queuePush({
 			command: 'vid_to_clip',
-			input: pathDecoded,
+			input: path,
 			output,
 			start: start * elVideo.duration || 0,
 			duration: dur * elVideo.duration || 0,
@@ -561,7 +557,7 @@ export function ViewEdit() {
 			}[saveAudio],
 			...getCrop(),
 		});
-	}, [getClip, getCrop, name, queuePush, pathDecoded, muted, saveAudio]);
+	}, [getClip, getCrop, name, queuePush, path, muted, saveAudio]);
 
 	const noContextMenu = useCallback<
 		MouseEventHandler<SVGSVGElement | HTMLElement>
@@ -582,12 +578,12 @@ export function ViewEdit() {
 				Number((elClip.style.width || '100%').replace('%', '')) / 100 +
 				clipStart;
 			setVideo({
-				path: pathEncoded,
+				path,
 				clipStart,
 				clipEnd,
 			});
 		};
-	}, [pathEncoded, setVideo, getCrop]);
+	}, [path, setVideo, getCrop]);
 
 	// reload clip
 	const lastVideo = useVideo();
@@ -710,7 +706,7 @@ export function ViewEdit() {
 		onSaveClip,
 	]);
 
-	if (!pathEncoded) throw new Error('No video path!');
+	if (!path) throw new Error('No video path!');
 	return (
 		<div className={styles.container}>
 			<Title>{['edit', name]}</Title>
