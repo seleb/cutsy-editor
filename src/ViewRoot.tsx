@@ -64,11 +64,7 @@ export function ViewRoot() {
 					<button type="button" title="Open file" onClick={onOpen}>
 						<Icon icon="open" />
 					</button>
-					<NavLink
-						aria-disabled={!path}
-						to={path ? `edit?v=${encodeURIComponent(path)}` : ''}
-						title="Edit"
-					>
+					<NavLink aria-disabled={!path} to={toEditUrl(path)} title="Edit">
 						<Icon icon="edit" />
 					</NavLink>
 					<NavLink to="videos" title="Videos">
