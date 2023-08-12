@@ -55,7 +55,9 @@
 			border: solid 1px var(--color-neutral-4);
 			border-radius: 0.25rem;
 			text-align: initial;
-			transition: border-color 0.1s ease-out, background-color 0.1s ease-out;
+			transition:
+				border-color 0.1s ease-out,
+				background-color 0.1s ease-out;
 			word-break: break-word;
 
 			&:hover,

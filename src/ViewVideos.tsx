@@ -88,8 +88,9 @@ export function ViewVideos() {
 	const sorted = useMemo(() => {
 		const copy = filteredVideos.slice();
 		if (sort === 'title') {
-			copy.sort(({ name: a = '' }, { name: b = '' }) =>
-				a?.localeCompare(b, undefined, { sensitivity: 'base' })
+			copy.sort(
+				({ name: a = '' }, { name: b = '' }) =>
+					a?.localeCompare(b, undefined, { sensitivity: 'base' })
 			);
 		} else {
 			copy.sort(({ [sort]: a = 0 }, { [sort]: b = 0 }) => a - b);
