@@ -646,7 +646,11 @@ export function ViewEdit() {
 					event.preventDefault();
 					break;
 				case ' ':
-					if (event.shiftKey) {
+					if (event.ctrlKey || event.metaKey) {
+						seek(0);
+						setPreview(true);
+						setPaused(false);
+					} else if (event.shiftKey) {
 						togglePreview();
 					} else {
 						togglePlaying();

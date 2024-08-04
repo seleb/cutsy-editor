@@ -7,6 +7,7 @@ import { Icon } from './Icon';
 const shortcuts = [
 	['Space', 'play/pause'],
 	['Shift+Space', 'preview clip'],
+	['Ctrl+Space', 'restart clip'],
 	['Ctrl+=', 'zoom in'],
 	['Ctrl+-', 'zoom out'],
 	['Ctrl+0', 'reset zoom'],
