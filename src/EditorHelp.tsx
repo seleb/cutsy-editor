@@ -23,6 +23,8 @@ const shortcuts = [
 	['Shift+ArrowLeft', 'backward (faster)'],
 	['Ctrl+ArrowRight', 'end'],
 	['Ctrl+ArrowLeft', 'start'],
+	['[', 'jump to clip end'],
+	[']', 'jump to clip start'],
 	['Ctrl+S', 'save clip'],
 ].map(([shortcut, label]) => [shortcut, shortcut.split(/\+/), label]) as [
 	string,

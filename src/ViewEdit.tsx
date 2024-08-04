@@ -645,6 +645,22 @@ export function ViewEdit() {
 					seekBy(-FRAME);
 					event.preventDefault();
 					break;
+				case '[': {
+					const clip = getClip();
+					if (!clip) return;
+					const [start] = clip;
+					seek(start * duration);
+					event.preventDefault();
+					break;
+				}
+				case ']': {
+					const clip = getClip();
+					if (!clip) return;
+					const [, end] = clip;
+					seek(end * duration);
+					event.preventDefault();
+					break;
+				}
 				case ' ':
 					if (event.ctrlKey || event.metaKey) {
 						const clip = getClip();
