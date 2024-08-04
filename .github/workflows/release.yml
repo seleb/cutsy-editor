@@ -39,7 +39,7 @@ jobs:
       matrix:
         platform:
           - name: mac
-            runs: macos-latest
+            runs: macos-12
           - name: linux
             runs: ubuntu-20.04
           - name: windows
@@ -133,7 +133,7 @@ jobs:
       - uses: geekyeggo/delete-artifact@v1
         with:
           name: |
-            artifacts-macos-latest
+            artifacts-macos-12
             artifacts-ubuntu-20.04
             artifacts-windows-latest
             artifacts-web
