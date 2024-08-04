@@ -3,7 +3,7 @@
 	"name": "cutsy-editor",
 	"description": "a lil video clip editor",
 	"type": "module",
-	"version": "1.3.1",
+	"version": "1.3.2",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/seleb/cutsy-editor"

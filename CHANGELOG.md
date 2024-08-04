@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/seleb/cutsy-editor/compare/v1.3.1...v1.3.2) (2024-08-04)
+
+
+### Bug Fixes
+
+* **build:** try downgrading mac runner ([6d55ba3](https://github.com/seleb/cutsy-editor/commit/6d55ba3d8370193554fcde77f087c756b446bd5b))
+
 ## [1.3.1](https://github.com/seleb/cutsy-editor/compare/v1.3.0...v1.3.1) (2024-08-04)
 
 
