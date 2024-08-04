@@ -18,6 +18,7 @@ type State = {
 	itemsPerPage: number;
 	sort: 'mtime' | 'title' | 'size';
 	sortDir: 'asc' | 'desc';
+	customCss: string;
 };
 
 const initial: State = {
@@ -29,6 +30,7 @@ const initial: State = {
 	itemsPerPage: 30,
 	sort: 'mtime',
 	sortDir: 'desc',
+	customCss: '',
 };
 
 export const availableSettings = Object.keys(initial) as (keyof State)[];

@@ -60,6 +60,17 @@ export function ViewSettings() {
 		},
 		[set]
 	);
+
+	const onText = useCallback<ChangeEventHandler<HTMLTextAreaElement>>(
+		(event) => {
+			const el = event.currentTarget as HTMLTextAreaElement;
+			// not guaranteed but safe enough
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
+			if (availableSettings.includes(el.name)) set(el.name, el.value);
+		},
+		[set]
+	);
 	return (
 		<Page>
 			<Title>settings</Title>
@@ -228,6 +239,15 @@ export function ViewSettings() {
 						/>{' '}
 						no thanks i can open my own files
 					</label>
+				</dd>
+
+				<dt>custom css</dt>
+				<dd>
+					<textarea
+						onChange={onText}
+						name="customCss"
+						value={settings.customCss}
+					/>
 				</dd>
 
 				<dt>reset to default</dt>
