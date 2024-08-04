@@ -1,3 +1,18 @@
+# [1.3.0](https://github.com/seleb/cutsy-editor/compare/v1.2.1...v1.3.0) (2024-08-04)
+
+
+### Bug Fixes
+
+* flicker on seek to clip start ([e27e440](https://github.com/seleb/cutsy-editor/commit/e27e4403f4140d7d67028e076dac7e63d26f0d15))
+
+
+### Features
+
+* `[`/`]` hotkeys for jump to clip start/end ([63cc0e5](https://github.com/seleb/cutsy-editor/commit/63cc0e569d971e484deb688b615dcd2b9fd3ebce))
+* add custom css setting ([a2784d5](https://github.com/seleb/cutsy-editor/commit/a2784d51ef1b17a1855910f734a9dd1243daf1a9))
+* ctrl + space restarts clip ([04ea392](https://github.com/seleb/cutsy-editor/commit/04ea39251c9d54d7b1db106d394d0a93c686e6ab))
+* setting for showing clips in folder after saving ([549ba55](https://github.com/seleb/cutsy-editor/commit/549ba55a0144809d4e392a2054aba3991b7d2324))
+
 ## [1.2.1](https://github.com/seleb/cutsy-editor/compare/v1.2.0...v1.2.1) (2023-08-12)
 
 
