@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/seleb/cutsy-editor/compare/v1.3.0...v1.3.1) (2024-08-04)
+
+
+### Bug Fixes
+
+* **build:** update `tauri-build` ([4d85295](https://github.com/seleb/cutsy-editor/commit/4d85295f6eff7668c178b17a9f0f9ab8b788da89))
+
 # [1.3.0](https://github.com/seleb/cutsy-editor/compare/v1.2.1...v1.3.0) (2024-08-04)
 
 
