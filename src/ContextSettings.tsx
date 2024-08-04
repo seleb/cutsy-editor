@@ -12,7 +12,7 @@ import {
 type State = {
 	theme: 'auto' | 'dark' | 'light';
 	font: 'bitch' | 'boring';
-	openAfterSave: 'true' | 'false';
+	openAfterSave: 'true' | 'false' | 'folder';
 	videoFolders: string[];
 	saveAudio: 'always' | 'never' | 'editor';
 	itemsPerPage: number;

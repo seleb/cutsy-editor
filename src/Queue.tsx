@@ -1,5 +1,6 @@
 import { message } from '@tauri-apps/api/dialog';
 import { open } from '@tauri-apps/api/shell';
+import { invoke } from '@tauri-apps/api/tauri';
 import { useEffect, useState } from 'react';
 import { useQueue, useQueueShift } from './ContextApp';
 import { useSettings } from './ContextSettings';
@@ -51,6 +52,9 @@ export function Queue() {
 	useEffect(() => {
 		if (last?.output && openAfterSave === 'true') {
 			open(`file:///${last.output}`);
+		}
+		if (last?.output && openAfterSave === 'folder') {
+			invoke('showfile', { filename: last?.output });
 		}
 		setLast(null);
 	}, [last?.output, openAfterSave]);

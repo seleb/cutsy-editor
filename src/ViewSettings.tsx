@@ -213,6 +213,16 @@ export function ViewSettings() {
 							onChange={onRadio}
 							type="radio"
 							name="openAfterSave"
+							value="folder"
+							checked={settings.openAfterSave === 'folder'}
+						/>{' '}
+						show in folder
+					</label>
+					<label>
+						<input
+							onChange={onRadio}
+							type="radio"
+							name="openAfterSave"
 							value="false"
 							checked={settings.openAfterSave === 'false'}
 						/>{' '}

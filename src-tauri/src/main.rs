@@ -219,6 +219,12 @@ fn filestat(filename: &str) -> Result<[u64; 2], String> {
     return Ok([u64millis, size]);
 }
 
+// adapted from https://github.com/tauri-apps/plugins-workspace/issues/999#issuecomment-2125587929
+#[tauri::command]
+fn showfile(filename: &str) {
+    showfile::show_path_in_file_manager(filename);
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_persisted_scope::init())
@@ -238,6 +244,7 @@ fn main() {
             vid_to_img,
             vid_to_clip,
             filestat,
+            showfile,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
