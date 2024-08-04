@@ -647,7 +647,10 @@ export function ViewEdit() {
 					break;
 				case ' ':
 					if (event.ctrlKey || event.metaKey) {
-						seek(0);
+						const clip = getClip();
+						if (!clip) return;
+						const [start] = clip;
+						seek(start * duration);
 						setPreview(true);
 						setPaused(false);
 					} else if (event.shiftKey) {
@@ -708,6 +711,9 @@ export function ViewEdit() {
 		zoomOut,
 		centerTrack,
 		onSaveClip,
+		getClip,
+		seek,
+		duration,
 	]);
 
 	if (!path) throw new Error('No video path!');
