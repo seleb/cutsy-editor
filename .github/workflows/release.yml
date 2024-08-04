@@ -52,7 +52,7 @@ jobs:
       - uses: ./.github/actions/tauri-setup
         with:
           linux: ${{ matrix.platform.name == 'linux' }}
-      - uses: JonasKruckenberg/tauri-build@v1
+      - uses: JonasKruckenberg/tauri-build@tauri-build-v1.5.11
         id: build
       - uses: actions/upload-artifact@v3
         with:
