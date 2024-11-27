@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/seleb/cutsy-editor/compare/v1.3.3...v1.4.0) (2024-11-27)
+
+
+### Features
+
+* app prompts confirmation when quitting mid-export ([d5df8fe](https://github.com/seleb/cutsy-editor/commit/d5df8fec1d2fb9c6531f497e0db5f4d2dc1f318a))
+
 ## [1.3.3](https://github.com/seleb/cutsy-editor/compare/v1.3.2...v1.3.3) (2024-08-04)
 
 
