@@ -14,6 +14,7 @@ import {
 	useReducer,
 	useState,
 } from 'react';
+import { safeQuit } from './safeQuit';
 
 type Command =
 	| {
@@ -121,6 +122,20 @@ export function ContextApp({ children }: PropsWithChildren<unknown>) {
 		s.addDocuments(state.videos);
 		setSearch(s);
 	}, [state.videos]);
+
+	useEffect(() => {
+		if (state.queue.length > 0) {
+			const unlistenPromise = safeQuit(
+				`${state.queue.length} export${
+					state.queue.length === 1 ? ' is' : 's are'
+				} in progress and may be corrupted/aborted.\n\nQuit anyway?`
+			);
+			return () => {
+				unlistenPromise.then((i) => i());
+			};
+		}
+		return undefined;
+	}, [state.queue]);
 
 	return (
 		<contextState.Provider value={state}>

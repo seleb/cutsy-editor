@@ -18,7 +18,8 @@
         "save": true,
         "open": true,
         "message": true,
-        "ask": true
+        "ask": true,
+        "confirm": true
       },
       "shell": {
         "all": false,
@@ -27,7 +28,8 @@
       "window": {
         "all": false,
         "setFullscreen": true,
-        "setTitle": true
+        "setTitle": true,
+        "close": true
       },
       "path": {
         "all": true
